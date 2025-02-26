@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "2gether-kongtteok",
+  "version": "1.0.0",
+  "description": "말랑콩떡",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=9.0.0",
+    "vscode": ">=1.9.0"
+  },
+  "scripts": {
+    "start": "pnpm dev --open",
+    "dev": "vite --host",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint --cache 'src/**/*.{ts,tsx}'",
+    "format": "prettier --write --cache 'src/**/*.{ts,tsx}'"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "pnpm lint",
+      "pnpm format"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "9.18.0",
+    "@types/node": "22.10.7",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "@vitejs/plugin-react": "4.3.4",
+    "eslint": "9.18.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.1.0",
+    "eslint-plugin-react-refresh": "0.4.18",
+    "globals": "15.14.0",
+    "lint-staged": "15.4.1",
+    "prettier": "3.4.2",
+    "supabase": "2.12.1",
+    "tailwind-merge": "3.0.1",
+    "tailwindcss": "4.0.1",
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.20.0",
+    "vite": "6.0.7"
+  },
+  "dependencies": {
+    "@supabase/auth-ui-react": "0.4.7",
+    "@supabase/auth-ui-shared": "0.1.8",
+    "@supabase/supabase-js": "2.48.1",
+    "react": "19",
+    "react-dom": "19",
+    "react-error-boundary": "5.0.0",
+    "react-router": "7.2.0",
+    "zustand": "5.0.3"
+  },
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+}
