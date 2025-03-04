@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@mynaui/icons-react':
+        specifier: 0.3.3
+        version: 0.3.3(react@19.0.0)
       '@supabase/auth-ui-react':
         specifier: 0.4.7
         version: 0.4.7(@supabase/supabase-js@2.48.1)
@@ -434,6 +437,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@mynaui/icons-react@0.3.3':
+    resolution: {integrity: sha512-vUA7T9xlPrFrXnApTb5Jdm9rbFKpENAL4cgXEmY+CpWOth+y4vdmw2gp3xGJ4Fhjpw+N4WH+yErHIoNzUD9HhA==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2621,6 +2629,11 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@mynaui/icons-react@0.3.3(react@19.0.0)':
+    dependencies:
+      prop-types: 15.8.1
+      react: 19.0.0
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

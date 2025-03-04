@@ -7,6 +7,7 @@
 @import 'tailwindcss/utilities.css' layer(utilities); */
 
 @theme {
+
   /* 디자인 토큰 구성 */
   --color-primary: #3e3232;
   --color-secondary: #d9c6b9;
@@ -15,4 +16,5 @@
   --color-peach-800: #665050;
 
   --color-brown-200: #b2adad;
+
 }
