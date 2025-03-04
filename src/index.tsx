@@ -8,7 +8,7 @@ if (root) {
 
   reactDOMRoot.render(
     <StrictMode>
-      <div className="flex justify-center items-center h-[100vh] bg-[#3E3232] p-5 text-6xl text-white">말랑콩떡</div>
+      <div className="flex h-[100vh] items-center justify-center bg-[#3E3232] p-5 text-6xl text-white">말랑콩떡</div>
     </StrictMode>
   );
 }
