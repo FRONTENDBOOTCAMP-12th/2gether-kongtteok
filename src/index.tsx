@@ -1,7 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import InputText from '@/components/InputText';
 import Button from './components/Button';
+import InputText from '@/components/InputText';
+import InputButtonSet from './components/InputButtonSet';
 
 const root = document.getElementById('root');
 
@@ -50,6 +51,13 @@ if (root) {
           <Button intent="outlinePink" size="small" inlineSize="fit">
             inline-block button
           </Button>
+        </article>
+
+        <article className="mt-10">
+          <h3 className="pb-4">input + button set</h3>
+          <InputButtonSet inputType="email" labelText="이메일" placeholder="이메일">
+            중복 확인
+          </InputButtonSet>
         </article>
       </section>
     </StrictMode>
