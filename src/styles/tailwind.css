@@ -7,16 +7,5 @@
 @import 'tailwindcss/utilities.css' layer(utilities); */
 
 @theme {
-  /* 디자인 토큰 구성 */
-  --color-euid-gray-200: #d7dadf;
-  --color-primary-500: #1550ff;
-  --color-primary-700: #2402f6;
-  --color-mint-200: #e6f7ff;
-  --color-react: #010d11; /* #440ae6 | #0b7ea4 | #010d11 */
-
-  --breakpoint-xs: 20rem;
-}
-
-@utility wrapper {
-  @apply mx-auto max-w-180 min-w-80;
+  --color-primary: #3e3232;
 }

@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import Header from './components/layout/Header';
 
 const root = document.getElementById('root');
 
@@ -8,7 +9,13 @@ if (root) {
 
   reactDOMRoot.render(
     <StrictMode>
-      <div className="flex h-[100vh] items-center justify-center bg-[#3E3232] p-5 text-6xl text-white">말랑콩떡</div>
+      <section className="p-4">
+        <article className="flex flex-col gap-y-2">
+          <Header title="메인" isLeftIcon={false} isRightIcon={true} />
+          <Header title="알림" isLeftIcon={true} isRightIcon={false} />
+          <Header title="일기장" isLeftIcon={true} isRightIcon={true} />
+        </article>
+      </section>
     </StrictMode>
   );
 }
