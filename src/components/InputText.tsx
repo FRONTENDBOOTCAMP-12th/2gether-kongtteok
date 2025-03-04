@@ -2,11 +2,9 @@ import { tm } from "@/utils/ts-merge";
 import { ComponentProps, useId } from "react";
 
 type InputTextProps = ComponentProps<'input'> & {
-  type?: string;
   labelText: string;
   labelHidden?: boolean;
   defaultValue?: string;
-  placeholder?: string;
 }
 
 function InputText({ type = 'text', labelText, labelHidden = false, ...restProps }:InputTextProps) {
