@@ -19,7 +19,7 @@ function InputText({
   const inputId = useId();
 
   return (
-    <div className={tm("text-primary flex flex-col gap-y-[6px]", className)}>
+    <div className={tm('text-primary flex flex-col gap-y-[6px]', className)}>
       <label htmlFor={inputId} className={tm({ 'sr-only': labelHidden }, 'text-xs leading-[16px]')}>
         {labelText}
       </label>
