@@ -7,7 +7,7 @@ function InputButtonSet({
   placeholder,
   intent,
   size,
-  inlineSize,
+  inlineSize = 'fit',
   disabled,
   children,
 }: InputTextProps & ButtonProps) {
