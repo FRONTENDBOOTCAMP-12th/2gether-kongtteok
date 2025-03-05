@@ -19,7 +19,7 @@ const buttonVariants = cva('cursor-pointer', {
       fit: null,
     },
     disabled: {
-      true: 'cursor-not-allowed!',
+      true: 'disabled:cursor-not-allowed',
       false: null,
     },
   },
@@ -27,7 +27,7 @@ const buttonVariants = cva('cursor-pointer', {
     {
       intent: 'primary',
       disabled: true,
-      className: 'border-brown-200! bg-brown-200!',
+      className: 'disabled:border-brown-200 disabled:bg-brown-200',
     },
     {
       intent: 'secondary',
@@ -49,6 +49,7 @@ const buttonVariants = cva('cursor-pointer', {
 export type ButtonProps = Omit<React.ComponentProps<'button'>, 'disabled'> &
   VariantProps<typeof buttonVariants> & {
     buttonType?: 'button' | 'submit' | 'reset';
+    children: React.ReactNode;
   };
 
 function Button({
@@ -65,7 +66,8 @@ function Button({
     <button
       type={buttonType}
       className={tm(buttonVariants({ intent, size, inlineSize, disabled, className }))}
-      {...restProps}>
+      {...restProps}
+      disabled={disabled || undefined}>
       {children}
     </button>
   );
