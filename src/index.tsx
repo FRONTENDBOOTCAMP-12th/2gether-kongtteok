@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import Button from './components/Button';
 import InputText from '@/components/InputText';
 import InputButtonSet from './components/InputButtonSet';
+import Footer from './components/layout/Footer';
 
 const root = document.getElementById('root');
 
@@ -53,12 +54,14 @@ if (root) {
           </Button>
         </article>
 
-        <article className="mt-10">
+        <article className="mt-10 pb-15">
           <h3 className="pb-4">input + button set</h3>
           <InputButtonSet inputType="email" labelText="이메일" placeholder="이메일">
             중복 확인
           </InputButtonSet>
         </article>
+
+        <Footer />
       </section>
     </StrictMode>
   );
