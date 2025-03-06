@@ -3,6 +3,7 @@ import InputButtonSet from './InputButtonSet';
 import InputText from './InputText';
 import Footer from './layout/Footer';
 import Header from './layout/Header';
+import Tab from './Tab';
 
 function Components() {
   return (
@@ -16,6 +17,10 @@ function Components() {
       <article className="flex flex-col gap-y-2">
         <InputText labelText="아이디" defaultValue="기본 값" placeholder="placeholder" />
         <InputText labelText="비밀번호" type="password" labelHidden={true} />
+      </article>
+      <article className="mt-12 flex flex-col items-start gap-y-2">
+        <h2>탭 컴포넌트</h2>
+        <Tab />
       </article>
       <article className="mt-4 flex flex-col gap-y-2">
         <h2>버튼</h2>
