@@ -63,7 +63,7 @@ function Components() {
         />
       </article>
 
-      <article className="mt-4 flex flex-col gap-y-2">
+      <article className="mt-4 flex flex-col items-start gap-y-2">
         <h2>버튼</h2>
         <h3>Default</h3>
         <Button>버튼</Button>
