@@ -27,7 +27,7 @@ function InputText({
         type={inputType}
         id={inputId}
         placeholder={placeholder}
-        className={tm('w-full px-2 py-[10px]', 'border-primary border', 'rounded-[10px] text-xs leading-none')}
+        className={tm('w-full px-2 py-[10px]', 'border-primary border bg-white', 'rounded-[10px] text-xs leading-none')}
         {...restProps}
       />
     </div>

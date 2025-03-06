@@ -8,7 +8,7 @@ const buttonVariants = cva('cursor-pointer', {
       primary: 'border border-primary bg-primary text-white',
       secondary: 'border border-secondary bg-secondary text-primary',
       outline: 'border border-current text-primary',
-      outlinePink: 'border border-peach-200 text-peach-800',
+      outlinePink: 'border border-peach-600 text-peach-800',
     },
     size: {
       medium: 'px-3 py-[9px] text-sm leading-[18px] rounded-[10px]',
@@ -18,7 +18,7 @@ const buttonVariants = cva('cursor-pointer', {
       full: 'w-full',
       fit: null,
     },
-    disabled: {
+    ariaDisabled: {
       true: 'disabled:cursor-not-allowed',
       false: null,
     },
@@ -26,12 +26,12 @@ const buttonVariants = cva('cursor-pointer', {
   compoundVariants: [
     {
       intent: 'primary',
-      disabled: true,
-      className: 'disabled:border-brown-200 disabled:bg-brown-200',
+      ariaDisabled: true,
+      className: 'aria-disabled:border-brown-200 aria-disabled:bg-brown-200',
     },
     {
       intent: 'secondary',
-      disabled: false,
+      ariaDisabled: false,
     },
     {
       intent: 'primary',
@@ -42,14 +42,15 @@ const buttonVariants = cva('cursor-pointer', {
     intent: 'primary',
     size: 'medium',
     inlineSize: 'full',
-    disabled: false,
+    ariaDisabled: false,
   },
 });
 
-export type ButtonProps = Omit<React.ComponentProps<'button'>, 'disabled'> &
+export type ButtonProps = ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
     buttonType?: 'button' | 'submit' | 'reset';
     children: React.ReactNode;
+    ariaDisabled?: boolean;
   };
 
 function Button({
@@ -58,16 +59,17 @@ function Button({
   intent,
   size,
   inlineSize,
-  disabled,
+  ariaDisabled = false,
   className,
   ...restProps
 }: ButtonProps) {
+  console.log(ariaDisabled);
   return (
     <button
       type={buttonType}
-      className={tm(buttonVariants({ intent, size, inlineSize, disabled, className }))}
+      className={tm(buttonVariants({ intent, size, inlineSize, ariaDisabled, className }))}
       {...restProps}
-      disabled={disabled || undefined}>
+      aria-disabled={ariaDisabled}>
       {children}
     </button>
   );

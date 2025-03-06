@@ -2,6 +2,7 @@ import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Tab from './Tab';
 import Button from './Button';
+import Switch from './Switch';
 import Textarea from './Textarea';
 import InputText from './InputText';
 import EmotionButton from './Emotion';
@@ -18,7 +19,7 @@ function Components() {
   };
 
   return (
-    <section className="p-4 pb-20">
+    <section className="bg-background p-4 pb-20">
       <h1 className="pb-4 text-2xl">공통 컴포넌트</h1>
       <article className="flex flex-col items-start gap-y-2">
         <Header title="메인" isLeftIcon={false} isRightIcon={true} />
@@ -37,8 +38,14 @@ function Components() {
         </InputButtonSet>
       </article>
 
-      <article>
+      <article className="flex flex-col gap-y-2">
         <Textarea label="소개글" />
+        <Textarea label="소개글" labelHidden className="h-[12.5rem]" defaultValue="label 없는 스타일" />
+      </article>
+
+      <article className="mt-15">
+        <h2>Switch</h2>
+        <Switch label="" />
       </article>
 
       <article className="mt-12 flex flex-col items-start gap-y-2">
@@ -60,7 +67,7 @@ function Components() {
         <h2>버튼</h2>
         <h3>Default</h3>
         <Button>버튼</Button>
-        <Button disabled>버튼</Button>
+        <Button ariaDisabled={true}>버튼</Button>
         <Button intent="secondary">버튼</Button>
         <Button intent="outline">버튼</Button>
         <Button intent="outlinePink">버튼</Button>
@@ -97,9 +104,9 @@ function Components() {
         <ToggleButton label="관심사" />
       </article>
 
-      <article>
+      <article className="mt-15">
         <h2>감정 버튼</h2>
-        <div className="grid-col-4 grid">
+        <div className="grid grid-cols-4 gap-x-4">
           <EmotionButton />
           <EmotionButton emotion="happy" />
           <EmotionButton emotion="proud" />
