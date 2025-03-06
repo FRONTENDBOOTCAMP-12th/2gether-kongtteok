@@ -62,14 +62,12 @@ function Button({
   ...restProps
 }: ButtonProps) {
   return (
-    <div className="flex">
-      <button
-        type={buttonType}
-        className={tm(buttonVariants({ intent, size, inlineSize, disabled, className }))}
-        {...restProps}>
-        {children}
-      </button>
-    </div>
+    <button
+      type={buttonType}
+      className={tm(buttonVariants({ intent, size, inlineSize, disabled, className }))}
+      {...restProps}>
+      {children}
+    </button>
   );
 }
 

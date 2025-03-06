@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router';
 import Router from './router';
 
+
 const root = document.getElementById('root');
 
 if (root) {
