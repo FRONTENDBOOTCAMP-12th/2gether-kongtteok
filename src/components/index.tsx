@@ -1,10 +1,11 @@
 import Header from './layout/Header';
 import Footer from './layout/Footer';
+import Tab from './Tab';
 import Button from './Button';
-import InputText from './InputText';
 import Textarea from './Textarea';
-import ToggleButton from './ToggleButton';
+import InputText from './InputText';
 import EmotionButton from './Emotion';
+import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
 
 function Components() {
@@ -33,6 +34,12 @@ function Components() {
       </article>
 
       <article className="mt-12 flex flex-col items-start gap-y-2">
+      <article className="mt-12 flex flex-col items-start gap-y-2">
+        <h2>탭 컴포넌트</h2>
+        <Tab />
+      </article>
+        
+      <article className="mt-4 flex flex-col gap-y-2">
         <h2>버튼</h2>
         <h3>Default</h3>
         <Button>버튼</Button>
