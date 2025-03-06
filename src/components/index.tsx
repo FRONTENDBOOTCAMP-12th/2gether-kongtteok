@@ -65,7 +65,10 @@ function Components() {
 
       <article className="mt-15">
         <h2>Switch</h2>
-        <Switch label="" />
+        <div className="flex flex-col items-start gap-y-3">
+          <Switch label="다크모드" defaultChecked labelHidden />
+          <Switch label="혼자볼래" />
+        </div>
       </article>
 
       <article className="mt-12 flex flex-col items-start gap-y-2">
@@ -92,7 +95,7 @@ function Components() {
         </section>
       </article>
 
-      <article className="mt-4 flex flex-col gap-y-2">
+      <article className="mt-4 flex flex-col items-start gap-y-2">
         <h2>버튼</h2>
         <h3>Default</h3>
         <Button>버튼</Button>
