@@ -19,7 +19,7 @@ const buttonVariants = cva('cursor-pointer', {
       fit: null,
     },
     ariaDisabled: {
-      true: 'disabled:cursor-not-allowed',
+      true: 'aria-disabled:cursor-not-allowed',
       false: null,
     },
   },
