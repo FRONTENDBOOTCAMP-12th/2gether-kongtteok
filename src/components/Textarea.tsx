@@ -13,7 +13,7 @@ function Textarea({ label, labelHidden = false, value, className, ...restProps }
   return (
     <div
       className={tm(
-        'border-primary relative rounded-[10px] border p-3 pr-2',
+        'border-primary relative rounded-[10px] border p-3 pr-2 bg-white',
         { 'mt-[1.375rem]': !labelHidden },
         className
       )}>
