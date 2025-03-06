@@ -8,8 +8,16 @@ import InputText from './InputText';
 import EmotionButton from './Emotion';
 import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
+import ProfileInfo from './ProfileInfo';
 
 function Components() {
+  const profileData = {
+    profileImage: '/logo.webp',
+    nickname: '박윤경',
+    intro: '내 총 어떤데~',
+    interests: ['취미', '직장', '친구'],
+  };
+
   return (
     <section className="bg-background p-4 pb-20">
       <h1 className="pb-4 text-2xl">공통 컴포넌트</h1>
@@ -45,7 +53,17 @@ function Components() {
         <Tab />
       </article>
 
-      <article className="mt-4 flex flex-col items-start gap-y-2">
+      <article className="mt-12">
+        <h2>프로필</h2>
+        <ProfileInfo
+          profileImage={profileData.profileImage}
+          nickname={profileData.nickname}
+          intro={profileData.intro}
+          interests={profileData.interests}
+        />
+      </article>
+
+      <article className="mt-4 flex flex-col gap-y-2">
         <h2>버튼</h2>
         <h3>Default</h3>
         <Button>버튼</Button>
