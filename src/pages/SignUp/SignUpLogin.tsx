@@ -4,6 +4,7 @@ import InputText from '@/components/InputText';
 import Header from '@/components/layout/Header';
 import validator from '@/lib/validator';
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router';
 
 interface FormData {
   userId: string;
@@ -18,7 +19,9 @@ interface Errors {
   duplicatedIdError: string;
 }
 
-const SignUpPage = () => {
+const SignUpLogin = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<FormData>({
     userId: '',
     password: '',
@@ -44,6 +47,12 @@ const SignUpPage = () => {
     }
 
     validateField(name as keyof FormData, value);
+  };
+
+  const handleNext = () => {
+    if (isFormValid) {
+      navigate('/signup_email');
+    }
   };
 
   const validateField = (name: keyof FormData, value: string) => {
@@ -172,11 +181,13 @@ const SignUpPage = () => {
           </fieldset>
         </div>
         <div className="mt-auto">
-          <Button disabled={!isFormValid}>다음</Button>
+          <Button onClick={handleNext} disabled={!isFormValid}>
+            다음
+          </Button>
         </div>
       </form>
     </section>
   );
 };
 
-export default SignUpPage;
+export default SignUpLogin;
