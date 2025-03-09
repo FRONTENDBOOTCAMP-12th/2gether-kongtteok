@@ -7,7 +7,6 @@ import SignUpInterests from './pages/SignUp/SignUpInterests';
 import SignInPage from '@/pages/SignIn/Index';
 import ProfilePage from '@/pages/Profile/Index';
 import DiaryWrite from '@/pages/DiaryWrite/';
-import Components from './components';
 
 export const navList = [
   { path: 'signin', text: '로그인', element: <SignInPage /> },
