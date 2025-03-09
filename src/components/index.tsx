@@ -5,19 +5,21 @@ import Button from './Button';
 import Switch from './Switch';
 import Textarea from './Textarea';
 import InputText from './InputText';
+import AttachFile from './AttachFile';
 import EmotionButton from './Emotion';
 import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
 import ProfileInfo from './ProfileInfo';
+import { Croissant } from '@mynaui/icons-react';
+
+const profileData = {
+  profileImage: '/logo.webp',
+  nickname: '박윤경',
+  intro: '내 총 어떤데~',
+  interests: ['취미', '직장', '친구'],
+};
 
 function Components() {
-  const profileData = {
-    profileImage: '/logo.webp',
-    nickname: '박윤경',
-    intro: '내 총 어떤데~',
-    interests: ['취미', '직장', '친구'],
-  };
-
   return (
     <section className="bg-background p-4 pb-20">
       <h1 className="pb-4 text-2xl">공통 컴포넌트</h1>
@@ -41,6 +43,11 @@ function Components() {
       <article className="flex flex-col gap-y-2">
         <Textarea label="소개글" />
         <Textarea label="소개글" labelHidden className="h-[12.5rem]" defaultValue="label 없는 스타일" />
+      </article>
+
+      <article className="mt-15">
+        <h2>이미지 파일 첨부</h2>
+        <AttachFile label="이미지 첨부" />
       </article>
 
       <article className="mt-15">
@@ -77,6 +84,9 @@ function Components() {
 
         <h3>Default size / inline-block</h3>
         <Button inlineSize="fit">버튼</Button>
+        <Button inlineSize="fit" className="inline-flex items-center justify-center gap-x-1">
+          크라상 먹기 <Croissant width={18} aria-hidden />
+        </Button>
         <Button inlineSize="fit" intent="secondary">
           버튼
         </Button>

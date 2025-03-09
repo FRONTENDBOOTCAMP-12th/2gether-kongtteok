@@ -6,8 +6,27 @@
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities); */
 
+@layer utilities {
+  .max-w-kong {
+    max-width: 27.5rem;
+  }
+}
+
+@layer components {
+  .attach-image {
+    .swiper-slide {
+      img {
+        max-height: 12.5rem;
+        margin: auto;
+      }
+    }
+  }
+}
+
 @theme {
   /* 디자인 토큰 구성 */
+  --max-w-kong: 27.5rem;
+
   --color-primary: #3e3232;
   --color-secondary: #d9c6b9;
   --color-background: #fffbeb;
