@@ -10,7 +10,7 @@ import EmotionButton from './Emotion';
 import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
 import ProfileInfo from './ProfileInfo';
-import DiaryPreview, { DiaryPreviewProps } from './DiaryPreview';
+import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
 import { Croissant } from '@mynaui/icons-react';
 
 const profileData = {
@@ -41,7 +41,7 @@ const diaryData: DiaryPreviewProps[] = [
 
 function Components() {
   return (
-    <section className="bg-background p-4 pb-20">
+    <section className="max-w-kong m-auto p-4 pb-20">
       <h1 className="pb-4 text-2xl">공통 컴포넌트</h1>
       <article className="flex flex-col items-start gap-y-2">
         <Header title="메인" isLeftIcon={false} isRightIcon={true} />
@@ -146,7 +146,7 @@ function Components() {
         <ToggleButton label="관심사" />
       </article>
 
-      <article className="mt-15">
+      <article className="max-w-kong mt-15">
         <h2>감정 버튼</h2>
         <div className="grid grid-cols-4 gap-x-4">
           <EmotionButton />
