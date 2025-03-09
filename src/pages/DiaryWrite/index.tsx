@@ -21,7 +21,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
     <div id="wrap" className="max-w-kong m-auto pb-15">
       <Header title="일기 쓰기" isLeftIcon isRightIcon />
 
-      <main>
+      <main className="px-4">
         <div className="flex flex-col gap-y-3">
           <div className="flex flex-row justify-between items-center mt-2">
             <div className="flex flex-row gap-x-2 items-center">
@@ -38,7 +38,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
           <InputText labelText="제목" labelHidden />
           <div className="relative">
             <AttachFile label="이미지 첨부" className="mr-auto" >
-              <Textarea label="일기 본문" className='h-50' />
+              <Textarea label="일기 본문" labelHidden className='h-50' />
             </AttachFile>
             <Button inlineSize='fit' className="absolute right-0 bottom-0">저장하기</Button>
           </div>
