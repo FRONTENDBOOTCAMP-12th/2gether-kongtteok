@@ -10,6 +10,7 @@ import EmotionButton from './Emotion';
 import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
 import ProfileInfo from './ProfileInfo';
+import DiaryPreview, { DiaryPreviewProps } from './DiaryPreview';
 import { Croissant } from '@mynaui/icons-react';
 
 const profileData = {
@@ -18,6 +19,25 @@ const profileData = {
   intro: '내 총 어떤데~',
   interests: ['취미', '직장', '친구'],
 };
+
+const diaryData: DiaryPreviewProps[] = [
+    {
+      emotion: 'sad',
+      date: '2025-03-06',
+      isPrivate: true,
+      diaryImage: '/images/emotion/sad.png',
+      content:
+        '친구가 타로를 봐줬는데 결과가 좋지 않아서 조금 슬펐어.. 프로젝트가 어떻게 될지 궁금해서 월간 운세를 봤는데 걱정이 된다ㅜㅜ 그래도 열심히 하고 있으니까 잘 해낼 수 있겠지? 조원분들도 힘내주시고 계시니까.. 타로 그거 뭐 다 미신이지!',
+      likes: 3,
+    },
+    {
+      emotion: 'happy',
+      date: '2025-03-07',
+      isPrivate: false,
+      content: '프로젝트 조원들이랑 동기들을 만나서 행복했어!',
+      likes: 12,
+    },
+  ];
 
 function Components() {
   return (
@@ -71,6 +91,15 @@ function Components() {
           intro={profileData.intro}
           interests={profileData.interests}
         />
+      </article>
+
+      <article className="mt-12">
+        <h2>일기 프리뷰</h2>
+        <section className="flex flex-col gap-[12px]">
+          {diaryData.map((diary, index) => (
+            <DiaryPreview key={index} {...diary} />
+          ))}
+        </section>
       </article>
 
       <article className="mt-4 flex flex-col items-start gap-y-2">
