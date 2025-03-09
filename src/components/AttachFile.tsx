@@ -1,8 +1,8 @@
 import React, { ComponentProps, useId, useState } from 'react';
 import Button from './Button';
 import { tm } from '@/utils/ts-merge';
-import { Paperclip } from '@mynaui/icons-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Paperclip, Trash } from '@mynaui/icons-react';
 
 type AttachFileProps = ComponentProps<'input'> & {
   label: string;
@@ -14,40 +14,54 @@ function AttachFile({ label, children, className }: AttachFileProps) {
   const id = useId();
 
   const handleAttachFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-
     const file = e.target.files;
 
     if (file) {
-      setImageSrc([...file].map((img) => URL.createObjectURL(img)));
+      setImageSrc((item) =>
+        item
+          ? [...item, ...[...file].map((img) => URL.createObjectURL(img))]
+          : [...file].map((img) => URL.createObjectURL(img))
+      );
     }
+  };
+
+  const handleDelete = (key: string) => {
+    setImageSrc(imageSrc?.filter((img) => img !== key) ?? null);
   };
 
   return (
     <>
-      <Swiper hidden={!imageSrc} slidesPerView={1} className="attach-image max-w-kong max-h-72">
+      <Swiper
+        hidden={!imageSrc}
+        slidesPerView={1}
+        className={tm(
+          'attach-image max-w-kong border-primary max-h-72 rounded-[10px]',
+          imageSrc && imageSrc?.length ? 'mb-3 border' : null
+        )}>
         {imageSrc &&
           imageSrc.map((src) => {
             return (
               <SwiperSlide key={src} className="relative">
                 <img src={src} alt="첨부 이미지" />
                 <Button
-                  intent="secondary"
+                  intent="outline"
                   inlineSize="fit"
                   size="small"
-                  className="absolute top-1 right-1 cursor-pointer">
-                  삭제
+                  onClick={() => {
+                    handleDelete(src);
+                  }}
+                  className="bg-blueberry-200 absolute top-1 right-1 cursor-pointer px-1">
+                  <Trash width={22} height={22} />
                 </Button>
               </SwiperSlide>
             );
           })}
       </Swiper>
+
       {children}
 
-      <label className={tm("relative inline-block", className)}>
-        <Button inlineSize="fit" intent="outline" className="inline-flex items-center mt-3">
+      <label className={tm('relative inline-block', className)}>
+        <Button inlineSize="fit" intent="outline" className="mt-3 inline-flex items-center">
           {label}
           <Paperclip width={18} aria-hidden />
         </Button>
