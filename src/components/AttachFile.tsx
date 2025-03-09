@@ -1,14 +1,15 @@
 import React, { ComponentProps, useId, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Paperclip } from '@mynaui/icons-react';
 import Button from './Button';
+import { tm } from '@/utils/ts-merge';
+import { Paperclip } from '@mynaui/icons-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 type AttachFileProps = ComponentProps<'input'> & {
   label: string;
-  slot?: React.ReactNode;
+  children?: React.ReactNode | undefined;
 };
 
-function AttachFile({ label, slot }: AttachFileProps) {
+function AttachFile({ label, children, className }: AttachFileProps) {
   const [imageSrc, setImageSrc] = useState<string[] | null>(null);
   const id = useId();
 
@@ -26,8 +27,7 @@ function AttachFile({ label, slot }: AttachFileProps) {
 
   return (
     <>
-      {slot}
-      <Swiper slidesPerView={1} className="attach-image max-w-kong max-h-72">
+      <Swiper hidden={!imageSrc} slidesPerView={1} className="attach-image max-w-kong max-h-72">
         {imageSrc &&
           imageSrc.map((src) => {
             return (
@@ -37,16 +37,17 @@ function AttachFile({ label, slot }: AttachFileProps) {
                   intent="secondary"
                   inlineSize="fit"
                   size="small"
-                  className="absolute top-0 right-0 cursor-pointer">
+                  className="absolute top-1 right-1 cursor-pointer">
                   삭제
                 </Button>
               </SwiperSlide>
             );
           })}
       </Swiper>
+      {children}
 
-      <label className="relative inline-block">
-        <Button inlineSize="fit" intent="outline" className="inline-flex items-center">
+      <label className={tm("relative inline-block", className)}>
+        <Button inlineSize="fit" intent="outline" className="inline-flex items-center mt-3">
           {label}
           <Paperclip width={18} aria-hidden />
         </Button>
