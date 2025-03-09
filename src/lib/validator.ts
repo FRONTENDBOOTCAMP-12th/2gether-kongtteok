@@ -20,10 +20,16 @@ export const isEmail = (value: string) => {
   return regExp.test(value);
 };
 
+export const isNickName = (value: string) => {
+  const regExp = /^[a-zA-Z0-9가-힣]{2,8}$/;
+  return regExp.test(value);
+};
+
 const validator = {
   isId,
   isPassword,
   isEmail,
+  isNickName,
 };
 
 export default validator;

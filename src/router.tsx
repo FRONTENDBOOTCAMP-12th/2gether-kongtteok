@@ -3,12 +3,14 @@ import { Route, Routes } from 'react-router';
 import Components from './components';
 import SignUpLogin from './pages/SignUp/SignUpLogin';
 import SignUpEmail from './pages/SignUp/SignUpEmail';
+import SignUpNickName from './pages/SignUp/SignUpNickName';
 
 export const navList = [
   { path: 'signin', text: '로그인', element: <SignInPage /> },
   { path: 'components', text: '컴포넌트 모음', element: <Components /> },
   { path: 'signup_login', text: '회원가입(로그인 정보)', element: <SignUpLogin /> },
   { path: 'signup_email', text: '회원가입(이메일)', element: <SignUpEmail /> },
+  { path: 'signup_nickname', text: '회원가입(닉네임)', element: <SignUpNickName /> },
 ];
 
 const Router = () => {
