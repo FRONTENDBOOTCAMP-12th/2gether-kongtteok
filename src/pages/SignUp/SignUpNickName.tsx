@@ -37,7 +37,7 @@ const SignUpNickName = () => {
 
   const handleNext = () => {
     if (isNickNameValid) {
-      navigate('/signup_nickname');
+      navigate('/signup_interests');
     }
   };
 
