@@ -8,7 +8,6 @@ type SwitchProps = ComponentProps<'input'> & {
 
 function Switch({ label, labelHidden, ...restProps }: SwitchProps) {
   const id = useId();
-  console.log(label, labelHidden);
 
   return (
     <label htmlFor={id} className="relative inline-flex h-[15px] items-center justify-center gap-x-2">

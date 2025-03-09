@@ -11,7 +11,7 @@ const buttonVariants = cva('cursor-pointer', {
       outlinePink: 'border border-peach-600 text-peach-800',
     },
     size: {
-      medium: 'px-3 py-[9px] text-sm leading-[18px] rounded-[10px]',
+      medium: 'px-3 py-1.5 text-sm leading-6 rounded-[10px]',
       small: 'py-[5px] px-3 text-[13px] leading-[17px] rounded-lg',
     },
     inlineSize: {
@@ -48,9 +48,12 @@ const buttonVariants = cva('cursor-pointer', {
 
 export type ButtonProps = ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
-    buttonType?: 'button' | 'submit' | 'reset';
     children: React.ReactNode;
+    buttonType?: 'button' | 'submit' | 'reset';
     ariaDisabled?: boolean;
+    intent?: 'primary' | 'secondary' | 'outline' | 'outlinePink';
+    size?: 'medium' | 'small';
+    inlineSize?: 'full' | 'fit';
   };
 
 function Button({
@@ -63,7 +66,6 @@ function Button({
   className,
   ...restProps
 }: ButtonProps) {
-  console.log(ariaDisabled);
   return (
     <button
       type={buttonType}
