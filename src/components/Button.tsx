@@ -8,30 +8,30 @@ const buttonVariants = cva('cursor-pointer', {
       primary: 'border border-primary bg-primary text-white',
       secondary: 'border border-secondary bg-secondary text-primary',
       outline: 'border border-current text-primary',
-      outlinePink: 'border border-peach-200 text-peach-800',
+      outlinePink: 'border border-peach-600 text-peach-800',
     },
     size: {
-      medium: 'px-3 py-[9px] text-sm leading-[18px] rounded-[10px]',
+      medium: 'px-3 py-1.5 text-sm leading-6 rounded-[10px]',
       small: 'py-[5px] px-3 text-[13px] leading-[17px] rounded-lg',
     },
     inlineSize: {
       full: 'w-full',
       fit: null,
     },
-    disabled: {
-      true: 'disabled:cursor-not-allowed',
+    ariaDisabled: {
+      true: 'aria-disabled:cursor-not-allowed',
       false: null,
     },
   },
   compoundVariants: [
     {
       intent: 'primary',
-      disabled: true,
-      className: 'disabled:border-brown-200 disabled:bg-brown-200',
+      ariaDisabled: true,
+      className: 'aria-disabled:border-brown-200 aria-disabled:bg-brown-200',
     },
     {
       intent: 'secondary',
-      disabled: false,
+      ariaDisabled: false,
     },
     {
       intent: 'primary',
@@ -42,14 +42,18 @@ const buttonVariants = cva('cursor-pointer', {
     intent: 'primary',
     size: 'medium',
     inlineSize: 'full',
-    disabled: false,
+    ariaDisabled: false,
   },
 });
 
-export type ButtonProps = Omit<React.ComponentProps<'button'>, 'disabled'> &
+export type ButtonProps = ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
-    buttonType?: 'button' | 'submit' | 'reset';
     children: React.ReactNode;
+    buttonType?: 'button' | 'submit' | 'reset';
+    ariaDisabled?: boolean;
+    intent?: 'primary' | 'secondary' | 'outline' | 'outlinePink';
+    size?: 'medium' | 'small';
+    inlineSize?: 'full' | 'fit';
   };
 
 function Button({
@@ -58,16 +62,16 @@ function Button({
   intent,
   size,
   inlineSize,
-  disabled,
+  ariaDisabled = false,
   className,
   ...restProps
 }: ButtonProps) {
   return (
     <button
       type={buttonType}
-      className={tm(buttonVariants({ intent, size, inlineSize, disabled, className }))}
+      className={tm(buttonVariants({ intent, size, inlineSize, ariaDisabled, className }))}
       {...restProps}
-      disabled={disabled || undefined}>
+      aria-disabled={ariaDisabled}>
       {children}
     </button>
   );

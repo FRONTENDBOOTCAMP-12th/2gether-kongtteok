@@ -5,6 +5,7 @@ import SignUpLogin from './pages/SignUp/SignUpLogin';
 import SignUpEmail from './pages/SignUp/SignUpEmail';
 import SignUpNickName from './pages/SignUp/SignUpNickName';
 import SignUpInterests from './pages/SignUp/SignUpInterests';
+import ProfilePage from '@/pages/Profile/Index';
 
 export const navList = [
   { path: 'signin', text: '로그인', element: <SignInPage /> },
@@ -13,6 +14,7 @@ export const navList = [
   { path: 'signup_email', text: '회원가입(이메일)', element: <SignUpEmail /> },
   { path: 'signup_nickname', text: '회원가입(닉네임)', element: <SignUpNickName /> },
   { path: 'signup_interests', text: '회원가입(관심사)', element: <SignUpInterests /> },
+  { path: '/profile', text: '프로필', element: <ProfilePage /> },
 ];
 
 const Router = () => {
