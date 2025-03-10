@@ -1,5 +1,5 @@
 export const isId = (value: string) => {
-  const regExp = /^[a-zA-Z0-9]{6,}$/;
+  const regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,}$/;
   return regExp.test(value);
 };
 
@@ -20,7 +20,7 @@ export const isEmail = (value: string) => {
   return regExp.test(value);
 };
 
-export const isNickName = (value: string) => {
+export const isNickname = (value: string) => {
   const regExp = /^[a-zA-Z0-9가-힣]{2,8}$/;
   return regExp.test(value);
 };
@@ -29,7 +29,7 @@ const validator = {
   isId,
   isPassword,
   isEmail,
-  isNickName,
+  isNickname,
 };
 
 export default validator;
