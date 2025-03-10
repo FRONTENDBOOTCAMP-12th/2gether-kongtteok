@@ -12,7 +12,7 @@ const buttonVariants = cva('cursor-pointer', {
     },
     size: {
       medium: 'px-3 py-1.5 text-sm leading-6 rounded-[10px]',
-      small: 'py-[5px] px-3 text-[13px] leading-[17px] rounded-lg',
+      small: 'py-[3px] px-3 text-[13px] leading-5 rounded-lg',
     },
     inlineSize: {
       full: 'w-full',

@@ -2,19 +2,19 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/Button';
 import Switch from '@/components/Switch';
+import Textarea from '@/components/Textarea';
 import InputText from '@/components/InputText';
 import AttachFile from '@/components/AttachFile';
-import Textarea from '@/components/Textarea';
-
-interface DiaryWriteProps {
-  date?: string;
-}
 
 const arrowIcon = (
   <svg width={9} height={6} viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M8.30297 0.891784L4.65148 5.10815L1 0.891784" stroke="#3E3232" strokeLinejoin="bevel" />
   </svg>
-)
+);
+
+interface DiaryWriteProps {
+  date?: string;
+}
 
 function DiaryWrite({ date }: DiaryWriteProps) {
   return (
@@ -23,13 +23,21 @@ function DiaryWrite({ date }: DiaryWriteProps) {
 
       <main className="px-4">
         <div className="flex flex-col gap-y-3">
-          <div className="flex flex-row justify-between items-center mt-2">
-            <div className="flex flex-row gap-x-2 items-center">
-              <span className="text-[15px] text-primary">{date ?? '2025.03.09'}</span>
-              <Button intent="outline" size="small" inlineSize="fit" className="flex flex-row gap-x-1.5 items-center bg-white">
+          <div className="mt-2 flex flex-row items-center justify-between">
+            <div className="flex flex-row items-center gap-x-2">
+              <span className="text-primary text-[15px] leading-3.5">{date ?? '2025.03.09'}</span>
+              <Button
+                intent="outline"
+                size="small"
+                inlineSize="fit"
+                className="flex flex-row items-center gap-x-1.5 bg-white px-1.5">
                 날씨{arrowIcon}
               </Button>
-              <Button intent="outline" size="small" inlineSize="fit" className="flex flex-row gap-x-1.5 items-center bg-white">
+              <Button
+                intent="outline"
+                size="small"
+                inlineSize="fit"
+                className="flex flex-row items-center gap-x-1.5 bg-white px-1.5">
                 감정{arrowIcon}
               </Button>
             </div>
@@ -37,10 +45,12 @@ function DiaryWrite({ date }: DiaryWriteProps) {
           </div>
           <InputText labelText="제목" labelHidden />
           <div className="relative">
-            <AttachFile label="이미지 첨부" className="mr-auto" >
-              <Textarea label="일기 본문" labelHidden className='h-50' />
+            <AttachFile label="이미지 첨부">
+              <Textarea label="일기 본문" labelHidden className="h-50" />
             </AttachFile>
-            <Button inlineSize='fit' className="absolute right-0 bottom-0">저장하기</Button>
+            <Button inlineSize="fit" className="absolute right-0 bottom-0">
+              저장하기
+            </Button>
           </div>
         </div>
       </main>
