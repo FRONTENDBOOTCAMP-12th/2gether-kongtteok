@@ -19,10 +19,22 @@ function ToggleButton({ type = 'checkbox', label, isActive, className, onClick, 
 
   const inputClasses = 'absolute inset-0 z-0 cursor-pointer appearance-none border-transparent';
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.checked);
+  };
+
   return (
     <label className={labelClasses} htmlFor={id}>
       {label}
-      <input type={type} id={id} checked={isActive} onClick={onClick} {...restProps} className={inputClasses} />
+      <input
+        type={type}
+        id={id}
+        checked={isActive}
+        onChange={handleChange}
+        onClick={onClick}
+        {...restProps}
+        className={inputClasses}
+      />
     </label>
   );
 }
