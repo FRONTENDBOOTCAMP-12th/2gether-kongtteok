@@ -4,26 +4,25 @@ import { tm } from '@/utils/ts-merge';
 type ToggleButtonProps = ComponentProps<'input'> & {
   label: string;
   className?: string;
+  isActive?: boolean;
 };
 
-function ToggleButton({ type = 'checkbox', label, defaultChecked, className, ...restProps }: ToggleButtonProps) {
+function ToggleButton({ type = 'checkbox', label, isActive, className, onClick, ...restProps }: ToggleButtonProps) {
   const id = useId();
 
+  const labelClasses = tm(
+    'relative z-10 inline-block rounded-lg border px-3 py-[7px] text-sm leading-[18px]',
+    'border-primary text-primary flex items-center justify-center text-center',
+    isActive ? 'bg-primary text-background border-transparent' : '',
+    className
+  );
+
+  const inputClasses = 'absolute inset-0 z-0 cursor-pointer appearance-none border-transparent';
+
   return (
-    <label
-      className={tm(
-        'has-checked:text-background has-checked:bg-primary border-primary text-primary relative z-10 inline-block rounded-lg border px-3 py-[7px] text-sm leading-[18px] has-checked:border-transparent',
-        className
-      )}
-      htmlFor={id}>
+    <label className={labelClasses} htmlFor={id}>
       {label}
-      <input
-        type={type}
-        id={id}
-        defaultChecked={defaultChecked}
-        {...restProps}
-        className="absolute inset-0 z-0 cursor-pointer appearance-none border-transparent"
-      />
+      <input type={type} id={id} checked={isActive} onClick={onClick} {...restProps} className={inputClasses} />
     </label>
   );
 }
