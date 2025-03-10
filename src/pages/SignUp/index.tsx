@@ -19,7 +19,7 @@ interface Errors {
   duplicatedIdError: string;
 }
 
-const SignUpLogin = () => {
+const SignUp = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>({
@@ -51,7 +51,7 @@ const SignUpLogin = () => {
 
   const handleNext = () => {
     if (isFormValid) {
-      navigate('/signup_email');
+      navigate('/signup/email');
     }
   };
 
@@ -181,7 +181,7 @@ const SignUpLogin = () => {
           </fieldset>
         </div>
         <div className="mt-auto">
-          <Button onClick={handleNext} disabled={!isFormValid}>
+          <Button onClick={handleNext} ariaDisabled={!isFormValid}>
             다음
           </Button>
         </div>
@@ -190,4 +190,4 @@ const SignUpLogin = () => {
   );
 };
 
-export default SignUpLogin;
+export default SignUp;

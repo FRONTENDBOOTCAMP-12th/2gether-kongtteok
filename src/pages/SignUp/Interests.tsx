@@ -90,7 +90,7 @@ const SignUpInterests = () => {
         </div>
 
         <div className="mt-auto">
-          <Button disabled={!isValid} onClick={handleNext}>
+          <Button ariaDisabled={!isValid} onClick={handleNext}>
             다음
           </Button>
         </div>

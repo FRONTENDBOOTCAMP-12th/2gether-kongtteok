@@ -1,7 +1,14 @@
 import Button from '@/components/Button';
 import InputText from '@/components/InputText';
+import { useNavigate } from 'react-router';
 
 function SignInPage() {
+  const navigate = useNavigate();
+
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
+
   return (
     <section className="bg-background flex min-h-dvh flex-col items-center justify-center p-4">
       <header className="flex flex-grow items-center justify-center">
@@ -22,7 +29,9 @@ function SignInPage() {
 
         <div className="flex flex-col gap-3">
           <Button>로그인</Button>
-          <Button intent="secondary">회원가입</Button>
+          <Button intent="secondary" onClick={handleSignUp}>
+            회원가입
+          </Button>
         </div>
       </form>
     </section>
