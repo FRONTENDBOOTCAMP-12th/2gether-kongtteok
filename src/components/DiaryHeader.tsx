@@ -12,7 +12,7 @@ export type DiaryHeaderProps = {
 const DiaryHeader = ({ date, weather, emotion, title }: DiaryHeaderProps) => {
   return (
     <section
-      className="flex h-[78px] w-[288px] items-center justify-between rounded-[12px] border border-[#3E3232] bg-[#FFFFFF] px-4 py-3"
+      className="flex h-auto w-full items-center justify-between rounded-[12px] border border-[#3E3232] bg-[#FFFFFF] px-4 py-3"
       aria-labelledby="diary-header-title">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
