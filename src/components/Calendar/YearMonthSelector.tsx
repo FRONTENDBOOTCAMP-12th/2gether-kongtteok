@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { ChevronDownSolid } from '@mynaui/icons-react';
 
 interface YearMonthSelectorProps {
@@ -6,40 +6,50 @@ interface YearMonthSelectorProps {
   onMonthChange: (month: string) => void;
 }
 
-function YearMonthSelector({ selectedMonth, onMonthChange }: YearMonthSelectorProps) {
+const YearMonthSelector = memo(function YearMonthSelector({ selectedMonth, onMonthChange }: YearMonthSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [year, month] = selectedMonth.split('-');
   const formattedMonth = `${year}년 ${parseInt(month, 10)}월`;
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
 
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const { currentYear, currentMonth, years, months } = React.useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-  const handleMonthClick = () => {
-    setIsOpen(!isOpen);
-  };
+    return { currentYear, currentMonth, years, months };
+  }, []);
 
-  const handleYearSelect = (selectedYear: number) => {
-    const newMonth = parseInt(month, 10);
+  const handleMonthClick = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
 
-    if (selectedYear === currentYear && newMonth > currentMonth) {
-      onMonthChange(`${selectedYear}-${String(currentMonth).padStart(2, '0')}`);
-    } else {
-      onMonthChange(`${selectedYear}-${month}`);
-    }
-    setIsOpen(false);
-  };
+  const handleYearSelect = useCallback(
+    (selectedYear: number) => {
+      const newMonth = parseInt(month, 10);
 
-  const handleMonthSelect = (selectedMonth: number) => {
-    const newYear = parseInt(year, 10);
-    if (newYear === currentYear && selectedMonth > currentMonth) {
-      return;
-    }
-    onMonthChange(`${year}-${String(selectedMonth).padStart(2, '0')}`);
-    setIsOpen(false);
-  };
+      if (selectedYear === currentYear && newMonth > currentMonth) {
+        onMonthChange(`${selectedYear}-${String(currentMonth).padStart(2, '0')}`);
+      } else {
+        onMonthChange(`${selectedYear}-${month}`);
+      }
+      setIsOpen(false);
+    },
+    [month, currentYear, currentMonth, onMonthChange]
+  );
+
+  const handleMonthSelect = useCallback(
+    (selectedMonth: number) => {
+      const newYear = parseInt(year, 10);
+      if (newYear === currentYear && selectedMonth > currentMonth) {
+        return;
+      }
+      onMonthChange(`${year}-${String(selectedMonth).padStart(2, '0')}`);
+      setIsOpen(false);
+    },
+    [year, currentYear, currentMonth, onMonthChange]
+  );
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -106,6 +116,6 @@ function YearMonthSelector({ selectedMonth, onMonthChange }: YearMonthSelectorPr
       )}
     </div>
   );
-}
+});
 
 export default YearMonthSelector;
