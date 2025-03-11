@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Header from './layout/Header';
 import Footer from './layout/Footer';
 import Tab from './Tab';
@@ -5,39 +6,51 @@ import Button from './Button';
 import Switch from './Switch';
 import Textarea from './Textarea';
 import InputText from './InputText';
-import EmotionButton from './Emotion';
+import AttachFile from './AttachFile';
+import EmotionButton from './EmotionButton';
 import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
 import ProfileInfo from './ProfileInfo';
-import DiaryPreview, { DiaryPreviewProps } from './DiaryPreview';
-import DiaryHeader, { DiaryHeaderProps } from './DiaryHeader';
+import BottomSheet from '@/BottomSheet';
+import DiaryHeader, { type DiaryHeaderProps } from './DiaryHeader';
+import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
+import { Croissant } from '@mynaui/icons-react';
+
+const profileData = {
+  profileImage: '/logo.webp',
+  nickname: '박윤경',
+  intro: '내 총 어떤데~',
+  interests: ['취미', '직장', '친구'],
+};
+
+const diaryData: DiaryPreviewProps[] = [
+  {
+    emotion: 'sad',
+    date: '2025-03-06',
+    isPrivate: true,
+    diaryImage: '/images/emotion/sad.png',
+    content:
+      '친구가 타로를 봐줬는데 결과가 좋지 않아서 조금 슬펐어.. 프로젝트가 어떻게 될지 궁금해서 월간 운세를 봤는데 걱정이 된다ㅜㅜ 그래도 열심히 하고 있으니까 잘 해낼 수 있겠지? 조원분들도 힘내주시고 계시니까.. 타로 그거 뭐 다 미신이지!',
+    likes: 3,
+  },
+  {
+    emotion: 'happy',
+    date: '2025-03-07',
+    isPrivate: false,
+    content: '프로젝트 조원들이랑 동기들을 만나서 행복했어!',
+    likes: 12,
+  },
+];
 
 function Components() {
-  const profileData = {
-    profileImage: '/logo.webp',
-    nickname: '박윤경',
-    intro: '내 총 어떤데~',
-    interests: ['취미', '직장', '친구'],
-  };
+  const [bottomSheet, setBottomSheet] = useState<boolean>(false);
 
-  const diaryData: DiaryPreviewProps[] = [
-    {
-      emotion: 'sad',
-      date: '2025-03-06',
-      isPrivate: true,
-      diaryImage: '/images/emotion/sad.png',
-      content:
-        '친구가 타로를 봐줬는데 결과가 좋지 않아서 조금 슬펐어.. 프로젝트가 어떻게 될지 궁금해서 월간 운세를 봤는데 걱정이 된다ㅜㅜ 그래도 열심히 하고 있으니까 잘 해낼 수 있겠지? 조원분들도 힘내주시고 계시니까.. 타로 그거 뭐 다 미신이지!',
-      likes: 3,
-    },
-    {
-      emotion: 'happy',
-      date: '2025-03-07',
-      isPrivate: false,
-      content: '프로젝트 조원들이랑 동기들을 만나서 행복했어!',
-      likes: 12,
-    },
-  ];
+  const openBottomSheet = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setBottomSheet(true);
+  };
+  const closeBottomSheet = () => {
+    setBottomSheet(false);
+  };
 
   const diaryHeaderData: DiaryHeaderProps = {
     date: '2025년 2월 14일',
@@ -47,7 +60,7 @@ function Components() {
   };
 
   return (
-    <section className="bg-background p-4 pb-20">
+    <section className="max-w-kong m-auto p-4 pb-20">
       <h1 className="pb-4 text-2xl">공통 컴포넌트</h1>
       <article className="flex flex-col items-start gap-y-2">
         <Header title="메인" isLeftIcon={false} isRightIcon={true} />
@@ -68,6 +81,11 @@ function Components() {
         <Textarea label="소개글" />
         <Textarea label="소개글" labelHidden className="h-[12.5rem]" defaultValue="label 없는 스타일" />
       </article>
+      <article className="mt-15">
+        <h2>이미지 파일 첨부</h2>
+        <AttachFile label="이미지 첨부" />
+      </article>
+
       <article className="mt-15">
         <h2>Switch</h2>
         <div className="flex flex-col items-start gap-y-3">
@@ -111,6 +129,9 @@ function Components() {
 
         <h3>Default size / inline-block</h3>
         <Button inlineSize="fit">버튼</Button>
+        <Button inlineSize="fit" className="inline-flex items-center justify-center gap-x-1">
+          크라상 먹기 <Croissant width={18} aria-hidden />
+        </Button>
         <Button inlineSize="fit" intent="secondary">
           버튼
         </Button>
@@ -139,7 +160,25 @@ function Components() {
         <h2>토글 버튼(checkbox / radio)</h2>
         <ToggleButton label="관심사" />
       </article>
-      <article className="mt-15">
+
+      <article className="mt-12">
+        <h2>바텀시트</h2>
+        <Button onClick={openBottomSheet}>바텀시트 열기</Button>
+        <BottomSheet isOpen={bottomSheet} title="감정 선택" handleClose={closeBottomSheet}>
+          <div className="grid grid-cols-4 justify-items-center gap-y-4 pb-1">
+            <EmotionButton className="w-15" />
+            <EmotionButton emotion="happy" title="happy" className="w-15" />
+            <EmotionButton emotion="proud" title="proud" className="w-15" />
+            <EmotionButton emotion="fine" title="fine" className="w-15" />
+            <EmotionButton emotion="angry" title="angry" className="w-15" />
+            <EmotionButton emotion="tired" title="tired" className="w-15" />
+            <EmotionButton emotion="sad" title="sad" className="w-15" />
+            <EmotionButton emotion="depressed" title="depressed" className="w-15" />
+          </div>
+        </BottomSheet>
+      </article>
+
+      <article className="max-w-kong mt-15">
         <h2>감정 버튼</h2>
         <div className="grid grid-cols-4 gap-x-4">
           <EmotionButton />

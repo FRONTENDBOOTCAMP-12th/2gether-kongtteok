@@ -1,4 +1,5 @@
 import { BellSolid, ChevronLeft, CogFourSolid } from '@mynaui/icons-react';
+import { useNavigate } from 'react-router';
 
 interface TopHeaderProps {
   title: string;
@@ -7,13 +8,20 @@ interface TopHeaderProps {
 }
 
 function Header({ title, isLeftIcon = false, isRightIcon = false }: TopHeaderProps) {
+  const navigate = useNavigate();
+
+  const handleBackClick = () => {
+    navigate(-1);
+  };
+
   return (
     <header className="relative flex h-[3.125rem] w-full max-w-[27.5rem] items-center justify-center text-base font-medium">
       {isLeftIcon && (
         <button
           type="button"
           className="absolute -left-2 flex size-8 items-center justify-center"
-          aria-label="뒤로 가기">
+          aria-label="뒤로 가기"
+          onClick={handleBackClick}>
           <ChevronLeft className="text-primary size-4" aria-hidden="true" />
         </button>
       )}
