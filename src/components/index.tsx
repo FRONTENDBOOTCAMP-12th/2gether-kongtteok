@@ -15,6 +15,7 @@ import BottomSheet from '@/BottomSheet';
 import DiaryHeader, { type DiaryHeaderProps } from './DiaryHeader';
 import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
 import { Croissant } from '@mynaui/icons-react';
+import Calendar from './Calendar';
 
 const profileData = {
   profileImage: '/logo.webp',
@@ -191,6 +192,11 @@ function Components() {
           <EmotionButton emotion="depressed" />
         </div>
       </article>
+
+      <article className="mt-12">
+        <Calendar />
+      </article>
+      
       <Footer />
     </section>
   );
