@@ -12,6 +12,7 @@ import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
 import ProfileInfo from './ProfileInfo';
 import BottomSheet from '@/BottomSheet';
+import DiaryHeader, { type DiaryHeaderProps } from './DiaryHeader';
 import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
 import { Croissant } from '@mynaui/icons-react';
 import Calendar from './Calendar';
@@ -52,6 +53,13 @@ function Components() {
     setBottomSheet(false);
   };
 
+  const diaryHeaderData: DiaryHeaderProps = {
+    date: '2025년 2월 14일',
+    weather: 'sunny',
+    emotion: 'happy',
+    title: '랜선탈출모임',
+  };
+
   return (
     <section className="max-w-kong m-auto p-4 pb-20">
       <h1 className="pb-4 text-2xl">공통 컴포넌트</h1>
@@ -64,19 +72,16 @@ function Components() {
         <InputText labelText="아이디" defaultValue="기본 값" placeholder="placeholder" />
         <InputText labelText="비밀번호" type="password" labelHidden={true} />
       </article>
-
       <article className="mt-10 pb-15">
         <h3 className="pb-4">input + button set</h3>
         <InputButtonSet inputType="email" labelText="이메일" placeholder="이메일">
           중복 확인
         </InputButtonSet>
       </article>
-
       <article className="flex flex-col gap-y-2">
         <Textarea label="소개글" />
         <Textarea label="소개글" labelHidden className="h-[12.5rem]" defaultValue="label 없는 스타일" />
       </article>
-
       <article className="mt-15">
         <h2>이미지 파일 첨부</h2>
         <AttachFile label="이미지 첨부" />
@@ -89,12 +94,10 @@ function Components() {
           <Switch label="혼자볼래" />
         </div>
       </article>
-
       <article className="mt-12 flex flex-col items-start gap-y-2">
         <h2>탭 컴포넌트</h2>
         <Tab />
       </article>
-
       <article className="mt-12">
         <h2>프로필</h2>
         <ProfileInfo
@@ -104,7 +107,10 @@ function Components() {
           interests={profileData.interests}
         />
       </article>
-
+      <article className="mt-12">
+        <h2>일기 헤더</h2>
+        <DiaryHeader {...diaryHeaderData} />
+      </article>
       <article className="mt-12">
         <h2>일기 프리뷰</h2>
         <section className="flex flex-col gap-[12px]">
@@ -113,7 +119,6 @@ function Components() {
           ))}
         </section>
       </article>
-
       <article className="mt-4 flex flex-col items-start gap-y-2">
         <h2>버튼</h2>
         <h3>Default</h3>
@@ -152,7 +157,6 @@ function Components() {
           inline-block button
         </Button>
       </article>
-
       <article className="mt-12 flex flex-col items-start gap-y-2">
         <h2>토글 버튼(checkbox / radio)</h2>
         <ToggleButton label="관심사" />
@@ -192,7 +196,7 @@ function Components() {
       <article className="mt-12">
         <Calendar />
       </article>
-
+      
       <Footer />
     </section>
   );

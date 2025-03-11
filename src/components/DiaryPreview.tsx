@@ -1,8 +1,7 @@
 import { LockSolid, LockOpenSolid, Heart } from '@mynaui/icons-react';
-import EmotionImage from '@/components/EmotionImage';
+import EmotionImage, { type EmotionProps } from '@/components/EmotionImage';
 
-export type DiaryPreviewProps = {
-  emotion: 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
+export type DiaryPreviewProps = Pick<Required<EmotionProps>, 'emotion'> & {
   date: string;
   isPrivate: boolean;
   diaryImage?: string;
