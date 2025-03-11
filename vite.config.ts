@@ -26,6 +26,9 @@ const viteConfig = defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  optimizeDeps: {
+    include: ['swiper'],
+  },
 });
 
 export default viteConfig;
