@@ -3,16 +3,26 @@ import { ComponentProps, useId } from 'react';
 
 type SwitchProps = ComponentProps<'input'> & {
   label: string;
-  labelHidden?: boolean | undefined;
+  labelHidden?: boolean;
+  checked?: boolean;
 };
 
-function Switch({ label, labelHidden, ...restProps }: SwitchProps) {
+function Switch({ label, labelHidden, checked, ...restProps }: SwitchProps) {
   const id = useId();
 
   return (
-    <label htmlFor={id} className="relative inline-flex h-[15px] items-center justify-center gap-x-2">
-      <span className={tm('text-primary text-xs leading-4', { 'sr-only': labelHidden })}>{label}</span>
-      <input type="checkbox" id={id} className="peer absolute inset-0 cursor-pointer appearance-none" {...restProps} />
+    <label htmlFor={id} className="relative inline-flex items-center gap-x-2">
+      <span className={tm('text-brown-700 min-w-[60px] text-right text-xs', { 'sr-only': labelHidden })}>
+        {checked ? '혼자보기' : '자랑하기'}
+      </span>
+      <input
+        type="checkbox"
+        id={id}
+        className="peer absolute inset-0 cursor-pointer appearance-none"
+        checked={checked}
+        readOnly
+        {...restProps}
+      />
       <span
         className={tm(
           'bg-brown-100 h-[7px] w-7 rounded-sm transition-[background]',
