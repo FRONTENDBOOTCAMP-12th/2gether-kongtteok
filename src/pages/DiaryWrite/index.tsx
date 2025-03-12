@@ -114,7 +114,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
           imageFileList.current.map(async (file) => await uploadFile({ date: '2025-03-12', user_id: 'kong', file }))
         )
           .then((res) => {
-            imageFilesPath.current = res.map(({ data }) => data?.path);
+            // imageFilesPath.current = res.map(({ data }) => data?.path);
           })
           .then(async () => {
             console.log(diaryData);
