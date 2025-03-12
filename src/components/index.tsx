@@ -16,6 +16,7 @@ import DiaryHeader, { type DiaryHeaderProps } from './DiaryHeader';
 import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
 import { Croissant } from '@mynaui/icons-react';
 import Calendar from './Calendar';
+import EmotionBarChart from './Chart';
 
 const profileData = {
   profileImage: '/logo.webp',
@@ -196,7 +197,11 @@ function Components() {
       <article className="mt-12">
         <Calendar />
       </article>
-      
+
+      <article className="mt-12">
+        <EmotionBarChart />
+      </article>
+
       <Footer />
     </section>
   );
