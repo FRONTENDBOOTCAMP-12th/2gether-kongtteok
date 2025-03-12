@@ -14,13 +14,14 @@ import { getGPTResponse } from '@/utils/openai';
 import 'swiper/css';
 
 interface DiaryViewProps extends Pick<EmotionProps, 'emotion'> {
-  date?: string;
-  title?: string;
+  id: number;
+  date: string;
+  title: string;
   content?: string;
-  weather?: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
-  isPrivate?: boolean;
+  weather: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
+  isPrivate: boolean;
   likes?: number;
-  images?: string[];
+  images: string[];
 }
 
 function DiaryView() {
