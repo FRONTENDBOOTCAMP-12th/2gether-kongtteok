@@ -8,20 +8,19 @@ import Switch from '@/components/Switch';
 import DiaryHeader from '@/components/DiaryHeader';
 import Textarea from '@/components/Textarea';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { type EmotionProps } from '@/components/EmotionImage';
 import { Heart } from '@mynaui/icons-react';
 import { getGPTResponse } from '@/utils/openai';
 import 'swiper/css';
 
-interface DiaryViewProps {
-  id: number;
-  date: string;
-  title: string;
-  content: string;
-  weather: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
-  emotion: 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
-  isPrivate: boolean;
-  likes: number;
-  images: string[];
+interface DiaryViewProps extends Pick<EmotionProps, 'emotion'> {
+  date?: string;
+  title?: string;
+  content?: string;
+  weather?: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
+  isPrivate?: boolean;
+  likes?: number;
+  images?: string[];
 }
 
 function DiaryView() {

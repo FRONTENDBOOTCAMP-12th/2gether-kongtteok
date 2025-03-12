@@ -2,7 +2,11 @@ import React, { ComponentProps, useId, useState } from 'react';
 import Button from './Button';
 import { tm } from '@/utils/ts-merge';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { A11y, Navigation } from 'swiper/modules';
 import { Paperclip, Trash } from '@mynaui/icons-react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 type AttachFileProps = ComponentProps<'input'> & {
   label: string;
@@ -33,6 +37,8 @@ function AttachFile({ label, children, className }: AttachFileProps) {
     <>
       <Swiper
         hidden={!imageSrc}
+        modules={[Navigation, A11y]}
+        navigation={(imageSrc && imageSrc.length > 1) || undefined}
         slidesPerView={1}
         className={tm(
           'attach-image max-w-kong border-primary max-h-72 rounded-[10px]',
