@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { supabase } from '@/lib/supabase-client';
+import supabase from '@/lib/supabase-client';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Button from '@/components/Button';
@@ -14,13 +14,14 @@ import { getGPTResponse } from '@/utils/openai';
 import 'swiper/css';
 
 interface DiaryViewProps extends Pick<EmotionProps, 'emotion'> {
-  date?: string;
-  title?: string;
+  id: number;
+  date: string;
+  title: string;
   content?: string;
-  weather?: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
-  isPrivate?: boolean;
+  weather: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
+  isPrivate: boolean;
   likes?: number;
-  images?: string[];
+  images: string[];
 }
 
 function DiaryView() {
