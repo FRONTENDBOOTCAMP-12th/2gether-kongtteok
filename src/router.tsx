@@ -7,6 +7,7 @@ import SignUpInterests from '@/pages/SignUp/Interests';
 import SignInPage from '@/pages/SignIn/Index';
 import ProfilePage from '@/pages/Profile/Index';
 import DiaryWrite from '@/pages/DiaryWrite/';
+import DiaryView from '@/pages/DiaryView';
 
 export const navList = [
   { path: 'signin', text: '로그인', element: <SignInPage /> },
@@ -16,6 +17,7 @@ export const navList = [
   { path: 'signup/interests', text: '회원가입(관심사)', element: <SignUpInterests /> },
   { path: 'diaryWrite', text: '일기 쓰기', element: <DiaryWrite /> },
   { path: 'profile', text: '프로필', element: <ProfilePage /> },
+  { path: 'diaryView', text: '내 일기 보기', element: <DiaryView /> },
   { path: 'components', text: '컴포넌트 모음', element: <Components /> },
 ];
 
