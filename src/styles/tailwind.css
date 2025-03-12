@@ -1,0 +1,135 @@
+@import 'tailwindcss';
+
+/* @layer theme, base, components, utilties;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities); */
+
+@layer utilities {
+  .max-w-kong {
+    max-width: 27.5rem;
+  }
+}
+
+@layer components {
+  .attach-image {
+    .swiper-slide {
+      img {
+        max-height: 12.5rem;
+        margin: auto;
+      }
+    }
+  }
+}
+
+@theme {
+  /* 디자인 토큰 구성 */
+  --max-w-kong: 27.5rem;
+
+  --color-primary: #3e3232;
+  --color-secondary: #d9c6b9;
+  --color-background: #fffbeb;
+  --color-warning: #ff4545;
+  --color-positive: #5ea4ff;
+  --color-highlight: #e4ae62;
+  --color-exciting: #fec8c8;
+  --color-happy: #feef8b;
+  --color-proud: #fcbe57;
+  --color-fine: #a8907b;
+  --color-angry: #fd908b;
+  --color-tired: #95e003;
+  --color-sad: #d0c5fe;
+  --color-depressed: #a6e9fe;
+
+  --color-brown-100: rgba(216, 214, 214, 1);
+  --color-brown-200: rgba(178, 173, 173, 1);
+  --color-brown-300: rgba(139, 132, 132, 1);
+  --color-brown-400: rgba(101, 91, 91, 1);
+  --color-brown-500: rgba(62, 50, 50, 1);
+  --color-brown-600: rgba(50, 40, 40, 1);
+  --color-brown-700: rgba(37, 30, 30, 1);
+  --color-brown-800: rgba(25, 20, 20, 1);
+  --color-brown-900: rgba(12, 10, 10, 1);
+  --color-cream-100: rgba(255, 254, 251, 1);
+  --color-cream-200: rgba(255, 253, 247, 1);
+  --color-cream-300: rgba(255, 253, 243, 1);
+  --color-cream-400: rgba(255, 252, 239, 1);
+  --color-cream-500: rgba(255, 251, 235, 1);
+  --color-cream-600: rgba(204, 201, 188, 1);
+  --color-cream-700: rgba(153, 151, 141, 1);
+  --color-cream-800: rgba(102, 100, 94, 1);
+  --color-cream-900: rgba(51, 50, 47, 1);
+  --color-beige-100: rgba(246, 241, 238, 1);
+  --color-beige-200: rgba(236, 227, 220, 1);
+  --color-beige-300: rgba(227, 212, 203, 1);
+  --color-beige-400: rgba(217, 198, 185, 1);
+  --color-beige-500: rgba(208, 184, 168, 1);
+  --color-beige-600: rgba(166, 147, 134, 1);
+  --color-beige-700: rgba(125, 110, 101, 1);
+  --color-beige-800: rgba(83, 74, 67, 1);
+  --color-beige-900: rgba(42, 37, 34, 1);
+  --color-peach-100: rgba(255, 244, 244, 1);
+  --color-peach-200: rgba(255, 233, 233, 1);
+  --color-peach-300: rgba(254, 222, 222, 1);
+  --color-peach-400: rgba(254, 211, 211, 1);
+  --color-peach-500: rgba(254, 200, 200, 1);
+  --color-peach-600: rgba(203, 160, 160, 1);
+  --color-peach-700: rgba(152, 120, 120, 1);
+  --color-peach-800: rgba(102, 80, 80, 1);
+  --color-peach-900: rgba(51, 40, 40, 1);
+  --color-banana-100: rgba(255, 252, 232, 1);
+  --color-banana-200: rgba(255, 249, 209, 1);
+  --color-banana-300: rgba(254, 245, 186, 1);
+  --color-banana-400: rgba(254, 242, 163, 1);
+  --color-banana-500: rgba(254, 239, 140, 1);
+  --color-banana-600: rgba(203, 191, 112, 1);
+  --color-banana-700: rgba(152, 143, 84, 1);
+  --color-banana-800: rgba(102, 96, 56, 1);
+  --color-banana-900: rgba(51, 48, 28, 1);
+  --color-orange-100: rgba(254, 242, 221, 1);
+  --color-orange-200: rgba(254, 229, 188, 1);
+  --color-orange-300: rgba(253, 216, 154, 1);
+  --color-orange-400: rgba(253, 203, 121, 1);
+  --color-orange-500: rgba(252, 190, 87, 1);
+  --color-orange-600: rgba(202, 152, 70, 1);
+  --color-orange-700: rgba(151, 114, 52, 1);
+  --color-orange-800: rgba(101, 76, 35, 1);
+  --color-orange-900: rgba(50, 38, 17, 1);
+  --color-strawberry-100: rgba(255, 233, 232, 1);
+  --color-strawberry-200: rgba(254, 211, 209, 1);
+  --color-strawberry-300: rgba(254, 188, 185, 1);
+  --color-strawberry-400: rgba(253, 166, 162, 1);
+  --color-strawberry-500: rgba(253, 144, 139, 1);
+  --color-strawberry-600: rgba(202, 115, 111, 1);
+  --color-strawberry-700: rgba(152, 86, 83, 1);
+  --color-strawberry-800: rgba(101, 58, 56, 1);
+  --color-strawberry-900: rgba(51, 29, 28, 1);
+  --color-lemon-100: rgba(234, 249, 205, 1);
+  --color-lemon-200: rgba(213, 243, 154, 1);
+  --color-lemon-300: rgba(191, 236, 104, 1);
+  --color-lemon-400: rgba(170, 230, 53, 1);
+  --color-lemon-500: rgba(149, 224, 3, 1);
+  --color-lemon-600: rgba(119, 179, 2, 1);
+  --color-lemon-700: rgba(89, 134, 2, 1);
+  --color-lemon-800: rgba(60, 90, 1, 1);
+  --color-lemon-900: rgba(30, 45, 1, 1);
+  --color-blueberry-100: rgba(246, 243, 255, 1);
+  --color-blueberry-200: rgba(236, 232, 255, 1);
+  --color-blueberry-300: rgba(227, 220, 254, 1);
+  --color-blueberry-400: rgba(217, 209, 254, 1);
+  --color-blueberry-500: rgba(208, 197, 254, 1);
+  --color-blueberry-600: rgba(166, 158, 203, 1);
+  --color-blueberry-700: rgba(125, 118, 152, 1);
+  --color-blueberry-800: rgba(83, 79, 102, 1);
+  --color-blueberry-900: rgba(42, 39, 51, 1);
+  --color-mint-100: rgba(237, 251, 255, 1);
+  --color-mint-200: rgba(219, 246, 255, 1);
+  --color-mint-300: rgba(202, 242, 254, 1);
+  --color-mint-400: rgba(184, 237, 254, 1);
+  --color-mint-500: rgba(166, 233, 254, 1);
+  --color-mint-600: rgba(133, 186, 203, 1);
+  --color-mint-700: rgba(100, 140, 152, 1);
+  --color-mint-800: rgba(66, 93, 102, 1);
+  --color-mint-900: rgba(33, 47, 51, 1);
+}

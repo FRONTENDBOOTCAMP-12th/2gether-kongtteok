@@ -1,0 +1,13 @@
+@import './tailwind.css';
+
+@import './common/fonts.css';
+@import './common/a11y.css';
+@import './common/base.css';
+
+body {
+  background-color: var(--color-background);
+
+  ::selection {
+    background-color: var(--color-peach-500);
+  }
+}

@@ -1,12 +1,14 @@
 import { defineConfig } from 'vite';
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 const viteConfig = defineConfig({
   plugins: [
     react({
       jsxRuntime: 'automatic',
     }),
+    tailwindcss(),
   ],
   server: {
     host: 'localhost',

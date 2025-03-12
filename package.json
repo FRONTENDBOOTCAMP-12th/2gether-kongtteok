@@ -15,7 +15,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint --cache 'src/**/*.{ts,tsx}'",
-    "format": "prettier --write --cache 'src/**/*.{ts,tsx}'"
+    "format": "prettier --write --cache 'src/**/*.{js,jsx,ts,tsx,css,html}'",
+    "prepare": "husky"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
@@ -28,15 +29,20 @@
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
+    "@typescript-eslint/eslint-plugin": "8.25.0",
     "@vitejs/plugin-react": "4.3.4",
+    "class-variance-authority": "0.7.1",
     "eslint": "9.18.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-no-relative-import-paths": "1.6.1",
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-react-hooks": "5.1.0",
     "eslint-plugin-react-refresh": "0.4.18",
     "globals": "15.14.0",
+    "husky": "9.1.7",
     "lint-staged": "15.4.1",
     "prettier": "3.4.2",
+    "prettier-plugin-tailwindcss": "0.6.11",
     "supabase": "2.12.1",
     "tailwind-merge": "3.0.1",
     "tailwindcss": "4.0.1",
@@ -45,13 +51,21 @@
     "vite": "6.0.7"
   },
   "dependencies": {
+    "@mynaui/icons-react": "0.3.3",
     "@supabase/auth-ui-react": "0.4.7",
     "@supabase/auth-ui-shared": "0.1.8",
     "@supabase/supabase-js": "2.48.1",
+    "@tailwindcss/vite": "4.0.9",
+    "clsx": "2.1.1",
+    "date-fns": "4.1.0",
+    "motion": "12.4.10",
+    "openai": "4.87.3",
     "react": "19",
     "react-dom": "19",
     "react-error-boundary": "5.0.0",
     "react-router": "7.2.0",
+    "recharts": "2.15.1",
+    "swiper": "11.2.5",
     "zustand": "5.0.3"
   },
   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
