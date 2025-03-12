@@ -11,9 +11,10 @@ import 'swiper/css/pagination';
 type AttachFileProps = ComponentProps<'input'> & {
   label: string;
   children?: React.ReactNode | undefined;
+  attachImage?: (file: FileList) => void;
 };
 
-function AttachFile({ label, children, className }: AttachFileProps) {
+function AttachFile({ label, children, className, attachImage }: AttachFileProps) {
   const [imageSrc, setImageSrc] = useState<string[] | null>(null);
   const id = useId();
 
@@ -21,6 +22,8 @@ function AttachFile({ label, children, className }: AttachFileProps) {
     const file = e.target.files;
 
     if (file) {
+      attachImage?.(file);
+
       setImageSrc((item) =>
         item
           ? [...item, ...[...file].map((img) => URL.createObjectURL(img))]

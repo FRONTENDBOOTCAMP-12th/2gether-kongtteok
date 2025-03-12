@@ -1,17 +1,18 @@
-import { JSX, useRef, useState } from 'react';
-import { supabase, DATABASE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
+import { useRef, useState } from 'react';
+import supabase, { DATABASE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import BottomSheet from '@/BottomSheet';
 import Button from '@/components/Button';
 import Switch from '@/components/Switch';
+import emotionList from '@/utils/emotion';
 import Textarea from '@/components/Textarea';
 import InputText from '@/components/InputText';
 import AttachFile from '@/components/AttachFile';
+import EmotionImage, { EmotionType } from '@/components/EmotionImage';
 import EmotionButton from '@/components/EmotionButton';
-import emotionList from '@/utils/emotion';
 import { getDate } from '@/utils/get-date';
-import EmotionImage, { type EmotionProps } from '@/components/EmotionImage';
+import { uploadFile } from '@/utils/supabase-api';
 
 const arrowIcon = (
   <svg width={9} height={6} viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,11 +29,13 @@ function DiaryWrite({ date }: DiaryWriteProps) {
   const [emotion, setEmotion] = useState<React.ReactNode | string>('감정');
   const [isBottomSheetShow, setIsBottomSheetShow] = useState<boolean>(false);
   const [bottomSheetTitle, setIsBottomSheetShowTitle] = useState<string>('');
+  const imageFileList = useRef<File[]>([]);
+  const imageFilesPath = useRef<string | undefined[]>([]);
   const weatherValue = useRef('');
   const emotionValue = useRef('');
 
   const selectEmotion = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const emotion = (e.target as HTMLImageElement).alt;
+    const emotion = (e.target as HTMLImageElement).alt as EmotionType;
 
     setEmotion(<EmotionImage emotion={emotion} className="w-5" />);
     closeBottomSheet();
@@ -89,21 +92,39 @@ function DiaryWrite({ date }: DiaryWriteProps) {
     setIsBottomSheetShow(false);
   };
 
+  const attachImage = (file: FileList) => {
+    imageFileList.current = [...file];
+  };
+
   const handleWrite = async (formData: FormData) => {
     const diaryData = {
+      user_id: 'kong',
       date: formData.get('date'),
-      weather: formData.get('weather'),
+      weather: formData.get('weather') || 'sunny',
       emotion: formData.get('emotion'),
-      isPrivate: !!formData.get('isPrivate'),
       title: formData.get('title'),
       content: formData.get('content'),
-      user_id: 'kong',
+      diaryImage: imageFileList.current.length ? JSON.stringify(imageFileList.current) : null,
+      isPrivate: !!formData.get('isPrivate'),
     } as DiaryItemInsert;
 
-    console.log(diaryData);
     try {
-      const { error } = await supabase.from(DATABASE_NAME).insert([diaryData]);
-      console.error(error);
+      if (imageFileList.current.length) {
+        Promise.all(
+          imageFileList.current.map(async (file) => await uploadFile({ date: '2025-03-12', user_id: 'kong', file }))
+        )
+          .then((res) => {
+            imageFilesPath.current = res.map(({ data }) => data?.path);
+          })
+          .then(async () => {
+            console.log(diaryData);
+            const { error } = await supabase.from(DATABASE_NAME).insert([diaryData]);
+
+            if (error) {
+              console.error(error);
+            }
+          });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -150,7 +171,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
             <InputText labelText="제목" name="title" required labelHidden />
 
             <div className="relative">
-              <AttachFile label="이미지 첨부">
+              <AttachFile label="이미지 첨부" attachImage={attachImage}>
                 <Textarea label="일기 본문" labelHidden className="h-50" name="content" required />
               </AttachFile>
               <Button buttonType="submit" inlineSize="fit" className="absolute right-0 bottom-0">
