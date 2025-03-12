@@ -47,7 +47,7 @@ const diaryData: DiaryPreviewProps[] = [
 function Components() {
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
 
-  const openBottomSheet = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const openBottomSheet = () => {
     setBottomSheet(true);
   };
   const closeBottomSheet = () => {
