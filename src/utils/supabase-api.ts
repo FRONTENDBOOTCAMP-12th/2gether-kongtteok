@@ -1,9 +1,5 @@
-import supabase, { DATABASE_NAME, DiaryItem } from '@/lib/supabase-client';
-
-interface DiaryViewQueryOptions extends Partial<QueryOptions> {
-  date: string;
-  userId: string;
-}
+import supabase, { DATABASE_NAME, DiaryItem, STORAGE_NAME } from '@/lib/supabase-client';
+import { getDate } from './get-date';
 
 interface QueryOptions {
   fields?: string;
@@ -14,6 +10,12 @@ interface QueryOptions {
   sortKey?: 'asc' | 'desc';
 }
 
+interface DiaryViewQueryOptions extends Partial<QueryOptions> {
+  date: string;
+  userId: string;
+}
+
+// FIXME: date 내림차순, 같은 날짜가 있는 경우 created_at 내림차순 정렬
 export const getDiaryList = async ({
   fields = '*',
   page = 0,
@@ -48,4 +50,20 @@ export const getDiaryViewList = async ({
     .eq('user_id', userId)
     .eq('date', date)
     .range(fromIndex, toIndex);
+};
+
+interface UploadFileOptions {
+  date: string;
+  user_id: string;
+  file: File;
+  path?: string;
+}
+
+export const uploadFile = async ({ date, user_id, file, path }: UploadFileOptions) => {
+  const imagePath = path ? path : `post/${user_id}/${date}`;
+
+  return await supabase.storage.from(STORAGE_NAME).upload(`/${imagePath}/${file.name}/`, file, {
+    upsert: true,
+    contentType: 'image/jpeg',
+  });
 };
