@@ -1,7 +1,9 @@
 import { ComponentProps } from 'react';
 
+export type EmotionType = 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
+
 export type EmotionProps = ComponentProps<'img'> & {
-  emotion?: 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
+  emotion?: EmotionType;
 };
 
 function EmotionImage({ emotion = 'exciting', ...restProps }: EmotionProps) {
