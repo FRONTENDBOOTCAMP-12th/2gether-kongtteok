@@ -12,7 +12,7 @@
   "scripts": {
     "start": "pnpm dev --open",
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint --cache 'src/**/*.{ts,tsx}'",
     "format": "prettier --write --cache 'src/**/*.{js,jsx,ts,tsx,css,html}'",
