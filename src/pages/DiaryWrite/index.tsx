@@ -1,5 +1,5 @@
 import { JSX, useRef, useState } from 'react';
-import { supabase, DATABASE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
+import supabase, { DATABASE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import BottomSheet from '@/BottomSheet';

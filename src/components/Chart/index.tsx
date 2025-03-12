@@ -60,7 +60,7 @@ const monthlyData = {
 
 const EmotionDashboardPage = () => {
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex w-full flex-col gap-5">
       <EmotionBarChart data={thisMonthData} />
 
       <EmotionPieChart monthlyData={monthlyData} />

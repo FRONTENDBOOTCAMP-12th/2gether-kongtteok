@@ -8,8 +8,10 @@ import SignInPage from '@/pages/SignIn/Index';
 import ProfilePage from '@/pages/Profile/Index';
 import DiaryWrite from '@/pages/DiaryWrite/';
 import DiaryView from '@/pages/DiaryView';
+import MainPage from '@/pages/Main';
 
 export const navList = [
+  { path: '/', text: '홈', element: <MainPage /> },
   { path: 'signin', text: '로그인', element: <SignInPage /> },
   { path: 'signup', text: '회원가입(로그인 정보)', element: <SignUp /> },
   { path: 'signup/email', text: '회원가입(이메일)', element: <SignUpEmail /> },
