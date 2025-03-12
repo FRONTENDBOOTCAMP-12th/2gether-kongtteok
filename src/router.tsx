@@ -1,14 +1,14 @@
 import { Route, Routes } from 'react-router';
-import Components from '@/components';
-import SignUp from '@/pages/SignUp/';
+import MainPage from '@/pages/Main';
+import SignUp from '@/pages/SignUp';
 import SignUpEmail from '@/pages/SignUp/Email';
 import SignUpNickname from '@/pages/SignUp/Nickname';
 import SignUpInterests from '@/pages/SignUp/Interests';
-import SignInPage from '@/pages/SignIn/Index';
-import ProfilePage from '@/pages/Profile/Index';
-import DiaryWrite from '@/pages/DiaryWrite/';
+import SignInPage from '@/pages/SignIn';
+import ProfilePage from '@/pages/Profile';
 import DiaryView from '@/pages/DiaryView';
-import MainPage from '@/pages/Main';
+import DiaryWrite from '@/pages/DiaryWrite';
+import Components from '@/components';
 
 export const navList = [
   { path: '/', text: '홈', element: <MainPage /> },
@@ -17,9 +17,9 @@ export const navList = [
   { path: 'signup/email', text: '회원가입(이메일)', element: <SignUpEmail /> },
   { path: 'signup/nickname', text: '회원가입(닉네임)', element: <SignUpNickname /> },
   { path: 'signup/interests', text: '회원가입(관심사)', element: <SignUpInterests /> },
-  { path: 'diaryWrite', text: '일기 쓰기', element: <DiaryWrite /> },
   { path: 'profile', text: '프로필', element: <ProfilePage /> },
-  { path: 'diaryView', text: '내 일기 보기', element: <DiaryView /> },
+  { path: 'diary/write', text: '일기 쓰기', element: <DiaryWrite /> },
+  { path: 'diary/view', text: '내 일기 보기', element: <DiaryView /> },
   { path: 'components', text: '컴포넌트 모음', element: <Components /> },
 ];
 
