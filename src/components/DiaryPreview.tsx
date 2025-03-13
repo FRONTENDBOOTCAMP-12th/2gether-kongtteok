@@ -18,8 +18,8 @@ function DiaryPreview({
   diaryImage,
   content,
   likes,
-  onDelete: _onDelete,
-  onEdit: _onEdit,
+  // onDelete: _onDelete,
+  // onEdit: _onEdit,
 }: DiaryPreviewProps) {
   return (
     <article className="flex h-[134px] w-[288px] flex-col justify-between rounded-[8px] border border-[#3E3232] bg-[#FFFBEB] p-[12px]">

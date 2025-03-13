@@ -96,11 +96,11 @@ function DiaryWrite({ date }: DiaryWriteProps) {
     imageFileList.current = [...file];
   };
 
-  const handleWrite = async (formData: FormData) => {
+  const handleWrite = (formData: FormData) => {
     const diaryData = {
       user_id: 'kong',
       date: formData.get('date'),
-      weather: formData.get('weather') || 'sunny',
+      weather: formData.get('weather') ?? 'sunny',
       emotion: formData.get('emotion'),
       title: formData.get('title'),
       content: formData.get('content'),
@@ -114,7 +114,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
           imageFileList.current.map(async (file) => await uploadFile({ date: '2025-03-12', user_id: 'kong', file }))
         )
           .then((res) => {
-            // imageFilesPath.current = res.map(({ data }) => data?.path);
+            imageFilesPath.current = res.map(({ data }) => data?.path);
           })
           .then(async () => {
             console.log(diaryData);
@@ -165,7 +165,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
                   {arrowIcon}
                 </Button>
               </div>
-              <Switch label="혼자보기" defaultChecked name="isPrivate" />
+              <Switch label="혼자보기" stateOnText='혼자보기' stateOffText='자랑하기' defaultChecked name="isPrivate" />
             </div>
 
             <InputText labelText="제목" name="title" required labelHidden />

@@ -66,12 +66,12 @@ const YearMonthSelector = memo(function YearMonthSelector({ selectedMonth, onMon
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <div
+      <button
         className="text-primary flex cursor-pointer justify-center text-lg font-medium transition-colors"
         onClick={handleMonthClick}>
         {formattedMonth}
         <ChevronDownSolid />
-      </div>
+      </button>
 
       {isOpen && (
         <div className="absolute left-1/2 z-10 mt-2 w-48 -translate-x-1/2 transform rounded-md border border-gray-200 bg-white p-2 shadow-lg">
@@ -80,12 +80,12 @@ const YearMonthSelector = memo(function YearMonthSelector({ selectedMonth, onMon
               <h3 className="mb-1 text-xs font-medium text-gray-500">년도</h3>
               <div className="max-h-32 overflow-y-auto pr-1">
                 {years.map((y) => (
-                  <div
+                  <button
                     key={y}
                     className={`hover:bg-beige-100 cursor-pointer rounded px-2 py-1 text-sm ${parseInt(year, 10) === y ? 'bg-beige-200 font-medium' : ''}`}
                     onClick={() => handleYearSelect(y)}>
                     {y}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -95,7 +95,7 @@ const YearMonthSelector = memo(function YearMonthSelector({ selectedMonth, onMon
                 {months.map((m) => {
                   const isDisabled = parseInt(year, 10) === currentYear && m > currentMonth;
                   return (
-                    <div
+                    <button
                       key={m}
                       className={`cursor-pointer rounded px-2 py-1 text-sm ${
                         parseInt(month, 10) === m
@@ -106,7 +106,7 @@ const YearMonthSelector = memo(function YearMonthSelector({ selectedMonth, onMon
                       }`}
                       onClick={() => !isDisabled && handleMonthSelect(m)}>
                       {m}월
-                    </div>
+                    </button>
                   );
                 })}
               </div>

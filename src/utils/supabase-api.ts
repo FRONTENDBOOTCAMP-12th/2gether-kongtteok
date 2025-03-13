@@ -1,5 +1,4 @@
 import supabase, { DATABASE_NAME, DiaryItem, STORAGE_NAME } from '@/lib/supabase-client';
-import { getDate } from './get-date';
 
 interface QueryOptions {
   fields?: string;

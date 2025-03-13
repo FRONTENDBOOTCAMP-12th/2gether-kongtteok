@@ -13,7 +13,7 @@ interface EmotionPieChartProps {
 
 const getEmotionKoreanName = (emotion: Emotion): string => emotionConfig.koreanNames[emotion];
 
-const getMostFrequentEmotions = (data: EmotionData[], limit: number = 3): EmotionData[] => {
+const getMostFrequentEmotions = (data: EmotionData[], limit = 3): EmotionData[] => {
   const sortedData = [...data].sort((a, b) => b.count - a.count);
   const highestCount = sortedData[0]?.count || 0;
   const mostFrequent = sortedData.filter((item) => item.count === highestCount);

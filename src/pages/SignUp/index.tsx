@@ -99,7 +99,7 @@ const SignUp = () => {
     }
   };
 
-  const renderError = (error: string, isSuccess: boolean = false) => {
+  const renderError = (error: string, isSuccess = false) => {
     return (
       error && (
         <p className={`absolute top-full left-0 mt-1.5 text-xs ${isSuccess ? 'text-positive' : 'text-warning'}`}>

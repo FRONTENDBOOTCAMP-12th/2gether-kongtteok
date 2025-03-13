@@ -2,7 +2,7 @@ import React from 'react';
 import WeatherImage from '@/components/WeatherImage';
 import EmotionImage from '@/components/EmotionImage';
 
-export type DiaryHeaderProps = {
+export interface DiaryHeaderProps {
   date: string;
   weather: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
   emotion?: 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
