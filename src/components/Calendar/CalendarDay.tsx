@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import { format, isSameDay, isAfter } from 'date-fns';
-import EmotionImage from '../EmotionImage';
 import { DiaryEntry } from './index';
+import { format, isSameDay, isAfter } from 'date-fns';
+import EmotionImage from '@/components/EmotionImage';
 
 interface CalendarDayProps {
   day: number;
@@ -29,7 +29,7 @@ const CalendarDay = memo(({ day, month, year, diaryEntries, onDayClick }: Calend
   };
 
   return (
-    <div className="flex cursor-pointer flex-col items-center justify-center" onClick={handleClick}>
+    <button className="flex cursor-pointer flex-col items-center justify-center" onClick={handleClick}>
       {hasDiary ? (
         <div className="flex h-11 w-11 items-center justify-center">
           <EmotionImage emotion={diaryEntry.emotion} className="h-full w-full object-contain" />
@@ -41,8 +41,10 @@ const CalendarDay = memo(({ day, month, year, diaryEntries, onDayClick }: Calend
           } bg-beige-200 flex h-9 w-9 items-center justify-center rounded-full`}></div>
       )}
       <span className={`pt-1.5 font-medium ${isToday ? 'text-highlight font-bold' : 'text-primary'}`}>{day}</span>
-    </div>
+    </button>
   );
 });
+
+CalendarDay.displayName= 'CalendarDay';
 
 export default CalendarDay;

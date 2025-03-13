@@ -94,7 +94,7 @@ function DiaryView() {
     try {
       const message = await getGPTResponse(diary.content, diary.emotion);
       setReply(message);
-    } catch (error) {
+    } catch {
       setReply('말랑이가 지금 말을 못 하고 있어요.');
     } finally {
       setLoading(false);
@@ -107,7 +107,7 @@ function DiaryView() {
 
       <main className="flex flex-col items-center gap-y-3 px-4">
         <section className="mt-2 flex w-full flex-row items-center justify-between">
-          <Switch label="혼자보기" checked={isPrivate} onChange={handleTogglePrivate} />
+          <Switch label="혼자보기" stateOnText='혼자보기' stateOffText='자랑하기' checked={isPrivate} onChange={handleTogglePrivate} />
           <span className="text-brown-700 text-xs">{isPrivate ? 'ON' : 'OFF'}</span>
           <div className="text-brown-900 flex gap-2 text-xs">
             <button onClick={() => navigate('/diary-list')} className="cursor-pointer">

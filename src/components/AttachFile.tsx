@@ -41,14 +41,13 @@ function AttachFile({ label, children, className, attachImage }: AttachFileProps
       <Swiper
         hidden={!imageSrc}
         modules={[Navigation, A11y]}
-        navigation={(imageSrc && imageSrc.length > 1) || undefined}
+        navigation={(imageSrc && imageSrc.length > 1) ?? undefined}
         slidesPerView={1}
         className={tm(
           'attach-image max-w-kong border-primary max-h-72 rounded-[10px]',
-          imageSrc && imageSrc?.length ? 'mb-3 border' : null
+          imageSrc?.length ? 'mb-3 border' : null
         )}>
-        {imageSrc &&
-          imageSrc.map((src) => {
+        {imageSrc?.map((src) => {
             return (
               <SwiperSlide key={src} className="relative">
                 <img src={src} alt="첨부 이미지" />

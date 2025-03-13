@@ -1,7 +1,7 @@
 import Footer from './Footer';
 import Header from './Header';
 
-type CommonLayoutProps = {
+interface CommonLayoutProps {
   children: React.ReactNode;
   headerProps?: {
     title: string;

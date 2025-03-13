@@ -1,4 +1,4 @@
-type ProfileInfoProps = {
+interface ProfileInfoProps {
   profileImage: string;
   nickname: string;
   intro: string;
