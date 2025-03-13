@@ -42,6 +42,7 @@ export default tseslint.config(
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'no-relative-import-paths': noRelativeImportPaths,
     },
     rules: {
       ...react.configs.flat.recommended.rules,
