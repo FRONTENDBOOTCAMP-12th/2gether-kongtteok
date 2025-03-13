@@ -14,7 +14,7 @@
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint --cache 'src/**/*.{ts,tsx}'",
+    "lint": "eslint --cache src/**/*.{ts,tsx}",
     "format": "prettier --write --cache 'src/**/*.{js,jsx,ts,tsx,css,html}'",
     "prepare": "husky"
   },
@@ -61,13 +61,12 @@
     "date-fns": "4.1.0",
     "motion": "12.4.10",
     "openai": "4.87.3",
-    "react": "19",
-    "react-dom": "19",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-error-boundary": "5.0.0",
     "react-router": "7.2.0",
     "recharts": "2.15.1",
     "swiper": "11.2.5",
     "zustand": "5.0.3"
-  },
-  "packageManager": "pnpm@10.4.0+sha512.6b849d0787d97f8f4e1f03a9b8ff8f038e79e153d6f11ae539ae7c435ff9e796df6a862c991502695c7f9e8fac8aeafc1ac5a8dab47e36148d183832d886dd52"
+  }
 }
