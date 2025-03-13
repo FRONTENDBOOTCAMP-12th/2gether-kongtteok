@@ -11,10 +11,10 @@ type SwitchProps = ComponentProps<'input'> & {
 
 function Switch({
   label,
-  stateTextHidden = true, // ✅ 기본값을 true로 설정해서 label을 숨김
   checked,
   stateOnText,
   stateOffText,
+  className,
   ...restProps
 }: SwitchProps) {
   const id = useId();
@@ -22,7 +22,7 @@ function Switch({
   return (
     <label htmlFor={id} className="relative inline-flex items-center gap-x-2">
       <span className="sr-only">{label}</span>
-      <span className={tm('text-brown-700 min-w-[60px] text-right text-xs', { 'sr-only': stateTextHidden })}>
+      <span className={tm('text-brown-700 text-right text-xs', { 'sr-only': !stateOnText }, className)}>
         {checked ? stateOnText : stateOffText}
       </span>
       <input

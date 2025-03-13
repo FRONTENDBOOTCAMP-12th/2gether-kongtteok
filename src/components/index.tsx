@@ -91,8 +91,8 @@ function Components() {
       <article className="mt-15">
         <h2>Switch</h2>
         <div className="flex flex-col items-start gap-y-3">
-          <Switch label="다크모드" defaultChecked stateTextHidden />
-          <Switch label="혼자볼래" />
+          <Switch label="다크모드" defaultChecked />
+          <Switch label="혼자볼래" stateOnText="혼자보기" stateOffText="같이보기" />
         </div>
       </article>
       <article className="mt-12 flex flex-col items-start gap-y-2">

@@ -165,7 +165,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
                   {arrowIcon}
                 </Button>
               </div>
-              <Switch label="혼자보기" stateOnText='혼자보기' stateOffText='자랑하기' defaultChecked name="isPrivate" />
+              <Switch className="min-w-11" label="혼자보기" stateOnText='혼자보기' stateOffText='자랑하기' defaultChecked name="isPrivate" />
             </div>
 
             <InputText labelText="제목" name="title" required labelHidden />
