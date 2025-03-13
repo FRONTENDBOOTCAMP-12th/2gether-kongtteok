@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
-import EmotionImage, { type EmotionProps } from './EmotionImage';
 import { tm } from '@/utils/ts-merge';
+import EmotionImage, { type EmotionProps } from './EmotionImage';
 
 type EmotionButtonProps = ComponentProps<'button'> & Pick<EmotionProps, 'emotion'>;
 
@@ -8,7 +8,7 @@ function EmotionButton({ emotion = 'exciting', className, ...restProps }: Emotio
   return (
     <button type="button" className={tm('cursor-pointer', className)} {...restProps}>
       <span className="sr-only">감정 선택</span>
-      <EmotionImage emotion={emotion} title={emotion} />
+      <EmotionImage emotion={emotion} />
     </button>
   );
 }
