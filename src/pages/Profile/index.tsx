@@ -1,49 +1,59 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router';
+import supabase from '@/lib/supabase-client';
 import Header from '@/components/layout/Header';
 import ProfileInfo from '@/components/ProfileInfo';
 import Tab from '@/components/Tab';
-import DiaryPreview, { DiaryPreviewProps } from '@/components/DiaryPreview';
+import DiaryPreview from '@/components/DiaryPreview';
 import Footer from '@/components/layout/Footer';
+import { DiaryItem } from '@/lib/supabase-client';
+
+interface Profile {
+  id: string;
+  profileImage: string;
+  nickname: string;
+  intro: string;
+  interests: string[];
+}
 
 function ProfilePage() {
-  const profileData = {
-    profileImage: '/logo.webp',
-    nickname: '박윤경',
-    intro: '내 총 어떤데~',
-    interests: ['취미', '직장', '친구'],
-  };
-
-  const diaryData: DiaryPreviewProps[] = [
-    {
-      emotion: 'sad',
-      date: '2025-03-06',
-      isPrivate: true,
-      diaryImage: '/images/emotion/sad.png',
-      content:
-        '친구가 타로를 봐줬는데 결과가 좋지 않아서 조금 슬펐어.. 프로젝트가 어떻게 될지 궁금해서 월간 운세를 봤는데 걱정이 된다ㅜㅜ 그래도 열심히 하고 있으니까 잘 해낼 수 있겠지? 조원분들도 힘내주시고 계시니까.. 타로 그거 뭐 다 미신이지!',
-      likes: 3,
-    },
-    {
-      emotion: 'happy',
-      date: '2025-03-07',
-      isPrivate: false,
-      content: '프로젝트 조원들이랑 동기들을 만나서 행복했어!',
-      likes: 12,
-    },
-  ];
-
-  const [profile, setProfile] = useState(profileData);
-  const [diaries, setDiaries] = useState<DiaryPreviewProps[]>(diaryData);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [diaries, setDiaries] = useState<
+    Pick<DiaryItem, 'id' | 'date' | 'title' | 'emotion' | 'isPrivate' | 'likes' | 'diaryImage'>[]
+  >([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // fetch("/api/profile")
-    //   .then((res) => res.json())
-    //   .then((data) => setProfile(data))
-    //   .catch((error) => console.error("프로필 정보를 가져오지 못했습니다.", error));
-    // fetch("/api/diaries")
-    //   .then((res) => res.json())
-    //   .then((data) => setDiaries(data))
-    //   .catch((error) => console.error("일기 데이터를 가져오지 못했습니다.", error));
+    const fetchProfile = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, profileImage, nickname, intro, interests')
+          .single();
+        if (error) throw error;
+        setProfile(data as Profile);
+      } catch (error) {
+        console.error('프로필 정보를 가져오지 못했습니다.', error);
+      }
+    };
+
+    const fetchDiaries = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('diary')
+          .select('id, date, title, emotion, isPrivate, likes, diaryImage')
+          .order('date', { ascending: false });
+        if (error) throw error;
+        setDiaries(data);
+      } catch (error) {
+        console.error('일기 데이터를 가져오지 못했습니다.', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+    fetchDiaries();
   }, []);
 
   return (
@@ -53,16 +63,22 @@ function ProfilePage() {
       </div>
 
       <div className="flex w-full items-center justify-center">
-        <ProfileInfo {...profile} />
+        {profile ? <ProfileInfo {...profile} /> : <p>로딩 중...</p>}
       </div>
 
       <Tab />
 
       <section className="flex flex-col items-center gap-4 py-4">
-        {diaries.length > 0 ? (
-          diaries.map((diary) => <DiaryPreview key={diary.date} {...diary} />)
+        {loading ? (
+          <p className="text-gray-500">데이터를 불러오는 중...</p>
+        ) : diaries.length > 0 ? (
+          diaries.map((diary) => (
+            <Link to={`/diary/${diary.id}`} key={diary.id}>
+              <DiaryPreview {...diary} />
+            </Link>
+          ))
         ) : (
-          <p className="text-gray-500">아직 작성한 일기가 없어요요.</p>
+          <p className="text-gray-500">아직 작성한 일기가 없어요.</p>
         )}
       </section>
 
