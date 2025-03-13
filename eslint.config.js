@@ -54,7 +54,10 @@ export default tseslint.config(
       '@typescript-eslint/no-misused-promises': 'off',
       'jsx-a11y/click-events-have-key-events': 'off',
       'react/prop-types': 'off',
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true, allowExportNames: ['emotionConfig', 'navList'] },
+      ],
       'jsx-a11y/alt-text': [
         'warn',
         {
