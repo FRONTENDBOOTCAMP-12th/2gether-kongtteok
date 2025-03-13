@@ -3,26 +3,27 @@ import { ComponentProps, useId } from 'react';
 
 type SwitchProps = ComponentProps<'input'> & {
   label: string;
-  labelHidden?: boolean;
+  stateTextHidden?: boolean;
   checked?: boolean;
-  onLabel?: string;
-  offLabel?: string;
+  stateOnText?: string;
+  stateOffText?: string;
 };
 
 function Switch({
   label,
-  labelHidden = true, // ✅ 기본값을 true로 설정해서 label을 숨김
+  stateTextHidden = true, // ✅ 기본값을 true로 설정해서 label을 숨김
   checked,
-  onLabel = '혼자보기',
-  offLabel = '자랑하기',
+  stateOnText,
+  stateOffText,
   ...restProps
 }: SwitchProps) {
   const id = useId();
 
   return (
     <label htmlFor={id} className="relative inline-flex items-center gap-x-2">
-      <span className={tm('text-brown-700 min-w-[60px] text-right text-xs', { 'sr-only': labelHidden })}>
-        {checked ? onLabel : offLabel}
+      <span className="sr-only">{label}</span>
+      <span className={tm('text-brown-700 min-w-[60px] text-right text-xs', { 'sr-only': stateTextHidden })}>
+        {checked ? stateOnText : stateOffText}
       </span>
       <input
         type="checkbox"
