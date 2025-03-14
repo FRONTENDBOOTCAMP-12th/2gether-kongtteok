@@ -9,24 +9,16 @@ interface CommonLayoutProps {
     isRightIcon?: boolean;
   };
   showFooter?: boolean;
-};
+}
 
 function CommonLayout({ children, headerProps, showFooter = true }: CommonLayoutProps) {
-  let paddingClasses = '';
-
-  if (headerProps && showFooter) {
-    paddingClasses = 'px-4 pb-20';
-  } else if (!showFooter) {
-    paddingClasses = 'px-4 pb-4';
-  } else {
-    paddingClasses = 'p-4';
-  }
-
   return (
-    <div className="">
-      {headerProps && <Header {...headerProps} />}
-      <main className="p-4">{children}</main>
-      {showFooter && <Footer />}
+    <div className="mx-auto w-full max-w-[440px] min-w-[320px]">
+      <div className={`flex min-h-screen flex-col ${showFooter ? 'pb-16' : ''}`}>
+        {headerProps && <Header {...headerProps} />}
+        <main className="flex-grow p-4">{children}</main>
+        {showFooter && <Footer />}
+      </div>
     </div>
   );
 }
