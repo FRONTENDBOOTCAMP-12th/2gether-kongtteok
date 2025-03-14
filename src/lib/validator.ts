@@ -1,8 +1,3 @@
-export const isId = (value: string) => {
-  const regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{6,}$/;
-  return regExp.test(value);
-};
-
 export const isPassword = (value: string, { min = 8, max = 16, isStrong = true } = {}) => {
   let regExp = null;
 
@@ -26,7 +21,6 @@ export const isNickname = (value: string) => {
 };
 
 const validator = {
-  isId,
   isPassword,
   isEmail,
   isNickname,
