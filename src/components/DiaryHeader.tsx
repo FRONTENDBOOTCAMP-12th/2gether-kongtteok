@@ -1,13 +1,13 @@
 import React from 'react';
-import WeatherImage from '@/components/WeatherImage';
-import EmotionImage from '@/components/EmotionImage';
+import WeatherImage, { type WeatherType } from '@/components/WeatherImage';
+import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 
 export interface DiaryHeaderProps {
   date: string;
-  weather: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
-  emotion?: 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
+  weather: WeatherType;
+  emotion: EmotionType;
   title: string;
-};
+}
 
 const DiaryHeader = ({ date, weather, emotion, title }: DiaryHeaderProps) => {
   return (

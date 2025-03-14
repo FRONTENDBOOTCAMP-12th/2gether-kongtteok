@@ -9,7 +9,7 @@ const buttons = [
 
 function Footer() {
   return (
-    <footer className="bg-primary fixed bottom-0 z-50 -mx-4 w-full max-w-[27.5rem] py-2.5">
+    <footer className="bg-primary fixed bottom-0 z-50 w-full max-w-[27.5rem] py-2.5">
       <nav className="flex items-center justify-around">
         <h1 className="sr-only">바텀 네비게이션</h1>
         {buttons.map(({ title, icon, label }) => (
