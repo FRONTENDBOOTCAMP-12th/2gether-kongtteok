@@ -92,7 +92,7 @@ function Components() {
         <h2>Switch</h2>
         <div className="flex flex-col items-start gap-y-3">
           <Switch label="다크모드" defaultChecked />
-          <Switch label="혼자볼래" stateOnText="혼자보기" stateOffText="같이보기" />
+          <Switch label="일기 공개 상태" stateOnText="혼자보기" stateOffText="같이보기" className="min-w-11" />
         </div>
       </article>
       <article className="mt-12 flex flex-col items-start gap-y-2">
@@ -169,13 +169,13 @@ function Components() {
         <BottomSheet isOpen={bottomSheet} title="감정 선택" handleClose={closeBottomSheet}>
           <div className="grid grid-cols-4 justify-items-center gap-y-4 pb-1">
             <EmotionButton className="w-15" />
-            <EmotionButton emotion="happy" title="happy" className="w-15" />
-            <EmotionButton emotion="proud" title="proud" className="w-15" />
-            <EmotionButton emotion="fine" title="fine" className="w-15" />
-            <EmotionButton emotion="angry" title="angry" className="w-15" />
-            <EmotionButton emotion="tired" title="tired" className="w-15" />
-            <EmotionButton emotion="sad" title="sad" className="w-15" />
-            <EmotionButton emotion="depressed" title="depressed" className="w-15" />
+            <EmotionButton emotion="happy" className="w-15" />
+            <EmotionButton emotion="proud" className="w-15" />
+            <EmotionButton emotion="fine" className="w-15" />
+            <EmotionButton emotion="angry" className="w-15" />
+            <EmotionButton emotion="tired" className="w-15" />
+            <EmotionButton emotion="sad" className="w-15" />
+            <EmotionButton emotion="depressed" className="w-15" />
           </div>
         </BottomSheet>
       </article>
