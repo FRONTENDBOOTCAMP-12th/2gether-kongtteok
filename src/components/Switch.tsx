@@ -9,29 +9,27 @@ type SwitchProps = ComponentProps<'input'> & {
   stateOffText?: string;
 };
 
-function Switch({
-  label,
-  checked,
-  stateOnText,
-  stateOffText,
-  className,
-  ...restProps
-}: SwitchProps) {
+function Switch({ label, checked, stateOnText, stateOffText, className, ...restProps }: SwitchProps) {
   const id = useId();
 
   return (
     <label htmlFor={id} className="relative inline-flex items-center gap-x-2">
       <span className="sr-only">{label}</span>
-      <span className={tm('text-brown-700 text-right text-xs', { 'sr-only': !stateOnText }, className)}>
-        {checked ? stateOnText : stateOffText}
-      </span>
       <input
         type="checkbox"
         id={id}
-        className="peer absolute inset-0 cursor-pointer appearance-none"
+        className="peer peer absolute inset-0 cursor-pointer appearance-none"
         checked={checked}
         {...restProps}
       />
+      {stateOnText && (
+        <>
+          <span className={tm('text-brown-700 hidden text-right text-xs peer-checked:block', className)}>
+            {stateOnText}
+          </span>
+          <span className={tm('text-brown-700 text-right text-xs peer-checked:hidden', className)}>{stateOffText}</span>
+        </>
+      )}
       <span
         className={tm(
           'bg-brown-100 h-[7px] w-7 rounded-sm transition-[background] dark:bg-gray-600',
