@@ -11,30 +11,21 @@ export type DiaryPreviewProps = Pick<Required<EmotionProps>, 'emotion'> & {
   onEdit?: () => void;
 };
 
-function DiaryPreview({
-  emotion,
-  date,
-  isPrivate,
-  diaryImage,
-  content,
-  likes,
-  // onDelete: _onDelete,
-  // onEdit: _onEdit,
-}: DiaryPreviewProps) {
+function DiaryPreview({ emotion, date, isPrivate, diaryImage, content, likes }: DiaryPreviewProps) {
   return (
-    <article className="flex h-[134px] w-[288px] flex-col justify-between rounded-[8px] border border-[#3E3232] bg-[#FFFBEB] p-[12px]">
+    <article className="border-primary bg-background flex h-33.5 w-72 flex-col justify-between rounded-[10px] border p-3">
       <section className="flex items-center justify-between">
-        <div className="flex items-center gap-[8px]">
-          <EmotionImage emotion={emotion} className="h-[20px] w-[20px]" />
-          <span className="text-[12px] text-[#3E3232] opacity-50">{date}</span>
+        <div className="flex items-center gap-2">
+          <EmotionImage emotion={emotion} className="h-5 w-5" />
+          <span className="text-primary text-xs opacity-50">{date}</span>
           {isPrivate ? (
-            <LockSolid className="h-[12px] w-[12px] text-[#CCA8A8]" />
+            <LockSolid className="text-secondary h-3 w-3" />
           ) : (
-            <LockOpenSolid className="h-[12px] w-[12px] text-[#CCA8A8]" />
+            <LockOpenSolid className="text-secondary h-3 w-3" />
           )}
         </div>
 
-        <div className="flex gap-[8px] text-[12px] text-[#3E3232]">
+        <div className="text-primary flex gap-2 text-xs">
           <button onClick={() => console.log('일기쓰기 페이지로 이동 예정')} className="cursor-pointer">
             수정
           </button>
@@ -44,18 +35,18 @@ function DiaryPreview({
         </div>
       </section>
 
-      <section className="mt-[6px] flex">
+      <section className="mt-1.5 flex">
         {diaryImage ? (
-          <figure className="h-[66px] w-[66px] min-w-[66px] flex-shrink-0 overflow-hidden rounded-[8px]">
+          <figure className="h-16.5 w-16.5 min-w-16.5 flex-shrink-0 overflow-hidden rounded-[10px]">
             <img src={diaryImage} alt="일기 이미지" className="h-full w-full object-cover" />
           </figure>
         ) : null}
-        <p className={`text-[12px] text-[#3E3232] ${diaryImage ? 'ml-[12px]' : ''} line-clamp-4`}>{content}</p>
+        <p className={`text-primary text-xs ${diaryImage ? 'ml-3' : ''} line-clamp-4`}>{content}</p>
       </section>
 
-      <section className="mt-auto flex items-center justify-end gap-[4px]">
-        <Heart className="h-[14px] w-[14px] fill-[#F3A79E] text-[#F3A79E]" />
-        <span className="text-[11px] text-[#F3A79E]">{likes}</span>
+      <section className="mt-auto flex items-center justify-end gap-1">
+        <Heart className="h-3.5 w-3.5 fill-[#F3A79E] text-[#F3A79E]" />
+        <span className="text-xs text-[#F3A79E]">{likes}</span>
       </section>
     </article>
   );
