@@ -8,17 +8,19 @@ import Switch from '@/components/Switch';
 import DiaryHeader from '@/components/DiaryHeader';
 import Textarea from '@/components/Textarea';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { type EmotionProps } from '@/components/EmotionImage';
 import { Heart } from '@mynaui/icons-react';
 import { getGPTResponse } from '@/utils/openai';
+import { type EmotionType } from '@/components/EmotionImage';
+import { type WeatherType } from '@/components/WeatherImage';
 import 'swiper/css';
 
-interface DiaryViewProps extends Pick<EmotionProps, 'emotion'> {
+interface DiaryViewProps {
   id: number;
   date: string;
   title: string;
   content?: string;
-  weather: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
+  emotion: EmotionType;
+  weather: WeatherType;
   isPrivate: boolean;
   likes?: number;
   images: string[];
@@ -107,7 +109,14 @@ function DiaryView() {
 
       <main className="flex flex-col items-center gap-y-3 px-4">
         <section className="mt-2 flex w-full flex-row items-center justify-between">
-          <Switch className="min-w-11" label="혼자보기" stateOnText='혼자보기' stateOffText='자랑하기' checked={isPrivate} onChange={handleTogglePrivate} />
+          <Switch
+            className="min-w-11"
+            label="혼자보기"
+            stateOnText="혼자보기"
+            stateOffText="자랑하기"
+            checked={isPrivate}
+            onChange={handleTogglePrivate}
+          />
           <span className="text-brown-700 text-xs">{isPrivate ? 'ON' : 'OFF'}</span>
           <div className="text-brown-900 flex gap-2 text-xs">
             <button onClick={() => navigate('/diary-list')} className="cursor-pointer">
