@@ -15,31 +15,35 @@ function Header({ title, isLeftIcon = false, isRightIcon = false }: TopHeaderPro
   };
 
   return (
-    <header className="relative flex h-[3.125rem] w-full max-w-[27.5rem] items-center justify-center text-base font-medium">
-      {isLeftIcon && (
-        <button
-          type="button"
-          className="absolute -left-2 flex size-8 items-center justify-center"
-          aria-label="뒤로 가기"
-          onClick={handleBackClick}>
-          <ChevronLeft className="text-primary size-4" aria-hidden="true" />
-        </button>
-      )}
+    <header className="relative flex h-12.5 w-full items-center justify-between px-4 text-base font-medium">
+      <div className="w-16">
+        {isLeftIcon && (
+          <button
+            type="button"
+            className="flex size-8 items-center justify-center"
+            aria-label="뒤로 가기"
+            onClick={handleBackClick}>
+            <ChevronLeft className="text-primary size-4" aria-hidden="true" />
+          </button>
+        )}
+      </div>
 
-      <div className="flex flex-col">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <p className="text-primary text-center text-base">{title}</p>
       </div>
 
-      {isRightIcon && (
-        <div className="absolute -right-2 flex space-x-1">
-          <button type="button" className="flex size-8 items-center justify-center" aria-label="알람페이지로 가기">
-            <BellSolid className="fill-primary size-4" aria-hidden="true" />
-          </button>
-          <button type="button" className="flex size-8 items-center justify-center" aria-label="일기 리스트로 가기">
-            <CogFourSolid className="fill-primary size-4" aria-hidden="true" />
-          </button>
-        </div>
-      )}
+      <div className="flex w-16 justify-end">
+        {isRightIcon && (
+          <>
+            <button type="button" className="flex size-8 items-center justify-center" aria-label="알람페이지로 가기">
+              <BellSolid className="fill-primary size-4" aria-hidden="true" />
+            </button>
+            <button type="button" className="flex size-8 items-center justify-center" aria-label="일기 리스트로 가기">
+              <CogFourSolid className="fill-primary size-4" aria-hidden="true" />
+            </button>
+          </>
+        )}
+      </div>
     </header>
   );
 }

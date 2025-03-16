@@ -1,192 +1,284 @@
 import Button from '@/components/Button';
 import InputButtonSet from '@/components/InputButtonSet';
 import InputText from '@/components/InputText';
-import Header from '@/components/layout/Header';
+import CommonLayout from '@/components/layout/CommonLayout';
+import ToggleButton from '@/components/ToggleButton';
 import validator from '@/lib/validator';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router';
 
+type FormField = 'email' | 'password' | 'confirmPassword' | 'nickname';
+
 interface FormData {
-  userId: string;
+  email: string;
   password: string;
   confirmPassword: string;
+  nickname: string;
 }
 
 interface Errors {
-  userIdError: string;
+  emailError: string;
   passwordError: string;
   confirmPasswordError: string;
-  duplicatedIdError: string;
+  nicknameError: string;
 }
+
+const INTERESTS = ['취미', '동물', '가정', '푸드', '패션', '직장', '여행', '운동', '학교', '친구', '돈', '사랑'];
+const MAX_INTERESTS = 4;
+const DUMMY_EMAIL = 'test@test.com';
+const DUMMY_NICKNAME = 'test12';
 
 const SignUp = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>({
-    userId: '',
+    email: '',
     password: '',
     confirmPassword: '',
+    nickname: '',
   });
 
   const [errors, setErrors] = useState<Errors>({
-    userIdError: '',
+    emailError: '',
     passwordError: '',
     confirmPasswordError: '',
-    duplicatedIdError: '',
+    nicknameError: '',
   });
 
-  const [idChecked, setIdChecked] = useState(false);
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const isEmailValid = useMemo(
+    () => formData.email && !errors.emailError && isEmailChecked,
+    [formData.email, errors.emailError, isEmailChecked]
+  );
 
-    if (name === 'userId') {
-      setErrors((prev) => ({ ...prev, duplicatedIdError: '' }));
-      setIdChecked(false);
-    }
+  const isPasswordValid = useMemo(
+    () => formData.password && !errors.passwordError,
+    [formData.password, errors.passwordError]
+  );
 
-    validateField(name as keyof FormData, value);
-  };
+  const isConfirmPasswordValid = useMemo(
+    () => formData.confirmPassword && !errors.confirmPasswordError,
+    [formData.confirmPassword, errors.confirmPasswordError]
+  );
 
-  const handleNext = () => {
-    if (isFormValid) {
-      navigate('/signup/email');
-    }
-  };
+  const isNicknameValid = useMemo(
+    () => formData.nickname && !errors.nicknameError && isNicknameChecked,
+    [formData.nickname, errors.nicknameError, isNicknameChecked]
+  );
 
-  const validateField = (name: keyof FormData, value: string) => {
-    let error = '';
+  const isInterestsValid = useMemo(
+    () => selectedInterests.length >= 1 && selectedInterests.length <= MAX_INTERESTS,
+    [selectedInterests]
+  );
 
-    switch (name) {
-      case 'userId':
-        if (!validator.isId(value)) {
-          error = '영어, 숫자 포함 6자리 이상 입력해주세요.';
-        }
-        break;
-      case 'password':
-        if (!validator.isPassword(value)) {
-          error = '영어, 숫자, 특수문자 포함 8자리 이상 입력해주세요.';
-        }
-        if (formData.confirmPassword && value !== formData.confirmPassword) {
-          setErrors((prev) => ({ ...prev, confirmPasswordError: '비밀번호가 일치하지 않습니다.' }));
-        } else {
-          setErrors((prev) => ({ ...prev, confirmPasswordError: '' }));
-        }
-        break;
-      case 'confirmPassword':
-        if (value !== formData.password) {
-          error = '비밀번호가 일치하지 않습니다.';
-        }
-        break;
-    }
+  const isFormValid = useMemo(
+    () => isEmailValid && isPasswordValid && isConfirmPasswordValid && isNicknameValid && isInterestsValid,
+    [isEmailValid, isPasswordValid, isConfirmPasswordValid, isNicknameValid, isInterestsValid]
+  );
 
-    setErrors((prev) => ({ ...prev, [`${name}Error`]: error }));
-  };
+  const validateField = useCallback(
+    (name: FormField, value: string) => {
+      let error = '';
 
-  const checkUserId = () => {
-    if (!validator.isId(formData.userId)) {
-      return;
-    }
+      switch (name) {
+        case 'email':
+          if (!validator.isEmail(value)) {
+            error = '올바른 이메일 형식이 아닙니다.';
+          }
+          break;
+        case 'password':
+          if (!validator.isPassword(value)) {
+            error = '영어, 숫자, 특수문자 포함 8자리 이상 입력해주세요.';
+          }
+          if (formData.confirmPassword && value !== formData.confirmPassword) {
+            setErrors((prev) => ({ ...prev, confirmPasswordError: '비밀번호가 일치하지 않습니다.' }));
+          } else {
+            setErrors((prev) => ({ ...prev, confirmPasswordError: '' }));
+          }
+          break;
+        case 'confirmPassword':
+          if (value !== formData.password) {
+            error = '비밀번호가 일치하지 않습니다.';
+          }
+          break;
+        case 'nickname':
+          if (!validator.isNickname(value)) {
+            error = '특수문자 제외 2~8자로 입력해주세요.';
+          }
+          break;
+      }
 
-    const dummyUserId = 'admin123';
-    if (formData.userId === dummyUserId) {
-      setErrors((prev) => ({ ...prev, duplicatedIdError: '중복된 아이디입니다.' }));
-      setIdChecked(false);
+      setErrors((prev) => ({ ...prev, [`${name}Error`]: error }));
+    },
+    [formData.password, formData.confirmPassword]
+  );
+
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({ ...prev, [name]: value }));
+
+      if (name === 'email') {
+        setIsEmailChecked(false);
+      } else if (name === 'nickname') {
+        setIsNicknameChecked(false);
+      }
+
+      validateField(name as FormField, value);
+    },
+    [validateField]
+  );
+
+  const checkEmail = useCallback(() => {
+    if (!validator.isEmail(formData.email)) return;
+
+    if (formData.email === DUMMY_EMAIL) {
+      setErrors((prev) => ({ ...prev, emailError: '중복된 이메일입니다.' }));
+      setIsEmailChecked(false);
     } else {
-      setErrors((prev) => ({ ...prev, duplicatedIdError: '사용 가능한 아이디입니다.' }));
-      setIdChecked(true);
+      setErrors((prev) => ({ ...prev, emailError: '사용 가능한 이메일입니다.' }));
+      setIsEmailChecked(true);
     }
-  };
+  }, [formData.email]);
 
-  const renderError = (error: string, isSuccess = false) => {
-    return (
-      error && (
-        <p className={`absolute top-full left-0 mt-1.5 text-xs ${isSuccess ? 'text-positive' : 'text-warning'}`}>
-          {error}
-        </p>
-      )
-    );
-  };
+  const checkNickname = useCallback(() => {
+    if (!validator.isNickname(formData.nickname)) return;
 
-  const isFormValid = useMemo(() => {
-    const allFieldsFilled = formData.userId && formData.password && formData.confirmPassword;
+    if (formData.nickname === DUMMY_NICKNAME) {
+      setErrors((prev) => ({ ...prev, nicknameError: '중복된 닉네임입니다.' }));
+      setIsNicknameChecked(false);
+    } else {
+      setErrors((prev) => ({ ...prev, nicknameError: '사용 가능한 닉네임입니다.' }));
+      setIsNicknameChecked(true);
+    }
+  }, [formData.nickname]);
 
-    const noValidationErrors = !errors.userIdError && !errors.passwordError && !errors.confirmPasswordError;
+  const handleToggle = useCallback((interest: string) => {
+    setSelectedInterests((prev) => {
+      if (prev.includes(interest)) {
+        return prev.filter((item) => item !== interest);
+      }
 
-    const idCheckPassed = idChecked && errors.duplicatedIdError === '사용 가능한 아이디입니다.';
+      if (prev.length >= MAX_INTERESTS) {
+        return prev;
+      }
 
-    return allFieldsFilled && noValidationErrors && idCheckPassed;
-  }, [formData, errors, idChecked]);
+      return [...prev, interest];
+    });
+  }, []);
+
+  const handleSubmit = useCallback(() => {
+    if (isFormValid) {
+      navigate('/signin');
+    }
+  }, [isFormValid, navigate]);
+
+  const renderError = useCallback((error: string, isSuccess = false) => {
+    return error ? (
+      <p className={`absolute top-full left-0 mt-1.5 text-xs ${isSuccess ? 'text-positive' : 'text-warning'}`}>
+        {error}
+      </p>
+    ) : null;
+  }, []);
+
+  const renderInterestsGrid = useCallback(
+    (startIdx: number, endIdx: number) => (
+      <div className="grid grid-cols-4 gap-2">
+        {INTERESTS.slice(startIdx, endIdx).map((interest) => (
+          <ToggleButton
+            key={interest}
+            label={interest}
+            isActive={selectedInterests.includes(interest)}
+            onClick={() => handleToggle(interest)}
+            disabled={selectedInterests.length >= MAX_INTERESTS && !selectedInterests.includes(interest)}
+          />
+        ))}
+      </div>
+    ),
+    [selectedInterests, handleToggle]
+  );
 
   return (
-    <section className="bg-background flex min-h-dvh flex-col gap-5 px-4 pb-4">
-      <header className="flex flex-col">
-        <Header title="회원가입" isLeftIcon={true} />
-        <div className="-mx-4 flex items-center">
-          <hr className="border-primary w-1/4 border-2 border-t" />
-          <hr className="border-secondary flex-1 border-2 border-t" />
-        </div>
-        <div className="flex flex-row justify-between pt-4">
-          <p className="text-primary text-base">
-            로그인시 사용할 아이디와 <br />
-            비밀번호를 알려주세요
-          </p>
-          <img src="/images/mallang.webp" alt="말랑이" width={50} height={50} />
-        </div>
-      </header>
+    <CommonLayout
+      headerProps={{
+        title: '회원가입',
+        isLeftIcon: true,
+      }}
+      showFooter={false}>
+      <form className="flex flex-col gap-10">
+        <fieldset className="relative">
+          <legend className="sr-only">이메일 입력</legend>
+          <InputButtonSet
+            inputType="text"
+            labelText="이메일"
+            placeholder="이메일 입력"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            onClick={checkEmail}>
+            중복 확인
+          </InputButtonSet>
+          {renderError(errors.emailError, errors.emailError === '사용 가능한 이메일입니다.')}
+        </fieldset>
 
-      <form className="flex w-full flex-grow flex-col">
-        <div className="flex flex-col gap-11">
-          <fieldset className="relative">
-            <legend className="sr-only">아이디 입력</legend>
-            <InputButtonSet
-              inputType="text"
-              labelText="아이디"
-              placeholder="아이디 입력"
-              name="userId"
-              value={formData.userId}
-              onChange={handleChange}
-              onClick={checkUserId}>
-              중복 확인
-            </InputButtonSet>
-            {renderError(errors.userIdError)}
-            {renderError(errors.duplicatedIdError, errors.duplicatedIdError === '사용 가능한 아이디입니다.')}
-          </fieldset>
+        <fieldset className="relative">
+          <legend className="sr-only">비밀번호 입력</legend>
+          <InputText
+            labelText="비밀번호"
+            type="password"
+            placeholder="비밀번호 입력"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          {renderError(errors.passwordError)}
+        </fieldset>
 
-          <fieldset className="relative">
-            <legend className="sr-only">비밀번호 입력</legend>
-            <InputText
-              labelText="비밀번호"
-              type="password"
-              placeholder="비밀번호 입력"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-            {renderError(errors.passwordError)}
-          </fieldset>
+        <fieldset className="relative">
+          <legend className="sr-only">비밀번호 확인</legend>
+          <InputText
+            labelText="비밀번호 확인"
+            type="password"
+            placeholder="비밀번호 확인"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          {renderError(errors.confirmPasswordError)}
+        </fieldset>
 
-          <fieldset className="relative">
-            <legend className="sr-only">비밀번호 확인</legend>
-            <InputText
-              labelText="비밀번호 확인"
-              type="password"
-              placeholder="비밀번호 확인"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-            {renderError(errors.confirmPasswordError)}
-          </fieldset>
-        </div>
-        <div className="mt-auto">
-          <Button onClick={handleNext} ariaDisabled={!isFormValid}>
-            다음
-          </Button>
+        <fieldset className="relative">
+          <legend className="sr-only">닉네임 입력</legend>
+          <InputButtonSet
+            inputType="text"
+            labelText="닉네임"
+            placeholder="닉네임 입력"
+            name="nickname"
+            value={formData.nickname}
+            onChange={handleChange}
+            onClick={checkNickname}>
+            중복 확인
+          </InputButtonSet>
+          {renderError(errors.nicknameError, errors.nicknameError === '사용 가능한 닉네임입니다.')}
+        </fieldset>
+
+        <div className="flex flex-col gap-2">
+          <p className="text-primary text-xs">관심사 (최대 {MAX_INTERESTS}개)</p>
+          {renderInterestsGrid(0, 4)}
+          {renderInterestsGrid(4, 8)}
+          {renderInterestsGrid(8, 12)}
         </div>
       </form>
-    </section>
+
+      <div className="fixed right-0 bottom-4 left-0 mx-auto max-w-[440px] px-4">
+        <Button onClick={handleSubmit} ariaDisabled={!isFormValid}>
+          말랑이 만나러 가기
+        </Button>
+      </div>
+    </CommonLayout>
   );
 };
 

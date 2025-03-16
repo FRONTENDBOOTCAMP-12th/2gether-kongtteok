@@ -59,18 +59,18 @@ function ProfilePage() {
   return (
     <section className="bg-background flex min-h-dvh flex-col items-center p-4">
       <div className="flex w-full items-center justify-center">
-        <Header title="프로필" isLeftIcon={true} isRightIcon={true} />
+        <Header title="프로필" isLeftIcon isRightIcon />
       </div>
 
       <div className="flex w-full items-center justify-center">
-        {profile ? <ProfileInfo {...profile} /> : <p>로딩 중...</p>}
+        {profile ? <ProfileInfo {...profile} /> : <p className="text-primary text-sm">로딩 중...</p>}
       </div>
 
       <Tab />
 
       <section className="flex flex-col items-center gap-4 py-4">
         {loading ? (
-          <p className="text-gray-500">데이터를 불러오는 중...</p>
+          <p className="text-primary text-sm opacity-50">데이터를 불러오는 중...</p>
         ) : diaries.length > 0 ? (
           diaries.map((diary) => (
             <Link to={`/diary/${diary.id}`} key={diary.id}>
@@ -78,7 +78,7 @@ function ProfilePage() {
             </Link>
           ))
         ) : (
-          <p className="text-gray-500">아직 작성한 일기가 없어요.</p>
+          <p className="text-primary text-sm opacity-50">아직 작성한 일기가 없어요.</p>
         )}
       </section>
 

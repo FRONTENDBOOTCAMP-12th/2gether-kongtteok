@@ -133,7 +133,7 @@ function DiaryView() {
             <DiaryHeader date={diary.date} weather={diary.weather} emotion={diary.emotion} title={diary.title} />
 
             {diary.images.length > 0 && (
-              <section className="relative flex h-[200px] w-[408px] items-center justify-center overflow-hidden bg-[#D0B8A8]">
+              <section className="bg-secondary relative flex h-50 w-[102] items-center justify-center overflow-hidden">
                 <Swiper spaceBetween={10} slidesPerView={1} className="h-full w-full">
                   {diary.images.map((img, index) => (
                     <SwiperSlide key={index} className="flex items-center justify-center">
@@ -173,11 +173,11 @@ function DiaryView() {
               ) : (
                 <section className="flex flex-col items-center">
                   <img src="/images/mallang/mallang.png" alt="말랑이" width={140} height={140} />
-                  <div className="mt-2 min-h-[140px] w-full rounded-[10px] bg-[#ECE3DC] p-4 text-center">
+                  <div className="mt-2 min-h-35 w-full rounded-[10px] bg-[#ECE3DC] p-4 text-center">
                     {loading ? (
-                      <p className="text-lg text-[#3E3232]">말랑이가 생각 중...</p>
+                      <p className="text-primary text-lg">말랑이가 생각 중...</p>
                     ) : (
-                      <p className="whitespace-pre-line text-[#3E3232]">{reply}</p>
+                      <p className="text-primary whitespace-pre-line">{reply}</p>
                     )}
                   </div>
                 </section>
