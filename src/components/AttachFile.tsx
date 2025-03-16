@@ -48,22 +48,22 @@ function AttachFile({ label, children, className, attachImage }: AttachFileProps
           imageSrc?.length ? 'mb-3 border' : null
         )}>
         {imageSrc?.map((src) => {
-            return (
-              <SwiperSlide key={src} className="relative">
-                <img src={src} alt="첨부 이미지" />
-                <Button
-                  intent="outline"
-                  inlineSize="fit"
-                  size="small"
-                  onClick={() => {
-                    handleDelete(src);
-                  }}
-                  className="bg-blueberry-200 absolute top-1 right-1 cursor-pointer px-1">
-                  <Trash width={22} height={22} />
-                </Button>
-              </SwiperSlide>
-            );
-          })}
+          return (
+            <SwiperSlide key={src} className="relative">
+              <img src={src} alt="첨부 이미지" />
+              <Button
+                intent="outline"
+                inlineSize="fit"
+                size="small"
+                onClick={() => {
+                  handleDelete(src);
+                }}
+                className="bg-blueberry-200 absolute top-1 right-1 cursor-pointer px-1">
+                <Trash width={22} height={22} />
+              </Button>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
 
       {children}
