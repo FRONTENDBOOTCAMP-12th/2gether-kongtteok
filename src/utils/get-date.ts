@@ -13,3 +13,7 @@ export function getDate(): string {
 
   return dateString;
 }
+
+export function getDateDot(date?: string) {
+  return (date ?? getDate()).split('-').join('.');
+}

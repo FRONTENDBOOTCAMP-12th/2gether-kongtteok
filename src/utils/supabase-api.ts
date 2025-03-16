@@ -19,12 +19,12 @@ export const getDiaryList = async ({
   fields = '*',
   page = 0,
   perPage = 10,
-  orderKey = 'created_at',
-  sortKey = 'asc',
+  orderKey = 'date',
+  sortKey = 'desc',
 }: QueryOptions = {}) => {
   const fromIndex = page > 0 ? page + perPage - 1 : 0;
   const toIndex = perPage > 1 ? page + perPage - 1 : fromIndex;
-  const isAscending = sortKey.includes('asc');
+  const isAscending = sortKey.includes('desc');
 
   return await supabase
     .from(DATABASE_NAME)

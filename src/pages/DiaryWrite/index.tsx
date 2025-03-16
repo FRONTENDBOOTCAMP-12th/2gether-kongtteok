@@ -1,22 +1,25 @@
 import { useRef, useState } from 'react';
-import supabase, { DATABASE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import BottomSheet from '@/BottomSheet';
+import { tm } from '@/utils/ts-merge';
+import { getDate, getDateDot } from '@/utils/get-date';
+import { uploadFile } from '@/utils/supabase-api';
+import { useBottomSheetStore } from '@/stores/bottom-sheet';
+import supabase, { DATABASE_NAME, STORAGE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
+import CommonLayout from '@/components/layout/CommonLayout';
+import BottomSheet from '@/components/BottomSheet';
 import Button from '@/components/Button';
 import Switch from '@/components/Switch';
 import emotionList from '@/utils/emotion';
+import weatherList from '@/utils/weather';
 import Textarea from '@/components/Textarea';
 import InputText from '@/components/InputText';
 import AttachFile from '@/components/AttachFile';
-import EmotionImage, { EmotionType } from '@/components/EmotionImage';
 import EmotionButton from '@/components/EmotionButton';
-import { getDate } from '@/utils/get-date';
-import { uploadFile } from '@/utils/supabase-api';
+import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
+import WeatherImage, { type WeatherType } from '@/components/WeatherImage';
 
 const arrowIcon = (
-  <svg width={9} height={6} viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.30297 0.891784L4.65148 5.10815L1 0.891784" stroke="#3E3232" strokeLinejoin="bevel" />
+  <svg width={9} height={6} className="pointer-events" viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.30297 0.891784L4.65148 5.10815L1 0.891784" stroke="var(--color-primary)" strokeLinejoin="bevel" />
   </svg>
 );
 
@@ -24,106 +27,148 @@ interface DiaryWriteProps {
   date?: string;
 }
 
+const insertDiary = async (data: DiaryItemInsert) => {
+  const { error } = await supabase.from(DATABASE_NAME).insert([data]);
+
+  if (error) {
+    console.error(error);
+  }
+};
+
 function DiaryWrite({ date }: DiaryWriteProps) {
-  const [weather, setWeather] = useState<string>('날씨');
-  const [emotion, setEmotion] = useState<React.ReactNode | string>('감정');
-  const [isBottomSheetShow, setIsBottomSheetShow] = useState<boolean>(false);
-  const [bottomSheetTitle, setIsBottomSheetShowTitle] = useState<string>('');
+  const [weatherValue, setWeatherValue] = useState<WeatherType | undefined>(undefined);
+  const [emotionValue, setEmotionValue] = useState<EmotionType | undefined>(undefined);
+  const weather = weatherValue ? <WeatherImage weather={weatherValue} className="w-5" /> : '날씨';
+  const emotion = emotionValue ? <EmotionImage emotion={emotionValue} className="w-5" /> : '감정';
+
+  const [isEmptyWeather, setIsEmptyWeather] = useState<boolean | null>(null);
+  const [isEmptyEmotion, setIsEmptyEmotion] = useState<boolean | null>(null);
+
   const imageFileList = useRef<File[]>([]);
-  const imageFilesPath = useRef<string | undefined[]>([]);
-  const weatherValue = useRef('');
-  const emotionValue = useRef('');
+  const imageFilesPath = useRef<string[]>([]);
+
+  const [bottomSheetContents, setBottomSheetContents] = useState<React.ReactNode | string>('');
+
+  const bottomSheetTitle = useBottomSheetStore((s) => s.title);
+  const isBottomSheetShow = useBottomSheetStore((s) => s.isShow);
+  const bottomSheetShow = useBottomSheetStore((s) => s.showBottomSheet);
+  const bottomSheetHide = useBottomSheetStore((s) => s.hideBottomSheet);
+
+  const formatDate = getDateDot(date);
 
   const selectEmotion = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const emotion = (e.target as HTMLImageElement).alt as EmotionType;
+    const selecteEmotion = (e.target as HTMLImageElement).dataset.emotion as EmotionType;
 
-    setEmotion(<EmotionImage emotion={emotion} className="w-5" />);
+    setEmotionValue(selecteEmotion);
+    setIsEmptyEmotion(false);
     closeBottomSheet();
-    emotionValue.current = emotion;
+  };
+
+  const selectWeather = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const selecteWeather = (e.target as HTMLImageElement).dataset.weather as WeatherType;
+
+    setWeatherValue(selecteWeather);
+    setIsEmptyWeather(false);
+    closeBottomSheet();
   };
 
   const emotionBtnList = (
     <div className="grid grid-cols-4 justify-items-center gap-y-4 pb-1">
       {emotionList.map((emotion) => (
-        <EmotionButton
-          key={emotion}
-          emotion={emotion}
-          value={emotion}
-          title={emotion}
-          className="w-12"
-          onClick={selectEmotion}
-        />
+        <EmotionButton key={emotion} emotion={emotion} className="w-12" onClick={selectEmotion} />
       ))}
     </div>
   );
 
-  const selectWeather = (
+  const weatherBtnList = (
     <div className="grid grid-cols-5 justify-items-center gap-y-4 pb-1">
-      <button type="button" className="cursor-pointer">
-        맑음
-      </button>
-      <button type="button" className="cursor-pointer">
-        비
-      </button>
-      <button type="button" className="cursor-pointer">
-        눈
-      </button>
-      <button type="button" className="cursor-pointer">
-        바람 많음
-      </button>
-      <button type="button" className="cursor-pointer">
-        흐림
-      </button>
+      {weatherList.map((weather) => {
+        return (
+          <button type="button" key={weather} className="cursor-pointer" onClick={selectWeather}>
+            <WeatherImage weather={weather} className="w-12" />
+          </button>
+        );
+      })}
     </div>
   );
 
-  const BottomSheetContents = bottomSheetTitle.includes('감정') ? emotionBtnList : selectWeather;
-  const today = getDate();
+  const selectValue = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const selectedText = (e.currentTarget as HTMLButtonElement).innerText;
+    const selectedId = (e.target as HTMLImageElement).id;
 
-  const openBottomSheet = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const name = (e.currentTarget as HTMLButtonElement).id;
-    const bottomSheetTitle = name === 'emotion' ? '감정' : '날씨';
+    switch (selectedId) {
+      case 'weather':
+        setBottomSheetContents(weatherBtnList);
+        break;
 
-    setIsBottomSheetShow(true);
-    setIsBottomSheetShowTitle(`${bottomSheetTitle} 선택`);
+      case 'emotion':
+        setBottomSheetContents(emotionBtnList);
+        break;
+
+      default:
+        break;
+    }
+
+    bottomSheetShow({ title: `${selectedText} 선택` });
   };
 
   const closeBottomSheet = () => {
-    setIsBottomSheetShow(false);
+    bottomSheetHide();
   };
 
   const attachImage = (file: FileList) => {
     imageFileList.current = [...file];
   };
 
-  const handleWrite = (formData: FormData) => {
-    const diaryData = {
+  const handleSubmit = (formData: FormData) => {
+    let diaryData = {
       user_id: 'kong',
       date: formData.get('date'),
-      weather: formData.get('weather') ?? 'sunny',
+      weather: formData.get('weather'),
       emotion: formData.get('emotion'),
       title: formData.get('title'),
       content: formData.get('content'),
-      diaryImage: imageFileList.current.length ? JSON.stringify(imageFileList.current) : null,
+      diaryImage: imageFilesPath.current.length ? JSON.stringify(imageFilesPath.current) : null,
       isPrivate: !!formData.get('isPrivate'),
     } as DiaryItemInsert;
+
+    setIsEmptyWeather(!weatherValue);
+    setIsEmptyEmotion(!emotionValue);
+
+    // FIXME: 필수값이 비어있을 때 DB에 들어가지 않도록 수정이 필요함
+    if (isEmptyWeather === undefined || isEmptyEmotion === undefined || isEmptyWeather || isEmptyEmotion) {
+      return;
+    }
 
     try {
       if (imageFileList.current.length) {
         Promise.all(
-          imageFileList.current.map(async (file) => await uploadFile({ date: '2025-03-12', user_id: 'kong', file }))
+          imageFileList.current.map(async (file) => await uploadFile({ date: getDate(), user_id: 'kong', file }))
         )
           .then((res) => {
-            imageFilesPath.current = res.map(({ data }) => data?.path);
+            return res.map(({ data }) => {
+              if (data) {
+                return supabase.storage.from(STORAGE_NAME).getPublicUrl(data.path);
+              }
+            });
           })
-          .then(async () => {
-            console.log(diaryData);
-            const { error } = await supabase.from(DATABASE_NAME).insert([diaryData]);
-
-            if (error) {
-              console.error(error);
-            }
+          .then((dataList) => {
+            imageFilesPath.current = dataList
+              .map((item) => item?.data.publicUrl)
+              .filter((item): item is string => Boolean(item));
+          })
+          .then(() => {
+            diaryData = {
+              ...diaryData,
+              diaryImage: imageFilesPath.current,
+            };
+            insertDiary(diaryData).then(() => {
+              imageFileList.current = [];
+              imageFilesPath.current = [];
+            });
           });
+      } else {
+        insertDiary(diaryData);
       }
     } catch (error) {
       console.error(error);
@@ -131,41 +176,61 @@ function DiaryWrite({ date }: DiaryWriteProps) {
   };
 
   return (
-    <div id="wrap" className="max-w-kong m-auto pb-15">
-      <Header title="일기 쓰기" isLeftIcon isRightIcon />
-
+    <CommonLayout headerProps={{ title: '일기 쓰기', isLeftIcon: true, isRightIcon: true }}>
       <main className="px-4">
-        <form action={handleWrite}>
+        <form action={handleSubmit}>
           <div className="flex flex-col gap-y-3">
             <div className="mt-2 flex flex-row items-center justify-between">
               <div className="flex flex-row items-center gap-x-2">
-                <input type="hidden" name="weather" value={weatherValue.current} />
-                <input type="hidden" name="emotion" value={emotionValue.current} />
-                <span className="text-primary text-[15px] leading-3.5">{date ?? today}</span>
-                <input type="hidden" name="date" value={date ?? today} />
+                <input type="hidden" name="weather" value={weatherValue} />
+                <input type="hidden" name="emotion" value={emotionValue} />
+                <span className="text-primary text-[15px] leading-3.5">{formatDate}</span>
+                <input type="hidden" name="date" value={date ?? getDate()} />
                 <Button
                   id="weather"
                   intent="outline"
                   size="small"
                   inlineSize="fit"
-                  value={weather}
-                  onClick={openBottomSheet}
-                  className="flex flex-row items-center gap-x-1.5 bg-white px-1.5">
+                  onClick={selectValue}
+                  className="relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {weather}
                   {arrowIcon}
+                  <span
+                    className={tm(
+                      'absolute bottom-full left-[50%] mb-1 hidden -translate-x-[50%] px-2 py-0.25',
+                      'bg-warning rounded-md whitespace-nowrap text-white',
+                      { block: isEmptyWeather }
+                    )}>
+                    필수입력
+                  </span>
                 </Button>
                 <Button
                   id="emotion"
                   intent="outline"
                   size="small"
                   inlineSize="fit"
-                  onClick={openBottomSheet}
-                  className="flex flex-row items-center gap-x-1.5 bg-white px-1.5">
+                  onClick={selectValue}
+                  className="relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {emotion}
                   {arrowIcon}
+                  <span
+                    className={tm(
+                      'absolute bottom-full left-[50%] mb-1 hidden -translate-x-[50%] px-2 py-0.25',
+                      'bg-warning rounded-md whitespace-nowrap text-white',
+                      { block: isEmptyEmotion }
+                    )}>
+                    필수입력
+                  </span>
                 </Button>
               </div>
-              <Switch className="min-w-11" label="혼자보기" stateOnText='혼자보기' stateOffText='자랑하기' defaultChecked name="isPrivate" />
+              <Switch
+                className="min-w-11"
+                label="일기 공개 상태"
+                stateOnText="혼자보기"
+                stateOffText="자랑하기"
+                defaultChecked
+                name="isPrivate"
+              />
             </div>
 
             <InputText labelText="제목" name="title" required labelHidden />
@@ -182,12 +247,10 @@ function DiaryWrite({ date }: DiaryWriteProps) {
         </form>
       </main>
 
-      <BottomSheet isOpen={isBottomSheetShow} title={bottomSheetTitle} handleClose={closeBottomSheet}>
-        {BottomSheetContents}
+      <BottomSheet isOpen={isBottomSheetShow} title={bottomSheetTitle!} handleClose={closeBottomSheet}>
+        {bottomSheetContents}
       </BottomSheet>
-
-      <Footer />
-    </div>
+    </CommonLayout>
   );
 }
 
