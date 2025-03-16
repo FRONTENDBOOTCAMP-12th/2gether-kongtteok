@@ -11,7 +11,7 @@ import EmotionButton from './EmotionButton';
 import ToggleButton from './ToggleButton';
 import InputButtonSet from './InputButtonSet';
 import ProfileInfo from './ProfileInfo';
-import BottomSheet from '@/BottomSheet';
+import BottomSheet from '@/components/BottomSheet';
 import DiaryHeader, { type DiaryHeaderProps } from './DiaryHeader';
 import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
 import { Croissant } from '@mynaui/icons-react';
@@ -62,7 +62,7 @@ function Components() {
   };
 
   return (
-    <CommonLayout headerProps={{title: '공통 컴포넌트'}}>
+    <CommonLayout headerProps={{ title: '공통 컴포넌트' }}>
       <article className="flex flex-col items-start gap-y-2">
         <Header title="메인" isLeftIcon={false} isRightIcon={true} />
         <Header title="알림" isLeftIcon={true} isRightIcon={false} />
