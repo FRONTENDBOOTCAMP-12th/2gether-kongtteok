@@ -23,7 +23,7 @@ function CommonLayout({ children, headerProps, showFooter = true }: CommonLayout
   }
 
   return (
-    <div className="">
+    <div className="max-w-kong m-auto">
       {headerProps && <Header {...headerProps} />}
       <main className="p-4">{children}</main>
       {showFooter && <Footer />}

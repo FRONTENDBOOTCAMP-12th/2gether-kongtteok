@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import CommonLayout from '@/components/layout/CommonLayout';
 import Header from './layout/Header';
-import Footer from './layout/Footer';
 import Tab from './Tab';
 import Button from './Button';
 import Switch from './Switch';
@@ -62,8 +62,7 @@ function Components() {
   };
 
   return (
-    <section className="max-w-kong m-auto p-4 pb-20">
-      <h1 className="pb-4 text-2xl">공통 컴포넌트</h1>
+    <CommonLayout headerProps={{title: '공통 컴포넌트'}}>
       <article className="flex flex-col items-start gap-y-2">
         <Header title="메인" isLeftIcon={false} isRightIcon={true} />
         <Header title="알림" isLeftIcon={true} isRightIcon={false} />
@@ -201,9 +200,7 @@ function Components() {
       <article className="mt-12">
         <EmotionBarChart />
       </article>
-
-      <Footer />
-    </section>
+    </CommonLayout>
   );
 }
 
