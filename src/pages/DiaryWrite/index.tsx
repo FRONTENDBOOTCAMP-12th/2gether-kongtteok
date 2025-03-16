@@ -1,24 +1,24 @@
 import { useRef, useState } from 'react';
 import { tm } from '@/utils/ts-merge';
-import { getDate } from '@/utils/get-date';
+import { getDate, getDateDot } from '@/utils/get-date';
 import { uploadFile } from '@/utils/supabase-api';
+import { useBottomSheetStore } from '@/stores/bottom-sheet';
 import supabase, { DATABASE_NAME, STORAGE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import BottomSheet from '@/BottomSheet';
+import CommonLayout from '@/components/layout/CommonLayout';
+import BottomSheet from '@/components/BottomSheet';
 import Button from '@/components/Button';
 import Switch from '@/components/Switch';
+import emotionList from '@/utils/emotion';
+import weatherList from '@/utils/weather';
 import Textarea from '@/components/Textarea';
 import InputText from '@/components/InputText';
 import AttachFile from '@/components/AttachFile';
 import EmotionButton from '@/components/EmotionButton';
-import emotionList from '@/utils/emotion';
-import weatherList from '@/utils/weather';
 import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 import WeatherImage, { type WeatherType } from '@/components/WeatherImage';
 
 const arrowIcon = (
-  <svg width={9} height={6} viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width={9} height={6} className="pointer-events" viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M8.30297 0.891784L4.65148 5.10815L1 0.891784" stroke="var(--color-primary)" strokeLinejoin="bevel" />
   </svg>
 );
@@ -27,44 +27,49 @@ interface DiaryWriteProps {
   date?: string;
 }
 
-const insertDiary = async(data: DiaryItemInsert) => {
+const insertDiary = async (data: DiaryItemInsert) => {
   const { error } = await supabase.from(DATABASE_NAME).insert([data]);
 
   if (error) {
     console.error(error);
   }
-}
+};
 
 function DiaryWrite({ date }: DiaryWriteProps) {
-  const [weather, setWeather] = useState<React.ReactNode | string>('날씨');
-  const [emotion, setEmotion] = useState<React.ReactNode | string>('감정');
-  const [isBottomSheetShow, setIsBottomSheetShow] = useState<boolean>(false);
-  const [bottomSheetTitle, setIsBottomSheetShowTitle] = useState<string>('');
-  const [isEmptyWeather, setIsEmptyWeather] = useState<boolean>(false);
-  const [isEmptyEmotion, setIsEmptyEmotion] = useState<boolean>(false);
+  const [weatherValue, setWeatherValue] = useState<WeatherType | undefined>(undefined);
+  const [emotionValue, setEmotionValue] = useState<EmotionType | undefined>(undefined);
+  const weather = weatherValue ? <WeatherImage weather={weatherValue} className="w-5" /> : '날씨';
+  const emotion = emotionValue ? <EmotionImage emotion={emotionValue} className="w-5" /> : '감정';
+
+  const [isEmptyWeather, setIsEmptyWeather] = useState<boolean | null>(null);
+  const [isEmptyEmotion, setIsEmptyEmotion] = useState<boolean | null>(null);
+
   const imageFileList = useRef<File[]>([]);
   const imageFilesPath = useRef<string[]>([]);
-  const weatherValue = useRef('');
-  const emotionValue = useRef('');
-  const titleValue = useRef<FormDataEntryValue | null | string>('');
-  const contentValue = useRef<FormDataEntryValue | null | string>('');
+
+  const [bottomSheetContents, setBottomSheetContents] = useState<React.ReactNode | string>('');
+
+  const bottomSheetTitle = useBottomSheetStore((s) => s.title);
+  const isBottomSheetShow = useBottomSheetStore((s) => s.isShow);
+  const bottomSheetShow = useBottomSheetStore((s) => s.showBottomSheet);
+  const bottomSheetHide = useBottomSheetStore((s) => s.hideBottomSheet);
+
+  const formatDate = getDateDot(date);
 
   const selectEmotion = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const selecteEmotion = (e.target as HTMLImageElement).dataset.emotion as EmotionType;
 
-    setEmotion(<EmotionImage emotion={selecteEmotion} className="w-5" />);
-    closeBottomSheet();
+    setEmotionValue(selecteEmotion);
     setIsEmptyEmotion(false);
-    emotionValue.current = selecteEmotion;
+    closeBottomSheet();
   };
 
   const selectWeather = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const selecteWeather = (e.target as HTMLImageElement).dataset.weather as WeatherType;
 
-    setWeather(<WeatherImage weather={selecteWeather} className="w-5" />);
+    setWeatherValue(selecteWeather);
     setIsEmptyWeather(false);
     closeBottomSheet();
-    weatherValue.current = selecteWeather;
   };
 
   const emotionBtnList = (
@@ -87,19 +92,28 @@ function DiaryWrite({ date }: DiaryWriteProps) {
     </div>
   );
 
-  const BottomSheetContents = bottomSheetTitle.includes('감정') ? emotionBtnList : weatherBtnList;
-  const today = getDate();
+  const selectValue = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const selectedText = (e.currentTarget as HTMLButtonElement).innerText;
+    const selectedId = (e.target as HTMLImageElement).id;
 
-  const openBottomSheet = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    const name = (e.currentTarget as HTMLButtonElement).id;
-    const bottomSheetTitle = name === 'emotion' ? '감정' : '날씨';
+    switch (selectedId) {
+      case 'weather':
+        setBottomSheetContents(weatherBtnList);
+        break;
 
-    setIsBottomSheetShow(true);
-    setIsBottomSheetShowTitle(`${bottomSheetTitle} 선택`);
+      case 'emotion':
+        setBottomSheetContents(emotionBtnList);
+        break;
+
+      default:
+        break;
+    }
+
+    bottomSheetShow({ title: `${selectedText} 선택` });
   };
 
   const closeBottomSheet = () => {
-    setIsBottomSheetShow(false);
+    bottomSheetHide();
   };
 
   const attachImage = (file: FileList) => {
@@ -107,7 +121,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
   };
 
   const handleSubmit = (formData: FormData) => {
-    const diaryData = {
+    let diaryData = {
       user_id: 'kong',
       date: formData.get('date'),
       weather: formData.get('weather'),
@@ -118,10 +132,13 @@ function DiaryWrite({ date }: DiaryWriteProps) {
       isPrivate: !!formData.get('isPrivate'),
     } as DiaryItemInsert;
 
-    setIsEmptyWeather(!weatherValue.current);
-    setIsEmptyEmotion(!emotionValue.current);
-    titleValue.current = formData.get('title');
-    contentValue.current = formData.get('content');
+    setIsEmptyWeather(!weatherValue);
+    setIsEmptyEmotion(!emotionValue);
+
+    // FIXME: 필수값이 비어있을 때 DB에 들어가지 않도록 수정이 필요함
+    if (isEmptyWeather === undefined || isEmptyEmotion === undefined || isEmptyWeather || isEmptyEmotion) {
+      return;
+    }
 
     try {
       if (imageFileList.current.length) {
@@ -135,12 +152,16 @@ function DiaryWrite({ date }: DiaryWriteProps) {
               }
             });
           })
-          .then((dataList)=> {
-            imageFilesPath.current = dataList.map(item => item?.data.publicUrl).filter((item): item is string => Boolean(item));
+          .then((dataList) => {
+            imageFilesPath.current = dataList
+              .map((item) => item?.data.publicUrl)
+              .filter((item): item is string => Boolean(item));
           })
           .then(() => {
-            console.log(imageFilesPath.current);
-            console.log(diaryData)
+            diaryData = {
+              ...diaryData,
+              diaryImage: imageFilesPath.current,
+            };
             insertDiary(diaryData).then(() => {
               imageFileList.current = [];
               imageFilesPath.current = [];
@@ -155,32 +176,30 @@ function DiaryWrite({ date }: DiaryWriteProps) {
   };
 
   return (
-    <div id="wrap" className="max-w-kong m-auto pb-15">
-      <Header title="일기 쓰기" isLeftIcon isRightIcon />
-
+    <CommonLayout headerProps={{ title: '일기 쓰기', isLeftIcon: true, isRightIcon: true }}>
       <main className="px-4">
         <form action={handleSubmit}>
           <div className="flex flex-col gap-y-3">
             <div className="mt-2 flex flex-row items-center justify-between">
               <div className="flex flex-row items-center gap-x-2">
-                <input type="hidden" name="weather" value={weatherValue.current} />
-                <input type="hidden" name="emotion" value={emotionValue.current} />
-                <span className="text-primary text-[15px] leading-3.5">{date ?? today}</span>
-                <input type="hidden" name="date" value={date ?? today} />
+                <input type="hidden" name="weather" value={weatherValue} />
+                <input type="hidden" name="emotion" value={emotionValue} />
+                <span className="text-primary text-[15px] leading-3.5">{formatDate}</span>
+                <input type="hidden" name="date" value={date ?? getDate()} />
                 <Button
                   id="weather"
                   intent="outline"
                   size="small"
                   inlineSize="fit"
-                  onClick={openBottomSheet}
+                  onClick={selectValue}
                   className="relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {weather}
                   {arrowIcon}
                   <span
                     className={tm(
-                      'hidden absolute bottom-full left-[50%] mb-1 px-2 py-0.25 -translate-x-[50%]',
-                      'bg-warning text-white  whitespace-nowrap rounded-md',
-                      {'block': isEmptyWeather}
+                      'absolute bottom-full left-[50%] mb-1 hidden -translate-x-[50%] px-2 py-0.25',
+                      'bg-warning rounded-md whitespace-nowrap text-white',
+                      { block: isEmptyWeather }
                     )}>
                     필수입력
                   </span>
@@ -190,15 +209,15 @@ function DiaryWrite({ date }: DiaryWriteProps) {
                   intent="outline"
                   size="small"
                   inlineSize="fit"
-                  onClick={openBottomSheet}
+                  onClick={selectValue}
                   className="relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {emotion}
                   {arrowIcon}
                   <span
                     className={tm(
-                      'hidden absolute bottom-full left-[50%] mb-1 px-2 py-0.25 -translate-x-[50%]',
-                      'bg-warning text-white  whitespace-nowrap rounded-md',
-                      {'block': isEmptyEmotion}
+                      'absolute bottom-full left-[50%] mb-1 hidden -translate-x-[50%] px-2 py-0.25',
+                      'bg-warning rounded-md whitespace-nowrap text-white',
+                      { block: isEmptyEmotion }
                     )}>
                     필수입력
                   </span>
@@ -228,12 +247,10 @@ function DiaryWrite({ date }: DiaryWriteProps) {
         </form>
       </main>
 
-      <BottomSheet isOpen={isBottomSheetShow} title={bottomSheetTitle} handleClose={closeBottomSheet}>
-        {BottomSheetContents}
+      <BottomSheet isOpen={isBottomSheetShow} title={bottomSheetTitle!} handleClose={closeBottomSheet}>
+        {bottomSheetContents}
       </BottomSheet>
-
-      <Footer />
-    </div>
+    </CommonLayout>
   );
 }
 
