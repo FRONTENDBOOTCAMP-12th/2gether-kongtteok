@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 
 export type EmotionType = 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
-enum EMOTION {
+export enum EMOTION {
   exciting = '설렘',
   happy = '행복',
   proud = '뿌듯',
