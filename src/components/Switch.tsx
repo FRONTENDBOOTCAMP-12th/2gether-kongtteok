@@ -7,10 +7,15 @@ type SwitchProps = ComponentProps<'input'> & {
   checked?: boolean;
   stateOnText?: string;
   stateOffText?: string;
+  onChangeValue?: () => void;
 };
 
-function Switch({ label, checked, stateOnText, stateOffText, className, ...restProps }: SwitchProps) {
+function Switch({ label, checked, stateOnText, stateOffText, className, onChangeValue, ...restProps }: SwitchProps) {
   const id = useId();
+
+  const handleChange = () => {
+    onChangeValue?.();
+  };
 
   return (
     <label htmlFor={id} className="relative inline-flex items-center gap-x-2">
@@ -20,6 +25,7 @@ function Switch({ label, checked, stateOnText, stateOffText, className, ...restP
         id={id}
         className="peer peer absolute inset-0 cursor-pointer appearance-none"
         checked={checked}
+        onChange={handleChange}
         {...restProps}
       />
       {stateOnText && (

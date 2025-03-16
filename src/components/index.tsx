@@ -17,6 +17,7 @@ import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
 import { Croissant } from '@mynaui/icons-react';
 import Calendar from './Calendar';
 import EmotionBarChart from './Chart';
+import ThemeSetters from './ThemeSetters';
 
 const profileData = {
   profileImage: '/logo.webp',
@@ -86,13 +87,16 @@ function Components() {
         <h2>이미지 파일 첨부</h2>
         <AttachFile label="이미지 첨부" />
       </article>
-
       <article className="mt-15">
         <h2>Switch</h2>
         <div className="flex flex-col items-start gap-y-3">
           <Switch label="다크모드" defaultChecked />
           <Switch label="일기 공개 상태" stateOnText="혼자보기" stateOffText="같이보기" className="min-w-11" />
         </div>
+      </article>
+      <article className="mt-15">
+        <h2>다크모드 토글</h2>
+        <ThemeSetters />
       </article>
       <article className="mt-12 flex flex-col items-start gap-y-2">
         <h2>탭 컴포넌트</h2>
