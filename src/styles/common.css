@@ -7,6 +7,10 @@
 body {
   background-color: var(--color-background);
 
+  &:has([data-theme='dark']) {
+    background-color: var(--color-brown-500);
+  }
+
   ::selection {
     background-color: var(--color-peach-500);
   }
