@@ -56,7 +56,7 @@ export default tseslint.config(
       'react/prop-types': 'off',
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true, allowExportNames: ['emotionConfig', 'navList'] },
+        { allowConstantExport: true, allowExportNames: ['emotionConfig', 'navList', 'EMOTION'] },
       ],
       'jsx-a11y/alt-text': [
         'warn',
