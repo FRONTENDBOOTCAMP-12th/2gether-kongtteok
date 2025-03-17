@@ -1,3 +1,4 @@
+import { motion } from 'motion/react';
 import { tm } from '@/utils/ts-merge';
 import { X } from '@mynaui/icons-react';
 
@@ -15,7 +16,9 @@ function BottomSheet({ isOpen = false, title, children, handleClose }: BottomShe
 
   return (
     <div hidden={!isOpen} className="fixed inset-0 z-60">
-      <div
+      <motion.div
+        animate={{ y: isOpen ? '0' : '100%' }}
+        transition={{ duration: 0.3, ease: 'anticipate' }}
         className={tm(
           'max-w-kong fixed bottom-0 left-[50%] z-10 m-auto w-full px-4 pt-5 pb-3',
           '-translate-x-[50%] rounded-t-[1.25rem] bg-white'
@@ -25,7 +28,7 @@ function BottomSheet({ isOpen = false, title, children, handleClose }: BottomShe
         <button type="button" onClick={closeBottomSheet} className="absolute top-4 right-2.5 cursor-pointer p-1">
           <X aria-label="닫기" />
         </button>
-      </div>
+      </motion.div>
       <span className="absolute inset-0 bg-black/60" aria-hidden="true" onClick={closeBottomSheet}></span>
     </div>
   );
