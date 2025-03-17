@@ -36,8 +36,8 @@ const insertDiary = async (data: DiaryItemInsert) => {
 };
 
 function DiaryWrite({ date }: DiaryWriteProps) {
-  const [weatherValue, setWeatherValue] = useState<WeatherType | undefined>(undefined);
-  const [emotionValue, setEmotionValue] = useState<EmotionType | undefined>(undefined);
+  const [weatherValue, setWeatherValue] = useState<WeatherType | ''>('');
+  const [emotionValue, setEmotionValue] = useState<EmotionType | ''>('');
   const weather = weatherValue ? <WeatherImage weather={weatherValue} className="w-5" /> : '날씨';
   const emotion = emotionValue ? <EmotionImage emotion={emotionValue} className="w-5" /> : '감정';
 
@@ -134,9 +134,9 @@ function DiaryWrite({ date }: DiaryWriteProps) {
 
     setIsEmptyWeather(!weatherValue);
     setIsEmptyEmotion(!emotionValue);
+    console.log(!weatherValue, !emotionValue, isEmptyWeather, isEmptyEmotion)
 
-    // FIXME: 필수값이 비어있을 때 DB에 들어가지 않도록 수정이 필요함
-    if (isEmptyWeather === undefined || isEmptyEmotion === undefined || isEmptyWeather || isEmptyEmotion) {
+    if (!weatherValue || !emotionValue || isEmptyWeather || isEmptyEmotion) {
       return;
     }
 
