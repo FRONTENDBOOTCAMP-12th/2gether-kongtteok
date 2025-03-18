@@ -45,6 +45,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      Tables: {
+        users: {
+          Row: {
+            id: string;
+            email: string;
+            nickname: string;
+          };
+          Insert: {
+            id: string;
+            email: string;
+            nickname: string;
+          };
+          Update: {
+            id?: string;
+            email?: string;
+            nickname?: string;
+          };
+        };
+        interests: {
+          Row: {
+            id: string;
+            name: string;
+          };
+          Insert: {};
+          Update: {};
+        };
+        user_interests: {
+          Row: {
+            user_id: string;
+            interest_id: string;
+          };
+          Insert: {
+            user_id: string;
+            interest_id: string;
+          };
+          Update: {};
+        };
+      };
     };
     Views: {
       [_ in never]: never;
