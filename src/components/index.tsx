@@ -18,6 +18,7 @@ import { Croissant } from '@mynaui/icons-react';
 import Calendar from './Calendar';
 import EmotionBarChart from './Chart';
 import ThemeSetters from './ThemeSetters';
+import NotiItem from './NotiItem';
 
 const profileData = {
   profileImage: '/logo.webp',
@@ -203,6 +204,10 @@ function Components() {
 
       <article className="mt-12">
         <EmotionBarChart />
+      </article>
+
+      <article className="mt-12">
+        <NotiItem nickname="박보검" diaryDate="2025-03-10" />
       </article>
     </CommonLayout>
   );

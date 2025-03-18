@@ -122,7 +122,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
 
   const handleSubmit = (formData: FormData) => {
     let diaryData = {
-      user_id: 'kong',
+      user_id: '79dd7647-498f-427e-81c6-d6a0f70259ff',
       date: formData.get('date'),
       weather: formData.get('weather'),
       emotion: formData.get('emotion'),
@@ -134,7 +134,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
 
     setIsEmptyWeather(!weatherValue);
     setIsEmptyEmotion(!emotionValue);
-    console.log(!weatherValue, !emotionValue, isEmptyWeather, isEmptyEmotion)
+    console.log(!weatherValue, !emotionValue, isEmptyWeather, isEmptyEmotion);
 
     if (!weatherValue || !emotionValue || isEmptyWeather || isEmptyEmotion) {
       return;
@@ -143,7 +143,9 @@ function DiaryWrite({ date }: DiaryWriteProps) {
     try {
       if (imageFileList.current.length) {
         Promise.all(
-          imageFileList.current.map(async (file) => await uploadFile({ date: getDate(), user_id: 'kong', file }))
+          imageFileList.current.map(
+            async (file) => await uploadFile({ date: getDate(), user_id: '79dd7647-498f-427e-81c6-d6a0f70259ff', file })
+          )
         )
           .then((res) => {
             return res.map(({ data }) => {
@@ -177,7 +179,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
 
   return (
     <CommonLayout headerProps={{ title: '일기 쓰기', isLeftIcon: true, isRightIcon: true }}>
-      <main className="px-4">
+      <main>
         <form action={handleSubmit}>
           <div className="flex flex-col gap-y-3">
             <div className="mt-2 flex flex-row items-center justify-between">
