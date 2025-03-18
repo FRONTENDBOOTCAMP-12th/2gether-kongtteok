@@ -3,8 +3,9 @@ import InputButtonSet from '@/components/InputButtonSet';
 import InputText from '@/components/InputText';
 import CommonLayout from '@/components/layout/CommonLayout';
 import ToggleButton from '@/components/ToggleButton';
+import supabase from '@/lib/supabase-client';
 import validator from '@/lib/validator';
-import { useState, useMemo, useCallback, ChangeEvent } from 'react';
+import { useState, useMemo, useCallback, ChangeEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 type FormField = 'email' | 'password' | 'confirmPassword' | 'nickname';
@@ -23,10 +24,12 @@ interface Errors {
   nicknameError: string;
 }
 
-const INTERESTS = ['취미', '동물', '가정', '푸드', '패션', '직장', '여행', '운동', '학교', '친구', '돈', '사랑'];
+interface Interest {
+  id: number;
+  name: string;
+}
+
 const MAX_INTERESTS = 4;
-const DUMMY_EMAIL = 'test@test.com';
-const DUMMY_NICKNAME = 'test12';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -47,10 +50,30 @@ const SignUp = () => {
 
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [interests, setInterests] = useState<Interest[]>([]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInterests = async () => {
+      try {
+        const { data, error } = await supabase.from('interests').select('id, name').order('name');
+
+        if (error) throw error;
+        setInterests(data || []);
+      } catch (error) {
+        console.error('Error fetching interests:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInterests();
+  }, []);
 
   const isEmailValid = useMemo(
-    () => formData.email && !errors.emailError && isEmailChecked,
+    () => formData.email && (!errors.emailError || errors.emailError === '사용 가능한 이메일입니다.') && isEmailChecked,
     [formData.email, errors.emailError, isEmailChecked]
   );
 
@@ -65,7 +88,10 @@ const SignUp = () => {
   );
 
   const isNicknameValid = useMemo(
-    () => formData.nickname && !errors.nicknameError && isNicknameChecked,
+    () =>
+      formData.nickname &&
+      (!errors.nicknameError || errors.nicknameError === '사용 가능한 닉네임입니다.') &&
+      isNicknameChecked,
     [formData.nickname, errors.nicknameError, isNicknameChecked]
   );
 
@@ -132,27 +158,47 @@ const SignUp = () => {
     [validateField]
   );
 
-  const checkEmail = useCallback(() => {
+  const checkEmail = useCallback(async () => {
     if (!validator.isEmail(formData.email)) return;
 
-    if (formData.email === DUMMY_EMAIL) {
-      setErrors((prev) => ({ ...prev, emailError: '중복된 이메일입니다.' }));
+    try {
+      const { data, error } = await supabase.from('users').select('email').eq('email', formData.email);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setErrors((prev) => ({ ...prev, emailError: '중복된 이메일입니다.' }));
+        setIsEmailChecked(false);
+      } else {
+        setErrors((prev) => ({ ...prev, emailError: '사용 가능한 이메일입니다.' }));
+        setIsEmailChecked(true);
+      }
+    } catch (error) {
+      console.error('Email check error:', error);
+      setErrors((prev) => ({ ...prev, emailError: '이메일 확인 중 오류가 발생했습니다.' }));
       setIsEmailChecked(false);
-    } else {
-      setErrors((prev) => ({ ...prev, emailError: '사용 가능한 이메일입니다.' }));
-      setIsEmailChecked(true);
     }
   }, [formData.email]);
 
-  const checkNickname = useCallback(() => {
+  const checkNickname = useCallback(async () => {
     if (!validator.isNickname(formData.nickname)) return;
 
-    if (formData.nickname === DUMMY_NICKNAME) {
-      setErrors((prev) => ({ ...prev, nicknameError: '중복된 닉네임입니다.' }));
+    try {
+      const { data, error } = await supabase.from('users').select('nickname').eq('nickname', formData.nickname);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setErrors((prev) => ({ ...prev, nicknameError: '중복된 닉네임입니다.' }));
+        setIsNicknameChecked(false);
+      } else {
+        setErrors((prev) => ({ ...prev, nicknameError: '사용 가능한 닉네임입니다.' }));
+        setIsNicknameChecked(true);
+      }
+    } catch (error) {
+      console.error('Nickname check error:', error);
+      setErrors((prev) => ({ ...prev, nicknameError: '닉네임 확인 중 오류가 발생했습니다.' }));
       setIsNicknameChecked(false);
-    } else {
-      setErrors((prev) => ({ ...prev, nicknameError: '사용 가능한 닉네임입니다.' }));
-      setIsNicknameChecked(true);
     }
   }, [formData.nickname]);
 
@@ -170,11 +216,53 @@ const SignUp = () => {
     });
   }, []);
 
-  const handleSubmit = useCallback(() => {
-    if (isFormValid) {
+  const handleSubmit = useCallback(async () => {
+    if (!isFormValid || isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (authError) throw authError;
+      if (!authData.user) throw new Error('사용자 생성 실패');
+
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .insert({
+          id: authData.user.id,
+          email: formData.email,
+          nickname: formData.nickname,
+        })
+        .select()
+        .single();
+
+      if (userError) throw userError;
+
+      const selectedInterestIds = interests
+        .filter((interest) => selectedInterests.includes(interest.name))
+        .map((interest) => interest.id);
+
+      const userInterestsData = selectedInterestIds.map((interestId) => ({
+        user_id: userData.id,
+        interest_id: interestId,
+      }));
+
+      const { error: userInterestsError } = await supabase.from('user_interests').insert(userInterestsData);
+
+      if (userInterestsError) throw userInterestsError;
+
       navigate('/signin');
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSubmitting(false);
     }
-  }, [isFormValid, navigate]);
+  }, [formData, isFormValid, navigate, selectedInterests, interests, isSubmitting]);
 
   const renderError = useCallback((error: string, isSuccess = false) => {
     return error ? (
@@ -185,20 +273,24 @@ const SignUp = () => {
   }, []);
 
   const renderInterestsGrid = useCallback(
-    (startIdx: number, endIdx: number) => (
-      <div className="grid grid-cols-4 gap-2">
-        {INTERESTS.slice(startIdx, endIdx).map((interest) => (
-          <ToggleButton
-            key={interest}
-            label={interest}
-            isActive={selectedInterests.includes(interest)}
-            onClick={() => handleToggle(interest)}
-            disabled={selectedInterests.length >= MAX_INTERESTS && !selectedInterests.includes(interest)}
-          />
-        ))}
-      </div>
-    ),
-    [selectedInterests, handleToggle]
+    (startIdx: number, endIdx: number) => {
+      const interestsSlice = interests.slice(startIdx, endIdx);
+
+      return (
+        <div className="grid grid-cols-4 gap-2">
+          {interestsSlice.map((interest) => (
+            <ToggleButton
+              key={interest.id}
+              label={interest.name}
+              isActive={selectedInterests.includes(interest.name)}
+              onClick={() => handleToggle(interest.name)}
+              disabled={selectedInterests.length >= MAX_INTERESTS && !selectedInterests.includes(interest.name)}
+            />
+          ))}
+        </div>
+      );
+    },
+    [interests, selectedInterests, handleToggle]
   );
 
   return (
@@ -267,14 +359,27 @@ const SignUp = () => {
 
         <div className="flex flex-col gap-2">
           <p className="text-primary text-xs">관심사 (최대 {MAX_INTERESTS}개)</p>
-          {renderInterestsGrid(0, 4)}
-          {renderInterestsGrid(4, 8)}
-          {renderInterestsGrid(8, 12)}
+          {isLoading ? (
+            <p className="text-sm text-gray-500">관심사 목록을 불러오는 중...</p>
+          ) : (
+            <>
+              {interests.length > 0 ? (
+                <>
+                  {renderInterestsGrid(0, 4)}
+                  {interests.length > 4 && renderInterestsGrid(4, 8)}
+                  {interests.length > 8 && renderInterestsGrid(8, 12)}
+                  {interests.length > 12 && renderInterestsGrid(12, 16)}
+                </>
+              ) : (
+                <p className="text-sm text-gray-500">관심사 목록을 불러올 수 없습니다.</p>
+              )}
+            </>
+          )}
         </div>
       </form>
 
       <div className="fixed right-0 bottom-4 left-0 mx-auto max-w-[440px] px-4">
-        <Button onClick={handleSubmit} ariaDisabled={!isFormValid}>
+        <Button onClick={handleSubmit} ariaDisabled={!isFormValid || isSubmitting || isLoading}>
           말랑이 만나러 가기
         </Button>
       </div>
