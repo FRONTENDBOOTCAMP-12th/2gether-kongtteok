@@ -6,12 +6,14 @@ import ProfilePage from '@/pages/Profile';
 import DiaryView from '@/pages/DiaryView';
 import DiaryWrite from '@/pages/DiaryWrite';
 import Components from '@/components';
+import DiaryList from '@/pages/DiaryList';
 
 export const navList = [
   { path: '/', text: '홈', element: <MainPage /> },
   { path: 'signin', text: '로그인', element: <SignInPage /> },
   { path: 'signup', text: '회원가입', element: <SignUp /> },
   { path: 'profile', text: '프로필', element: <ProfilePage /> },
+  { path: 'diarylist', text: '일기 리스트', element: <DiaryList /> },
   { path: 'diary/write', text: '일기 쓰기', element: <DiaryWrite /> },
   { path: 'diary/view', text: '내 일기 보기', element: <DiaryView /> },
   { path: 'components', text: '컴포넌트 모음', element: <Components /> },
