@@ -1,17 +1,18 @@
 import { LockSolid, LockOpenSolid, Heart } from '@mynaui/icons-react';
-import EmotionImage, { type EmotionProps } from '@/components/EmotionImage';
+import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 
-export type DiaryPreviewProps = Pick<Required<EmotionProps>, 'emotion'> & {
+export interface DiaryPreviewProps {
   date: string;
   isPrivate: boolean;
   diaryImage?: string;
   content: string;
-  likes: number;
+  likes?: number;
+  emotion: EmotionType;
   onDelete?: () => void;
   onEdit?: () => void;
-};
+}
 
-function DiaryPreview({ emotion, date, isPrivate, diaryImage, content, likes }: DiaryPreviewProps) {
+function DiaryPreview({ emotion, date, isPrivate, diaryImage, content, likes = 0 }: DiaryPreviewProps) {
   return (
     <article className="border-primary bg-background flex h-33.5 w-72 flex-col justify-between rounded-[10px] border p-3">
       <section className="flex items-center justify-between">
