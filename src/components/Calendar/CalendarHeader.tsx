@@ -17,7 +17,7 @@ function CalendarHeader({ selectedMonth, onMonthChange, onListViewClick }: Calen
 
       <Link
         to={`/diaryList`}
-        className="flex w-[94px] items-center gap-1.5 rounded-md border-none border-gray-200 p-2 transition-colors"
+        className="flex w-[94px] items-center gap-1.5 rounded-md border-none border-gray-200 pl-2 transition-colors"
         onClick={onListViewClick}>
         <ListSolid className="fill-primary h-4 w-4" />
         <span className="text-primary">리스트보기</span>

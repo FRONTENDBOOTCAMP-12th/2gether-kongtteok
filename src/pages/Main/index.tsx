@@ -8,11 +8,12 @@ function MainPage() {
       headerProps={{
         title: '메인페이지',
         isRightIcon: true,
-        isLeftIcon: true,
       }}
       showFooter={true}>
-      <Calendar />
-      <Chart />
+      <div className="flex flex-col gap-5">
+        <Calendar />
+        <Chart />
+      </div>
     </CommonLayout>
   );
 }

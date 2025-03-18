@@ -31,7 +31,7 @@ const CalendarDay = memo(({ day, month, year, diaryEntries, onDayClick }: Calend
   return (
     <button className="flex cursor-pointer flex-col items-center justify-center" onClick={handleClick}>
       {hasDiary ? (
-        <div className="flex h-11 w-11 items-center justify-center">
+        <div className="flex h-9 w-9 items-center justify-center">
           <EmotionImage emotion={diaryEntry.emotion} className="h-full w-full object-contain" />
         </div>
       ) : (
@@ -45,6 +45,6 @@ const CalendarDay = memo(({ day, month, year, diaryEntries, onDayClick }: Calend
   );
 });
 
-CalendarDay.displayName= 'CalendarDay';
+CalendarDay.displayName = 'CalendarDay';
 
 export default CalendarDay;
