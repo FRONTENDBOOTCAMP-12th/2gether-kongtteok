@@ -19,6 +19,7 @@ import Calendar from './Calendar';
 import EmotionBarChart from './Chart';
 import ThemeSetters from './ThemeSetters';
 import NotiItem from './NotiItem';
+import Modal from './modal';
 
 const profileData = {
   profileImage: '/logo.webp',
@@ -48,6 +49,7 @@ const diaryData: DiaryPreviewProps[] = [
 
 function Components() {
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
+  const [isModalShow, setIsModalShow] = useState<boolean>(false);
 
   const openBottomSheet = () => {
     setBottomSheet(true);
@@ -208,6 +210,25 @@ function Components() {
 
       <article className="mt-12">
         <NotiItem nickname="박보검" diaryDate="2025-03-10" />
+      </article>
+
+      <article className="mt-12">
+        <h2 className="mb-3">모달 팝업</h2>
+        <Button intent="outlinePink" onClick={() => setIsModalShow(true)}>
+          모달 OPEN
+        </Button>
+        <Modal
+          title="로그아웃"
+          description="로그아웃 하시겠습니까?"
+          cancelBtn="취소"
+          onConfirm={() => {
+            alert('콜백 함수는 onCinfirm에 넣어주세요.');
+          }}
+          onClose={() => {
+            setIsModalShow(false);
+          }}
+          hidden={!isModalShow}
+        />
       </article>
     </CommonLayout>
   );
