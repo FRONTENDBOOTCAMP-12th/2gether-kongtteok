@@ -12,7 +12,6 @@ export type Database = {
           emotion: string;
           id: number;
           isPrivate: boolean;
-          likes: number;
           title: string;
           user_id: string;
           weather: string;
@@ -25,9 +24,8 @@ export type Database = {
           emotion: string;
           id?: number;
           isPrivate: boolean;
-          likes?: number;
           title: string;
-          user_id: string;
+          user_id?: string;
           weather: string;
         };
         Update: {
@@ -38,10 +36,112 @@ export type Database = {
           emotion?: string;
           id?: number;
           isPrivate?: boolean;
-          likes?: number;
           title?: string;
           user_id?: string;
           weather?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'diary_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      interests: {
+        Row: {
+          id: string;
+          name: string | null;
+        };
+        Insert: {
+          id?: string;
+          name?: string | null;
+        };
+        Update: {
+          id?: string;
+          name?: string | null;
+        };
+        Relationships: [];
+      };
+      likes: {
+        Row: {
+          created_at: string;
+          id: number;
+          post_id: number | null;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          post_id?: number | null;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          post_id?: number | null;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'likes_post_id_fkey';
+            columns: ['post_id'];
+            isOneToOne: false;
+            referencedRelation: 'diary';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      user_interests: {
+        Row: {
+          interest_id: string;
+          user_id: string;
+        };
+        Insert: {
+          interest_id: string;
+          user_id: string;
+        };
+        Update: {
+          interest_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'user_interests_interest_id_fkey';
+            columns: ['interest_id'];
+            isOneToOne: false;
+            referencedRelation: 'interests';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'user_interests_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      users: {
+        Row: {
+          created_at: string;
+          email: string | null;
+          id: string;
+          nickname: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          nickname?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          email?: string | null;
+          id?: string;
+          nickname?: string | null;
         };
         Relationships: [];
       };
