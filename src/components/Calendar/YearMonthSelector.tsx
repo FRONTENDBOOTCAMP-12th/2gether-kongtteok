@@ -67,7 +67,7 @@ const YearMonthSelector = memo(function YearMonthSelector({ selectedMonth, onMon
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        className="text-primary flex cursor-pointer justify-center text-lg font-medium transition-colors"
+        className="text-primary flex cursor-pointer justify-center text-base font-medium transition-colors"
         onClick={handleMonthClick}>
         {formattedMonth}
         <ChevronDownSolid />

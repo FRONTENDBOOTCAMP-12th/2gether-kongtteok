@@ -14,9 +14,9 @@ function CalendarGrid({ selectedMonth, diaryEntries }: CalendarGridProps) {
 
   const handleDayClick = (date: Date, hasDiary: boolean) => {
     if (hasDiary) {
-      navigate(`/diaryDetail`);
+      navigate(`/diary/view`);
     } else {
-      navigate(`/diaryWrite`);
+      navigate(`/diary/write`);
     }
   };
 
@@ -51,37 +51,33 @@ function CalendarGrid({ selectedMonth, diaryEntries }: CalendarGridProps) {
   const { year, month, weeks } = calendarData;
 
   return (
-    <table className="w-full border-separate border-spacing-y-5">
-      <caption className="sr-only">일기 달력</caption>
-      <thead>
-        <tr>
-          {WEEKS.map((day, idx) => (
-            <th key={idx} className="text-primary font-medium">
-              {day}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {weeks.map((week, weekIdx) => (
-          <tr key={`week-${weekIdx}`}>
-            {week.map((day, dayIdx) => (
-              <td key={`day-${weekIdx}-${dayIdx}`}>
-                {day !== null && (
-                  <CalendarDay
-                    day={day}
-                    month={month}
-                    year={year}
-                    diaryEntries={diaryEntries}
-                    onDayClick={handleDayClick}
-                  />
-                )}
-              </td>
-            ))}
-          </tr>
+    <div className="w-full">
+      <h2 className="sr-only">일기 달력</h2>
+
+      <div className="mb-2 grid grid-cols-7 gap-2">
+        {WEEKS.map((day, idx) => (
+          <div key={idx} className="text-primary flex items-center justify-center text-center font-medium">
+            {day}
+          </div>
         ))}
-      </tbody>
-    </table>
+      </div>
+
+      <div className="grid grid-cols-7 gap-2">
+        {weeks.flat().map((day, idx) => (
+          <div key={`day-${idx}`} className="flex aspect-square items-center justify-center">
+            {day !== null && (
+              <CalendarDay
+                day={day}
+                month={month}
+                year={year}
+                diaryEntries={diaryEntries}
+                onDayClick={handleDayClick}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
