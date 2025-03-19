@@ -47,9 +47,15 @@ const diaryData: DiaryPreviewProps[] = [
   },
 ];
 
+const tabList = [
+  { title: '탭 1', value: 'tab1' },
+  { title: '탭 2', value: 'tab2' },
+];
+
 function Components() {
   const [bottomSheet, setBottomSheet] = useState<boolean>(false);
   const [isModalShow, setIsModalShow] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState(tabList[0].value);
 
   const openBottomSheet = () => {
     setBottomSheet(true);
@@ -103,7 +109,7 @@ function Components() {
       </article>
       <article className="mt-12 flex flex-col items-start gap-y-2">
         <h2>탭 컴포넌트</h2>
-        <Tab />
+        <Tab tabs={tabList} activeTab={activeTab} onTabChange={setActiveTab} />
       </article>
       <article className="mt-12">
         <h2>프로필</h2>
