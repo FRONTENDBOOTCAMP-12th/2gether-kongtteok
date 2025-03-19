@@ -19,7 +19,7 @@ import Calendar from './Calendar';
 import EmotionBarChart from './Chart';
 import ThemeSetters from './ThemeSetters';
 import NotiItem from './NotiItem';
-import Modal from './modal';
+import Modal from './Modal';
 
 const profileData = {
   profileImage: '/logo.webp',
