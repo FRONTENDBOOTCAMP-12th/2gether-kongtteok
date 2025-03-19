@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { getDate } from '@/utils/get-date';
+import { Croissant } from '@mynaui/icons-react';
 import CommonLayout from '@/components/layout/CommonLayout';
 import Header from './layout/Header';
 import Tab from './Tab';
@@ -14,7 +16,6 @@ import ProfileInfo from './ProfileInfo';
 import BottomSheet from '@/components/BottomSheet';
 import DiaryHeader, { type DiaryHeaderProps } from './DiaryHeader';
 import DiaryPreview, { type DiaryPreviewProps } from './DiaryPreview';
-import { Croissant } from '@mynaui/icons-react';
 import Calendar from './Calendar';
 import EmotionBarChart from './Chart';
 import ThemeSetters from './ThemeSetters';
@@ -103,7 +104,7 @@ function Components() {
       </article>
       <article className="mt-12 flex flex-col items-start gap-y-2">
         <h2>탭 컴포넌트</h2>
-        <Tab />
+        {/* <Tab /> */}
       </article>
       <article className="mt-12">
         <h2>프로필</h2>
@@ -209,7 +210,7 @@ function Components() {
       </article>
 
       <article className="mt-12">
-        <NotiItem nickname="박보검" diaryDate="2025-03-10" />
+        <NotiItem nickname="박보검" diaryDate="2025-03-10" likeDate={getDate()} />
       </article>
 
       <article className="mt-12">
@@ -222,7 +223,7 @@ function Components() {
           description="로그아웃 하시겠습니까?"
           cancelBtn="취소"
           onConfirm={() => {
-            alert('콜백 함수는 onCinfirm에 넣어주세요.');
+            alert('콜백 함수는 onConfirm에 넣어주세요.');
           }}
           onClose={() => {
             setIsModalShow(false);
