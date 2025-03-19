@@ -7,6 +7,7 @@ import DiaryView from '@/pages/DiaryView';
 import DiaryWrite from '@/pages/DiaryWrite';
 import Settings from '@/pages/Settings';
 import DiaryDetail from '@/pages/DiaryDetail';
+import NotifyList from '@/pages/Notifi';
 import Components from '@/components';
 
 export const navList = [
@@ -18,6 +19,7 @@ export const navList = [
   { path: 'settings', text: '설정', element: <Settings /> },
   { path: 'diary/view/:diaryId', text: '내 일기 보기', element: <DiaryView /> },
   { path: 'diary/detail/:diaryId', text: '일기 상세 보기', element: <DiaryDetail /> },
+  { path: 'notify', text: '알림', element: <NotifyList /> },
   { path: 'components', text: '컴포넌트 모음', element: <Components /> },
 ];
 
