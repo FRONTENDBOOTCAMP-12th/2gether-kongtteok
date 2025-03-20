@@ -51,10 +51,8 @@ function DiaryWrite() {
   const isBottomSheetShow = useBottomSheetStore((s) => s.isShow);
   const bottomSheetShow = useBottomSheetStore((s) => s.showBottomSheet);
   const bottomSheetHide = useBottomSheetStore((s) => s.hideBottomSheet);
-
-  const date = useLocation().search.split('=').at(-1);
-
   const userId = useAuthStore((s) => s.user)!;
+  const date = useLocation().search.split('=').at(-1) ?? getDate();
 
   const selectEmotion = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const selecteEmotion = (e.target as HTMLImageElement).dataset.emotion as EmotionType;
@@ -141,9 +139,7 @@ function DiaryWrite() {
 
     try {
       if (imageFileList.current.length) {
-        Promise.all(
-          imageFileList.current.map(async (file) => await uploadFile({ date: getDate(), user_id: userId, file }))
-        )
+        Promise.all(imageFileList.current.map(async (file) => await uploadFile({ date, user_id: userId, file })))
           .then((res) => {
             return res.map(({ data }) => {
               if (data) {
@@ -184,7 +180,7 @@ function DiaryWrite() {
                 <input type="hidden" name="weather" value={weatherValue} />
                 <input type="hidden" name="emotion" value={emotionValue} />
                 <span className="text-primary text-[15px] leading-3.5">{getDateDot(date)}</span>
-                <input type="hidden" name="date" value={date ?? getDate()} />
+                <input type="hidden" name="date" value={date} />
                 <Button
                   id="weather"
                   intent="outline"

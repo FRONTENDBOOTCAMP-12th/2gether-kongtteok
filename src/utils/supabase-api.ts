@@ -61,7 +61,7 @@ interface UploadFileOptions {
 export const uploadFile = async ({ date, user_id, file, path }: UploadFileOptions) => {
   const imagePath = path ? path : `post/${user_id}/${date}`;
 
-  return await supabase.storage.from(STORAGE_NAME).upload(`/${imagePath}/${file.name}/`, file, {
+  return await supabase.storage.from(STORAGE_NAME).upload(`/${imagePath}/${file.name}`, file, {
     upsert: true,
     contentType: 'image/jpeg',
   });
