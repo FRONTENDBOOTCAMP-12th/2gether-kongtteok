@@ -1,31 +1,29 @@
-import { Link, useLocation } from 'react-router';
+interface TabProps {
+  tabs: { title: string; value: string }[];
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
 
-function Tab() {
-  const location = useLocation();
-
-  const activeTab = location.pathname === '/empathy' ? '공감' : '쪽지';
-
-  const tabs = [
-    { title: '공감', path: '/empathy' },
-    { title: '쪽지', path: '/letter' },
-  ];
-
+function Tab({ tabs, activeTab, onTabChange }: TabProps) {
   return (
-    <nav className="relative flex h-[44px] w-full border-b border-gray-300 bg-[#FFFBEB]">
+    <nav className="bg-background relative flex h-[44px] w-full border-b border-gray-300">
       <h1 className="sr-only">탭 메뉴</h1>
 
-      {tabs.map(({ title, path }) => (
-        <Link
-          key={title}
-          to={path}
-          className={`relative flex h-full w-1/2 items-center justify-center text-sm font-medium text-[#3E3232] ${activeTab === title ? 'font-bold' : 'opacity-70'} `}
-          aria-current={activeTab === title ? 'page' : undefined}>
+      {tabs.map(({ title, value }) => (
+        <button
+          key={value}
+          onClick={() => onTabChange(value)}
+          className={`text-primary relative flex h-full w-1/2 items-center justify-center text-sm font-medium ${
+            activeTab === value ? 'font-bold' : 'opacity-70'
+          } `}
+          aria-current={activeTab === value ? 'page' : undefined}>
           {title}
-
           <div
-            className={`absolute bottom-0 left-0 w-full ${activeTab === title ? 'h-[3px] bg-[#3E3232]' : 'h-[1px] bg-[#3E3232]/30'} `}
+            className={`absolute bottom-0 left-0 w-full ${
+              activeTab === value ? 'bg-primary h-[3px]' : 'bg-primary/30 h-[1px]'
+            } `}
           />
-        </Link>
+        </button>
       ))}
     </nav>
   );

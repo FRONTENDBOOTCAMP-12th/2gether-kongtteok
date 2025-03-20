@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams } from 'react-router';
 import supabase from '@/lib/supabase-client';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import CommonLayout from '@/components/layout/CommonLayout';
 import Button from '@/components/Button';
 import Switch from '@/components/Switch';
 import DiaryHeader from '@/components/DiaryHeader';
@@ -22,73 +21,56 @@ interface DiaryViewProps {
   emotion: EmotionType;
   weather: WeatherType;
   isPrivate: boolean;
-  likes?: number;
+  likes: number;
   images: string[];
 }
 
 function DiaryView() {
-  const { id } = useParams();
-  const diaryId = id ? parseInt(id, 10) : null;
+  const { diaryId } = useParams<{ diaryId: string }>();
+  const diaryIdNum = diaryId ? Number(diaryId) : null;
+
   const [diary, setDiary] = useState<DiaryViewProps | null>(null);
   const [reply, setReply] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showMallang, setShowMallang] = useState(false);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDiary = async () => {
-      if (!diaryId) return;
+    if (!diaryIdNum) return;
 
-      const { data, error } = await supabase.from('diary').select('*').eq('id', diaryId).single();
+    const fetchDiary = async () => {
+      const { data, error } = await supabase.from('diary').select('*').eq('id', diaryIdNum).single();
 
       if (error) {
         console.error('Supabase 데이터 불러오기 실패:', error);
       } else {
-        const diaryData: DiaryViewProps = {
+        setDiary({
           id: data.id,
           date: data.date,
           title: data.title,
           content: data.content,
-          weather: data.weather as 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy',
-          emotion: data.emotion as 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed',
+          weather: data.weather as WeatherType,
+          emotion: data.emotion as EmotionType,
           isPrivate: data.isPrivate,
-          likes: data.likes,
+          likes: data.likes ?? 0,
           images:
             typeof data.diaryImage === 'string'
               ? JSON.parse(data.diaryImage)
               : Array.isArray(data.diaryImage)
                 ? data.diaryImage
                 : [],
-        };
-
-        setDiary(diaryData);
-        setIsPrivate(diaryData.isPrivate);
+        });
+        setIsPrivate(data.isPrivate);
       }
     };
 
     fetchDiary();
-  }, [diaryId]);
+  }, [diaryIdNum]);
 
-  const handleTogglePrivate = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!diary?.id) {
-      console.error('id 값이 없습니다.');
-      return;
-    }
-
-    const newValue = e.target.checked;
-    setIsPrivate(newValue);
-
-    const { error } = await supabase.from('diary').update({ isPrivate: newValue }).eq('id', diary.id);
-
-    if (error) {
-      console.error('혼자보기 상태 변경 실패:', error);
-      setIsPrivate(!newValue);
-    }
-  };
+  if (!diary) return <p>일기를 불러오는 중...</p>;
 
   const handleGetEncouragement = async () => {
-    if (!diary?.content || !diary?.emotion) return;
+    if (!diary.content || !diary.emotion) return;
     setLoading(true);
     setShowMallang(true);
     setReply(null);
@@ -104,93 +86,73 @@ function DiaryView() {
   };
 
   return (
-    <div id="wrap" className="max-w-kong m-auto h-screen overflow-y-auto pb-15">
-      <Header title="내 일기 보기" isLeftIcon isRightIcon />
+    <CommonLayout
+      headerProps={{
+        title: '내 일기 보기',
+        isLeftIcon: true,
+        isRightIcon: true,
+      }}
+      showFooter={true}>
+      <section className="mt-2 flex w-full flex-row items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-brown-900 text-sm">{isPrivate ? '혼자보기' : '자랑하기'}</span>
+          <Switch className="min-w-11" label="" checked={isPrivate} onChange={() => setIsPrivate((prev) => !prev)} />
+        </div>
+        <div className="text-brown-900 flex gap-2 text-sm">
+          <button onClick={() => console.log('삭제 확인 창 띄울 예정')} className="cursor-pointer">
+            삭제
+          </button>
+          <button onClick={() => console.log('일기 쓰기 페이지로 이동 예정')} className="cursor-pointer">
+            수정
+          </button>
+        </div>
+      </section>
 
-      <main className="flex flex-col items-center gap-y-3 px-4">
-        <section className="mt-2 flex w-full flex-row items-center justify-between">
-          <Switch
-            className="min-w-11"
-            label="혼자보기"
-            stateOnText="혼자보기"
-            stateOffText="자랑하기"
-            checked={isPrivate}
-            onChange={handleTogglePrivate}
-          />
-          <span className="text-brown-700 text-xs">{isPrivate ? 'ON' : 'OFF'}</span>
-          <div className="text-brown-900 flex gap-2 text-xs">
-            <button onClick={() => navigate('/diary-list')} className="cursor-pointer">
-              목록으로
-            </button>
-            <button onClick={() => console.log('삭제 확인 창 띄울 예정')} className="cursor-pointer">
-              삭제
-            </button>
-          </div>
+      <DiaryHeader date={diary.date} weather={diary.weather} emotion={diary.emotion} title={diary.title} />
+      <div className="h-2" />
+
+      {diary.images.length > 0 && (
+        <section className="bg-secondary relative flex h-50 w-full items-center justify-center overflow-hidden">
+          <Swiper spaceBetween={10} slidesPerView={1} className="h-full w-full">
+            {diary.images.map((img, index) => (
+              <SwiperSlide key={index} className="flex items-center justify-center">
+                <img
+                  src={img}
+                  alt={`일기 이미지 ${index + 1}`}
+                  className="h-auto max-h-[300px] w-full object-contain"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </section>
+      )}
 
-        {diary ? (
-          <>
-            <DiaryHeader date={diary.date} weather={diary.weather} emotion={diary.emotion} title={diary.title} />
+      <section className="relative flex w-full flex-col gap-y-3">
+        <div className="relative">
+          <Textarea label="일기 내용" value={diary.content} labelHidden disabled />
+          <div className="absolute right-3 bottom-2 flex items-center gap-1 text-sm text-[#F3A79E]">
+            <Heart className="h-4 w-4 fill-[#F3A79E]" />
+            <span>{diary.likes}</span>
+          </div>
+        </div>
 
-            {diary.images.length > 0 && (
-              <section className="bg-secondary relative flex h-50 w-[102] items-center justify-center overflow-hidden">
-                <Swiper spaceBetween={10} slidesPerView={1} className="h-full w-full">
-                  {diary.images.map((img, index) => (
-                    <SwiperSlide key={index} className="flex items-center justify-center">
-                      <img
-                        src={img}
-                        alt={`일기 이미지 ${index + 1}`}
-                        className="absolute inset-0 m-auto max-h-full max-w-full object-contain"
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </section>
-            )}
-
-            <section className="flex w-full flex-col gap-y-3">
-              <div className="relative">
-                <Textarea label="일기 내용" value={diary.content} labelHidden disabled />
-                <div className="absolute right-3 bottom-3 flex items-center gap-1 text-sm text-[#F3A79E]">
-                  <Heart className="h-4 w-4 fill-[#F3A79E]" />
-                  <span>{diary.likes}</span>
-                </div>
-              </div>
-
-              {!showMallang ? (
-                <div className="flex items-center justify-end gap-x-2">
-                  <Button intent="primary" size="small" onClick={handleGetEncouragement} disabled={loading}>
-                    <img
-                      src="/images/mallang/mallangFace.png"
-                      alt="말랑이"
-                      width={31}
-                      height={31}
-                      className="inline-block"
-                    />
-                    말랑이의 응원 받기
-                  </Button>
-                </div>
-              ) : (
-                <section className="flex flex-col items-center">
-                  <img src="/images/mallang/mallang.png" alt="말랑이" width={140} height={140} />
-                  <div className="mt-2 min-h-35 w-full rounded-[10px] bg-[#ECE3DC] p-4 text-center">
-                    {loading ? (
-                      <p className="text-primary text-lg">말랑이가 생각 중...</p>
-                    ) : (
-                      <p className="text-primary whitespace-pre-line">{reply}</p>
-                    )}
-                  </div>
-                </section>
-              )}
-            </section>
-          </>
+        {!showMallang ? (
+          <div className="flex items-center justify-end gap-x-2">
+            <Button intent="primary" size="small" onClick={handleGetEncouragement} disabled={loading}>
+              <img src="/images/mallang/mallangFace.png" alt="말랑이" width={31} height={31} className="inline-block" />
+              말랑이의 응원 받기
+            </Button>
+          </div>
         ) : (
-          <p>일기를 불러오는 중...</p>
+          <div className="relative flex flex-col items-center">
+            <div className="bg-beige-200 absolute top-24 z-20 flex min-h-35 w-full items-center justify-center rounded-[10px] p-4 text-center">
+              {loading ? <p className="text-primary text-lg">말랑이가 생각 중...</p> : <p>{reply}</p>}
+            </div>
+            <img src="/images/mallang/mallang.png" alt="말랑이" width={140} height={140} className="relative z-10" />
+          </div>
         )}
-      </main>
-
-      <Footer />
-    </div>
+      </section>
+    </CommonLayout>
   );
 }
 

@@ -54,5 +54,4 @@ abbr[title] {
 :focus-visible {
   outline: 2.5px solid var(--focus, #0869dfc0);
   outline-offset: 0.5px;
-  border-radius: 2px;
 }
