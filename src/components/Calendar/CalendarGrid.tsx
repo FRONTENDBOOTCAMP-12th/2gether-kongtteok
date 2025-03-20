@@ -1,22 +1,36 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import CalendarDay from './CalendarDay';
-import { DiaryEntry } from './index';
+import { format } from 'date-fns';
+import { EmotionType } from '@/components/EmotionImage';
+
+interface DiaryEntry {
+  id: number;
+  date: string;
+  emotion: EmotionType;
+  isPrivate: boolean;
+  content: string;
+  diaryImage: string;
+  likes: number;
+}
 
 interface CalendarGridProps {
   selectedMonth: string;
   diaryEntries: DiaryEntry[];
+  isLoading: boolean;
+  error: string | null;
 }
 
-function CalendarGrid({ selectedMonth, diaryEntries }: CalendarGridProps) {
+function CalendarGrid({ selectedMonth, diaryEntries, isLoading, error }: CalendarGridProps) {
   const navigate = useNavigate();
   const WEEKS = ['일', '월', '화', '수', '목', '금', '토'];
 
-  const handleDayClick = (date: Date, hasDiary: boolean) => {
-    if (hasDiary) {
-      navigate(`/diary/view`);
+  const handleDayClick = (date: Date, diaryId: number | null) => {
+    if (diaryId) {
+      navigate(`/diary/view/${diaryId}`);
     } else {
-      navigate(`/diary/write`);
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      navigate(`/diary/write?date=${formattedDate}`);
     }
   };
 
@@ -49,6 +63,14 @@ function CalendarGrid({ selectedMonth, diaryEntries }: CalendarGridProps) {
   }, [selectedMonth]);
 
   const { year, month, weeks } = calendarData;
+
+  if (isLoading) {
+    return <div className="w-full py-8 text-center text-gray-500">로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div className="w-full py-8 text-center text-red-500">{error}</div>;
+  }
 
   return (
     <div className="w-full">
