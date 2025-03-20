@@ -14,9 +14,6 @@ interface DiaryItem {
   id: number;
   date: string;
   emotion: EmotionType;
-  isPrivate: boolean;
-  content: string;
-  diaryImage: string | null;
   user_id: string;
 }
 
@@ -24,10 +21,6 @@ interface DiaryEntry {
   id: number;
   date: string;
   emotion: EmotionType;
-  isPrivate: boolean;
-  content: string;
-  diaryImage: string;
-  likes: number;
 }
 
 interface CalendarProps {
@@ -75,7 +68,7 @@ function Calendar({
 
       const { data, error: fetchError } = await supabase
         .from(DATABASE_NAME)
-        .select('*')
+        .select('id, date, emotion, user_id')
         .eq('user_id', userData.id)
         .gte('date', startDate)
         .lt('date', endDate)
@@ -84,32 +77,15 @@ function Calendar({
       if (fetchError) throw fetchError;
 
       if (data) {
-        const diaryPromises = data.map(async (diary: DiaryItem) => {
-          const { count } = await supabase
-            .from('likes')
-            .select('*', { count: 'exact', head: true })
-            .eq('post_id', diary.id);
-
-          let diaryImageStr = '/images/emotion/default.png';
-          if (typeof diary.diaryImage === 'string') {
-            diaryImageStr = diary.diaryImage;
-          } else if (diary.emotion) {
-            diaryImageStr = `/images/emotion/${diary.emotion}.png`;
-          }
-
+        const formattedDiaries = data.map((diary: DiaryItem) => {
           return {
             id: diary.id,
-            emotion: diary.emotion,
             date: diary.date,
-            isPrivate: diary.isPrivate || false,
-            content: diary.content || '',
-            diaryImage: diaryImageStr,
-            likes: count ?? 0,
+            emotion: diary.emotion,
           };
         });
 
-        const diariesWithLikes = await Promise.all(diaryPromises);
-        setDiaries(diariesWithLikes);
+        setDiaries(formattedDiaries);
       }
     } catch (err) {
       console.error('Failed to fetch diaries:', err);
