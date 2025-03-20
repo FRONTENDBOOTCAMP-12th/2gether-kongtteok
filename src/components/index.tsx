@@ -31,6 +31,7 @@ const profileData = {
 
 const diaryData: DiaryPreviewProps[] = [
   {
+    title: '타로',
     emotion: 'sad',
     date: '2025-03-06',
     isPrivate: true,
@@ -40,9 +41,11 @@ const diaryData: DiaryPreviewProps[] = [
     likes: 3,
   },
   {
+    title: '동기들과 함께한 행복한 하루',
     emotion: 'happy',
     date: '2025-03-07',
     isPrivate: false,
+    diaryImage: null,
     content: '프로젝트 조원들이랑 동기들을 만나서 행복했어!',
     likes: 12,
   },
