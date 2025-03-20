@@ -1,40 +1,33 @@
+import { useCallback, useState, useMemo, useEffect } from 'react';
+import { format } from 'date-fns';
+import { CalendarSolid } from '@mynaui/icons-react';
 import CalendarHeader from '@/components/Calendar/CalendarHeader';
 import DiaryPreview, { type DiaryPreviewProps } from '@/components/DiaryPreview';
+import { EMOTION, EmotionType } from '@/components/EmotionImage';
 import CommonLayout from '@/components/layout/CommonLayout';
-import { CalendarSolid } from '@mynaui/icons-react';
-import { format } from 'date-fns';
-import { useCallback, useState, useMemo } from 'react';
+import ToggleButton from '@/components/ToggleButton';
+import emotionList from '@/utils/emotion';
+import supabase, { DATABASE_NAME, DiaryItem } from '@/lib/supabase-client';
+import { GetUser } from '@/api/get-user';
+import { Link } from 'react-router';
 
-const diaryData: DiaryPreviewProps[] = [
-  {
-    emotion: 'happy',
-    date: '2025-02-07',
-    isPrivate: false,
-    content: '프로젝트 조원들이랑 동기들을 만나서 행복했어!',
-    likes: 12,
-  },
-  {
-    emotion: 'sad',
-    date: '2025-03-06',
-    isPrivate: true,
-    diaryImage: '/images/emotion/sad.png',
-    content:
-      '친구가 타로를 봐줬는데 결과가 좋지 않아서 조금 슬펐어.. 프로젝트가 어떻게 될지 궁금해서 월간 운세를 봤는데 걱정이 된다ㅜㅜ 그래도 열심히 하고 있으니까 잘 해낼 수 있겠지? 조원분들도 힘내주시고 계시니까.. 타로 그거 뭐 다 미신이지!',
-    likes: 3,
-  },
-  {
-    emotion: 'happy',
-    date: '2025-03-07',
-    isPrivate: false,
-    content: '프로젝트 조원들이랑 동기들을 만나서 행복했어!',
-    likes: 12,
-  },
-];
+interface User {
+  id: string;
+}
 
 interface DiaryListProps {
   initialSelectedMonth?: string;
   onMonthChange?: (month: string) => void;
   handleCalendarViewClick?: () => void;
+}
+
+interface DiaryItemWithId extends DiaryItem {
+  id: number;
+}
+
+interface EnhancedDiaryPreviewProps extends DiaryPreviewProps {
+  id: number;
+  emotion: EmotionType;
 }
 
 function DiaryList({
@@ -43,6 +36,11 @@ function DiaryList({
   handleCalendarViewClick,
 }: DiaryListProps) {
   const [selectedMonth, setSelectedMonth] = useState(initialSelectedMonth);
+  const [selectedEmotion, setSelectedEmotion] = useState<EmotionType | null>(null);
+  const [diaries, setDiaries] = useState<EnhancedDiaryPreviewProps[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const handleMonthChange = useCallback(
     (newMonth: string) => {
@@ -54,12 +52,103 @@ function DiaryList({
     [onMonthChange]
   );
 
-  const filteredDiaries = useMemo(() => {
-    return diaryData.filter((diary) => {
-      const diaryMonth = diary.date.substring(0, 7);
-      return diaryMonth === selectedMonth;
-    });
+  const handleEmotionToggle = useCallback((emotion: EmotionType | null) => {
+    setSelectedEmotion((prevEmotion) => (prevEmotion === emotion ? null : emotion));
+  }, []);
+
+  const fetchDiaries = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const userData = (await GetUser()) as User | null;
+
+      if (!userData) {
+        setError('로그인이 필요합니다');
+        return;
+      }
+
+      setCurrentUserId(userData.id);
+
+      const [year, month] = selectedMonth.split('-');
+      const startDate = `${year}-${month}-01`;
+      const endDate =
+        month === '12' ? `${parseInt(year) + 1}-01-01` : `${year}-${String(parseInt(month) + 1).padStart(2, '0')}-01`;
+
+      const { data, error: fetchError } = await supabase
+        .from(DATABASE_NAME)
+        .select('*')
+        .eq('user_id', userData.id)
+        .gte('date', startDate)
+        .lt('date', endDate)
+        .order('date', { ascending: false });
+
+      if (fetchError) throw fetchError;
+
+      if (data) {
+        const diaryPromises = data.map(async (diary: DiaryItemWithId) => {
+          const { count } = await supabase
+            .from('likes')
+            .select('*', { count: 'exact', head: true })
+            .eq('post_id', diary.id);
+
+          let diaryImageStr = '/images/emotion/default.png';
+          if (typeof diary.diaryImage === 'string') {
+            diaryImageStr = diary.diaryImage;
+          } else if (diary.emotion) {
+            diaryImageStr = `/images/emotion/${diary.emotion}.png`;
+          }
+
+          return {
+            id: diary.id,
+            emotion: diary.emotion as EmotionType,
+            date: diary.date,
+            isPrivate: diary.isPrivate || false,
+            content: diary.content || '',
+            diaryImage: diaryImageStr,
+            likes: count ?? 0,
+          };
+        });
+
+        const diariesWithLikes = await Promise.all(diaryPromises);
+        setDiaries(diariesWithLikes);
+      }
+    } catch (err) {
+      console.error('Failed to fetch diaries:', err);
+      setError('일기를 불러오는 데 실패했습니다');
+    } finally {
+      setIsLoading(false);
+    }
   }, [selectedMonth]);
+
+  useEffect(() => {
+    fetchDiaries();
+  }, [fetchDiaries]);
+
+  const filteredDiaries = useMemo(() => {
+    if (!selectedEmotion) return diaries;
+    return diaries.filter((diary) => diary.emotion === selectedEmotion);
+  }, [diaries, selectedEmotion]);
+
+  const renderDiaryList = () => {
+    if (isLoading) return <div className="py-8 text-center text-gray-500">로딩 중...</div>;
+    if (error) return <div className="py-8 text-center text-red-500">{error}</div>;
+    if (filteredDiaries.length === 0)
+      return <div className="py-8 text-center text-gray-500">작성된 일기가 없습니다.</div>;
+
+    return filteredDiaries.map((diary) => (
+      <Link key={diary.id} to={`/diary/view/${diary.id}`}>
+        <DiaryPreview
+          emotion={diary.emotion}
+          date={diary.date}
+          isPrivate={diary.isPrivate}
+          content={diary.content}
+          diaryImage={diary.diaryImage}
+          likes={diary.likes}
+        />
+      </Link>
+    ));
+  };
 
   return (
     <CommonLayout
@@ -69,7 +158,7 @@ function DiaryList({
         isRightIcon: true,
       }}
       showFooter={true}>
-      <div>
+      <div className="flex flex-col gap-3">
         <CalendarHeader
           selectedMonth={selectedMonth}
           onMonthChange={handleMonthChange}
@@ -79,13 +168,28 @@ function DiaryList({
           onViewClick={handleCalendarViewClick}
         />
 
-        <section className="flex flex-col gap-4">
-          {filteredDiaries.length > 0 ? (
-            filteredDiaries.map((diary, index) => <DiaryPreview key={index} {...diary} />)
-          ) : (
-            <div className="py-8 text-center text-gray-500">작성된 일기가 없습니다.</div>
-          )}
-        </section>
+        <div className="flex flex-nowrap gap-2 overflow-x-auto">
+          <ToggleButton
+            type="checkbox"
+            label="전체"
+            isActive={selectedEmotion === null}
+            onClick={() => handleEmotionToggle(null)}
+            className="min-w-fit whitespace-nowrap"
+          />
+
+          {emotionList.map((emotion) => (
+            <ToggleButton
+              key={emotion}
+              type="checkbox"
+              label={EMOTION[emotion]}
+              isActive={selectedEmotion === emotion}
+              onClick={() => handleEmotionToggle(emotion)}
+              className="min-w-fit whitespace-nowrap"
+            />
+          ))}
+        </div>
+
+        <section className="flex flex-col gap-4">{renderDiaryList()}</section>
       </div>
     </CommonLayout>
   );

@@ -21,7 +21,7 @@ function CalendarHeader({
   linkTo = '/diarylist',
 }: CalendarHeaderProps) {
   return (
-    <div className="mb-8 flex items-center justify-between">
+    <div className="flex items-center justify-between">
       <div className="w-[94px]" />
 
       <YearMonthSelector selectedMonth={selectedMonth} onMonthChange={onMonthChange} />

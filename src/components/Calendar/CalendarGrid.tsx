@@ -54,7 +54,7 @@ function CalendarGrid({ selectedMonth, diaryEntries }: CalendarGridProps) {
     <div className="w-full">
       <h2 className="sr-only">일기 달력</h2>
 
-      <div className="mb-2 grid grid-cols-7 gap-2">
+      <div className="mt-10 mb-2 grid grid-cols-7 gap-2">
         {WEEKS.map((day, idx) => (
           <div key={idx} className="text-primary flex items-center justify-center text-center font-medium">
             {day}

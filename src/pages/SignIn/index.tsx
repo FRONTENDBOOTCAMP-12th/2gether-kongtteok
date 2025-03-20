@@ -41,21 +41,13 @@ function SignInPage() {
 
         const { data: userData, error: userError } = await supabase
           .from('users')
-          .select('*')
+          .select('id')
           .eq('id', data.user.id)
           .single();
 
         if (userError) throw userError;
 
-        localStorage.setItem('userData', JSON.stringify(userData));
-
-        localStorage.setItem(
-          'authData',
-          JSON.stringify({
-            user: data.user,
-            session: data.session,
-          })
-        );
+        localStorage.setItem('userData', userData.id);
 
         navigate('/');
       } catch (error) {

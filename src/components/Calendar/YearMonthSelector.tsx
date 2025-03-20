@@ -74,7 +74,7 @@ const YearMonthSelector = memo(function YearMonthSelector({ selectedMonth, onMon
       </button>
 
       {isOpen && (
-        <div className="absolute left-1/2 z-10 mt-2 w-48 -translate-x-1/2 transform rounded-md border border-gray-200 bg-white p-2 shadow-lg">
+        <div className="absolute left-1/2 z-100 mt-2 w-48 -translate-x-1/2 transform rounded-md border border-gray-200 bg-white p-2 shadow-lg">
           <div className="grid grid-cols-2 gap-2">
             <div>
               <h3 className="mb-1 text-xs font-medium text-gray-500">년도</h3>
