@@ -1,14 +1,24 @@
 import { memo } from 'react';
-import { DiaryEntry } from './index';
 import { format, isSameDay, isAfter } from 'date-fns';
 import EmotionImage from '@/components/EmotionImage';
+import { EmotionType } from '@/components/EmotionImage';
+
+interface DiaryEntry {
+  id: number;
+  date: string;
+  emotion: EmotionType;
+  isPrivate: boolean;
+  content: string;
+  diaryImage: string;
+  likes: number;
+}
 
 interface CalendarDayProps {
   day: number;
   month: number;
   year: number;
   diaryEntries: DiaryEntry[];
-  onDayClick: (date: Date, hasDiary: boolean) => void;
+  onDayClick: (date: Date, diaryId: number | null) => void;
 }
 
 const CalendarDay = memo(({ day, month, year, diaryEntries, onDayClick }: CalendarDayProps) => {
@@ -24,7 +34,7 @@ const CalendarDay = memo(({ day, month, year, diaryEntries, onDayClick }: Calend
 
   const handleClick = () => {
     if (!isFuture) {
-      onDayClick(currentDate, hasDiary);
+      onDayClick(currentDate, diaryEntry?.id ?? null);
     }
   };
 
