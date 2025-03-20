@@ -45,7 +45,8 @@ function Calendar({
       <CalendarHeader
         selectedMonth={selectedMonth}
         onMonthChange={handleMonthChange}
-        onListViewClick={onListViewClick}
+        linkTo="/diarylist"
+        onViewClick={onListViewClick}
       />
 
       <CalendarGrid selectedMonth={selectedMonth} diaryEntries={dummyDiaries} />

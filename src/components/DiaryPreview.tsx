@@ -14,7 +14,7 @@ export interface DiaryPreviewProps {
 
 function DiaryPreview({ emotion, date, isPrivate, diaryImage, content, likes = 0 }: DiaryPreviewProps) {
   return (
-    <article className="border-primary bg-background flex h-33.5 w-72 flex-col justify-between rounded-[10px] border p-3">
+    <article className="border-primary bg-background flex h-33.5 w-full flex-col justify-between rounded-[10px] border p-3">
       <section className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <EmotionImage emotion={emotion} className="h-5 w-5" />
