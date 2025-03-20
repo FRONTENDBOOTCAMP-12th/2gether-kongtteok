@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/stores/auth';
 import supabase from '@/lib/supabase-client';
 import NotiItem from '@/components/NotiItem';
+import EmotionImage from '@/components/EmotionImage';
 import CommonLayout from '@/components/layout/CommonLayout';
 
 export interface LikeData {
@@ -42,15 +44,23 @@ const useLikes = (userId: string) => {
 };
 
 function NotifyList() {
-  const { likes, error } = useLikes('79dd7647-498f-427e-81c6-d6a0f70259ff');
+  const userId = useAuthStore((s) => s.user)!;
+  const { likes, error } = useLikes(userId);
+  const isLikesNull = !likes?.length;
 
-  if (likes) {
-    console.log({ likes, error });
+  if (error) {
+    console.error(error);
   }
 
   return (
     <CommonLayout headerProps={{ title: '알림', isLeftIcon: true }}>
-      <main>
+      {isLikesNull && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-y-2">
+          <EmotionImage emotion="sad" className="w-8" />
+          <span className="text-primary text-sm">알림이 없습니다.</span>
+        </div>
+      )}
+      {!isLikesNull && (
         <ul className="flex flex-col gap-y-3">
           {likes?.map((data) => (
             <li key={crypto.randomUUID()}>
@@ -63,7 +73,7 @@ function NotifyList() {
             </li>
           ))}
         </ul>
-      </main>
+      )}
     </CommonLayout>
   );
 }
