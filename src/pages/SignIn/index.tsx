@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
-import Button from '@/components/Button';
-import InputText from '@/components/InputText';
 import { Link, useNavigate } from 'react-router';
+import { useAuthStore } from '@/stores/auth';
+import Button from '@/components/Button';
 import supabase from '@/lib/supabase-client';
+import InputText from '@/components/InputText';
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function SignInPage() {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const signIn = useAuthStore((s) => s.signIn);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,6 +49,7 @@ function SignInPage() {
 
         if (userError) throw userError;
 
+        signIn(userData.id);
         localStorage.setItem('userData', userData.id);
 
         navigate('/');
@@ -57,7 +60,7 @@ function SignInPage() {
         setIsLoading(false);
       }
     },
-    [formData, navigate]
+    [formData, navigate, signIn]
   );
 
   const handleSignUp = () => {
