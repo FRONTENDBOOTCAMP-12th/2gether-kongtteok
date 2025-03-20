@@ -1,15 +1,8 @@
 import { create } from 'zustand';
 import { combine, persist } from 'zustand/middleware';
 
-interface User {
-  id: string;
-  nickname: string;
-  email: string;
-  created_at: string;
-}
-
-interface AuthUser {
-  user: null | User;
+export interface AuthUser {
+  user: null | string;
   isSignIn: boolean;
 }
 
@@ -21,7 +14,7 @@ const initialUser: AuthUser = {
 export const useAuthStore = create(
   persist(
     combine({ ...initialUser }, (set) => ({
-      signIn: (user: User) => {
+      signIn: (user: string) => {
         set({
           user: user,
           isSignIn: !!user,

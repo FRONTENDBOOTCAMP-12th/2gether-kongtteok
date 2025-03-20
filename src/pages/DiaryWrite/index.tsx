@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 import { tm } from '@/utils/ts-merge';
-import { getDate, getDateDot } from '@/utils/get-date';
 import { uploadFile } from '@/utils/supabase-api';
+import { useLocation } from 'react-router';
+import { useAuthStore } from '@/stores/auth';
+import { getDate, getDateDot } from '@/utils/get-date';
 import { useBottomSheetStore } from '@/stores/bottom-sheet';
 import supabase, { DATABASE_NAME, STORAGE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
-import CommonLayout from '@/components/layout/CommonLayout';
-import BottomSheet from '@/components/BottomSheet';
 import Button from '@/components/Button';
 import Switch from '@/components/Switch';
 import emotionList from '@/utils/emotion';
@@ -13,7 +13,9 @@ import weatherList from '@/utils/weather';
 import Textarea from '@/components/Textarea';
 import InputText from '@/components/InputText';
 import AttachFile from '@/components/AttachFile';
+import BottomSheet from '@/components/BottomSheet';
 import EmotionButton from '@/components/EmotionButton';
+import CommonLayout from '@/components/layout/CommonLayout';
 import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 import WeatherImage, { type WeatherType } from '@/components/WeatherImage';
 
@@ -23,10 +25,6 @@ const arrowIcon = (
   </svg>
 );
 
-interface DiaryWriteProps {
-  date?: string;
-}
-
 const insertDiary = async (data: DiaryItemInsert) => {
   const { error } = await supabase.from(DATABASE_NAME).insert([data]);
 
@@ -35,7 +33,7 @@ const insertDiary = async (data: DiaryItemInsert) => {
   }
 };
 
-function DiaryWrite({ date }: DiaryWriteProps) {
+function DiaryWrite() {
   const [weatherValue, setWeatherValue] = useState<WeatherType | ''>('');
   const [emotionValue, setEmotionValue] = useState<EmotionType | ''>('');
   const weather = weatherValue ? <WeatherImage weather={weatherValue} className="w-5" /> : '날씨';
@@ -54,7 +52,9 @@ function DiaryWrite({ date }: DiaryWriteProps) {
   const bottomSheetShow = useBottomSheetStore((s) => s.showBottomSheet);
   const bottomSheetHide = useBottomSheetStore((s) => s.hideBottomSheet);
 
-  const formatDate = getDateDot(date);
+  const date = useLocation().search.split('=').at(-1);
+
+  const userId = useAuthStore((s) => s.user)!;
 
   const selectEmotion = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const selecteEmotion = (e.target as HTMLImageElement).dataset.emotion as EmotionType;
@@ -122,7 +122,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
 
   const handleSubmit = (formData: FormData) => {
     let diaryData = {
-      user_id: '79dd7647-498f-427e-81c6-d6a0f70259ff',
+      user_id: userId as unknown as string,
       date: formData.get('date'),
       weather: formData.get('weather'),
       emotion: formData.get('emotion'),
@@ -134,7 +134,6 @@ function DiaryWrite({ date }: DiaryWriteProps) {
 
     setIsEmptyWeather(!weatherValue);
     setIsEmptyEmotion(!emotionValue);
-    console.log(!weatherValue, !emotionValue, isEmptyWeather, isEmptyEmotion);
 
     if (!weatherValue || !emotionValue || isEmptyWeather || isEmptyEmotion) {
       return;
@@ -143,9 +142,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
     try {
       if (imageFileList.current.length) {
         Promise.all(
-          imageFileList.current.map(
-            async (file) => await uploadFile({ date: getDate(), user_id: '79dd7647-498f-427e-81c6-d6a0f70259ff', file })
-          )
+          imageFileList.current.map(async (file) => await uploadFile({ date: getDate(), user_id: userId, file }))
         )
           .then((res) => {
             return res.map(({ data }) => {
@@ -186,7 +183,7 @@ function DiaryWrite({ date }: DiaryWriteProps) {
               <div className="flex flex-row items-center gap-x-2">
                 <input type="hidden" name="weather" value={weatherValue} />
                 <input type="hidden" name="emotion" value={emotionValue} />
-                <span className="text-primary text-[15px] leading-3.5">{formatDate}</span>
+                <span className="text-primary text-[15px] leading-3.5">{getDateDot(date)}</span>
                 <input type="hidden" name="date" value={date ?? getDate()} />
                 <Button
                   id="weather"

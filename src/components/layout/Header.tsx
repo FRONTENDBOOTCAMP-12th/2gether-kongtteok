@@ -1,5 +1,5 @@
 import { BellSolid, ChevronLeft, CogFourSolid } from '@mynaui/icons-react';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 
 interface TopHeaderProps {
   title: string;
@@ -20,7 +20,7 @@ function Header({ title, isLeftIcon = false, isRightIcon = false }: TopHeaderPro
         {isLeftIcon && (
           <button
             type="button"
-            className="flex size-8 items-center justify-center"
+            className="flex size-8 cursor-pointer items-center justify-center"
             aria-label="뒤로 가기"
             onClick={handleBackClick}>
             <ChevronLeft className="text-primary size-4" aria-hidden="true" />
@@ -35,12 +35,18 @@ function Header({ title, isLeftIcon = false, isRightIcon = false }: TopHeaderPro
       <div className="flex w-16 justify-end">
         {isRightIcon && (
           <>
-            <button type="button" className="flex size-8 items-center justify-center" aria-label="알람페이지로 가기">
+            <Link
+              to="/notify"
+              className="flex size-8 cursor-pointer items-center justify-center"
+              aria-label="알람페이지로 가기">
               <BellSolid className="fill-primary size-4" aria-hidden="true" />
-            </button>
-            <button type="button" className="flex size-8 items-center justify-center" aria-label="일기 리스트로 가기">
+            </Link>
+            <Link
+              to="/settings"
+              className="flex size-8 cursor-pointer items-center justify-center"
+              aria-label="환경설정으로 가기">
               <CogFourSolid className="fill-primary size-4" aria-hidden="true" />
-            </button>
+            </Link>
           </>
         )}
       </div>
