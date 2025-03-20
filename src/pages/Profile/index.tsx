@@ -4,7 +4,6 @@ import CommonLayout from '@/components/layout/CommonLayout';
 import ProfileInfo from '@/components/ProfileInfo';
 import Tab from '@/components/Tab';
 import DiaryPreview from '@/components/DiaryPreview';
-import { DiaryItem } from '@/lib/supabase-client';
 import { EmotionType } from '@/components/EmotionImage';
 
 interface Profile {
@@ -15,11 +14,28 @@ interface Profile {
   interests: string[];
 }
 
+interface Diary {
+  id: number;
+  date: string;
+  title: string;
+  content: string;
+  isPrivate: boolean;
+  emotion: EmotionType;
+  diaryImage: string | string[] | null;
+}
+
+interface Like {
+  post_id: number;
+}
+
+interface UserInterest {
+  interest_id: string;
+  interests: { name: string } | null;
+}
+
 function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [diaries, setDiaries] = useState<
-    Pick<DiaryItem, 'id' | 'date' | 'title' | 'emotion' | 'isPrivate' | 'diaryImage'>[]
-  >([]);
+  const [diaries, setDiaries] = useState<Diary[]>([]);
   const [likes, setLikes] = useState<Record<number, number>>({});
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'일기장' | '쪽지함'>('일기장');
@@ -29,10 +45,24 @@ function ProfilePage() {
       try {
         const { data, error } = await supabase
           .from('users')
-          .select('id, profileImage, nickname, intro, interests')
+          .select(`id, profileImage, nickname, intro, user_interests (interest_id, interests (name))`)
           .single();
+
         if (error) throw error;
-        setProfile(data as Profile);
+
+        const interestsArray: string[] = Array.isArray(data?.user_interests)
+          ? (data.user_interests as unknown as UserInterest[])
+              .filter((interest) => interest.interests !== null && typeof interest.interests.name === 'string')
+              .map((interest) => interest.interests!.name)
+          : [];
+
+        setProfile({
+          id: data.id,
+          profileImage: data.profileImage ?? '/images/default/profile.webp',
+          nickname: data.nickname ?? '익명',
+          intro: data.intro ?? '',
+          interests: interestsArray,
+        });
       } catch (error) {
         console.error('프로필 정보를 가져오지 못했습니다.', error);
       }
@@ -42,15 +72,31 @@ function ProfilePage() {
       try {
         const { data, error } = await supabase
           .from('diary')
-          .select('id, date, title, emotion, isPrivate, diaryImage')
-          .order('date', { ascending: false });
+          .select('id, date, title, content, emotion, isPrivate, diaryImage');
+
         if (error) throw error;
-        setDiaries(
-          data.map((diary) => ({
-            ...diary,
-            emotion: diary.emotion as EmotionType,
-          }))
-        );
+
+        if (data && Array.isArray(data)) {
+          setDiaries(
+            data.map((diary) => ({
+              id: diary.id,
+              date: diary.date,
+              title: diary.title,
+              content: diary.content,
+              isPrivate: diary.isPrivate,
+              emotion: (['exciting', 'happy', 'proud', 'fine', 'angry', 'tired', 'sad', 'depressed'].includes(
+                diary.emotion
+              )
+                ? diary.emotion
+                : 'fine') as EmotionType,
+              diaryImage: Array.isArray(diary.diaryImage)
+                ? (diary.diaryImage as string[])
+                : typeof diary.diaryImage === 'string'
+                  ? diary.diaryImage
+                  : null,
+            }))
+          );
+        }
       } catch (error) {
         console.error('일기 데이터를 가져오지 못했습니다.', error);
       }
@@ -58,14 +104,16 @@ function ProfilePage() {
 
     const fetchLikes = async () => {
       try {
-        const { data, error } = await supabase.from('likes').select('post_id').eq('post_id', 1); // 개별 조회로 변경
+        const { data, error } = await supabase.from('likes').select('post_id');
         if (error) throw error;
 
-        const likesMap: Record<number, number> = {};
-        data?.forEach((like: { post_id: number }) => {
-          likesMap[like.post_id] = (likesMap[like.post_id] || 0) + 1;
-        });
-        setLikes(likesMap);
+        if (data && Array.isArray(data)) {
+          const likesMap: Record<number, number> = {};
+          (data as Like[]).forEach((like) => {
+            likesMap[like.post_id] = (likesMap[like.post_id] || 0) + 1;
+          });
+          setLikes(likesMap);
+        }
       } catch (error) {
         console.error('좋아요 데이터를 가져오지 못했습니다.', error);
       }
@@ -84,21 +132,34 @@ function ProfilePage() {
       </div>
 
       <Tab
-        onTabChange={setActiveTab}
+        activeTab={activeTab}
+        onTabChange={(tab) => setActiveTab(tab as '일기장' | '쪽지함')}
         tabs={[
           { title: '일기장', value: '일기장' },
           { title: '쪽지함', value: '쪽지함' },
         ]}
       />
 
-      <section className="flex flex-col items-center gap-4 py-4">
+      <section className="flex w-full flex-col items-center gap-4 py-4">
         {activeTab === '일기장' ? (
           loading ? (
             <p className="text-primary text-sm opacity-50">데이터를 불러오는 중...</p>
           ) : diaries.length > 0 ? (
             diaries.map((diary) => (
-              <button key={diary.id} onClick={() => (window.location.href = `/diary/view/${diary.id}`)}>
-                <DiaryPreview {...diary} likes={likes[diary.id] ?? 0} />
+              <button
+                key={diary.id}
+                onClick={() => (window.location.href = `/diary/view/${diary.id}`)}
+                className="w-full">
+                <DiaryPreview
+                  date={diary.date}
+                  isPrivate={diary.isPrivate}
+                  diaryImage={diary.diaryImage}
+                  title={diary.title}
+                  content={diary.content}
+                  likes={likes[diary.id] ?? 0}
+                  emotion={diary.emotion}
+                  showActions={true}
+                />
               </button>
             ))
           ) : (
