@@ -7,10 +7,6 @@ interface DiaryEntry {
   id: number;
   date: string;
   emotion: EmotionType;
-  isPrivate: boolean;
-  content: string;
-  diaryImage: string;
-  likes: number;
 }
 
 interface CalendarDayProps {
