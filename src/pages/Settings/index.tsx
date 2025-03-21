@@ -6,22 +6,36 @@ import Button from '@/components/Button';
 import ThemeSetters from '@/components/ThemeSetters';
 import CommonLayout from '@/components/layout/CommonLayout';
 import EmotionImage from '@/components/EmotionImage';
+import supabase from '@/lib/supabase-client';
 
 function Settings() {
   const navigate = useNavigate();
   const userId = useAuthStore((s) => s.user)!;
   const signOut = useAuthStore((s) => s.signOut);
-  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteCompleteModalOpen, setIsDeleteCompleteModalOpen] = useState(false);
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
   const [currentView, setCurrentView] = useState<'settings' | 'notice' | 'terms' | 'privacy'>('settings');
 
-  const handleLogout = () => {
+  const handleSignOut = () => {
     signOut();
     navigate('/signin');
   };
 
-  const onDeleteUser = () => {
-    console.log(userId);
+  const onDeleteUser = async () => {
+    const { error } = await supabase.rpc('delete_user_data', { target_user_id: userId });
+    const { error: authError } = await supabase.auth.admin.deleteUser(userId);
+
+    if (error) {
+      console.error(error);
+    }
+
+    if (authError) {
+      console.error(authError);
+    }
+
+    setIsDeleteCompleteModalOpen(true);
   };
 
   if (currentView !== 'settings') {
@@ -76,7 +90,7 @@ function Settings() {
           </button>
         </li>
         <li className="border-beige-200 dark:border-beige-800 border-b">
-          <button className="w-full cursor-pointer py-4 text-left" onClick={handleLogout}>
+          <button className="w-full cursor-pointer py-4 text-left" onClick={() => setIsLogoutModalOpen(true)}>
             로그아웃
           </button>
         </li>
@@ -93,6 +107,17 @@ function Settings() {
           description="준비중이에요!"
           primaryBtnText="확인"
           onClose={() => setIsActivityModalOpen(false)}
+        />
+      )}
+
+      {(isLogoutModalOpen || isDeleteCompleteModalOpen) && (
+        <Modal
+          title={isLogoutModalOpen ? '로그아웃 완료' : '회원탈퇴 완료'}
+          description="로그인 화면으로 이동합니다."
+          primaryBtnText="확인"
+          onConfirm={() => {
+            handleSignOut();
+          }}
         />
       )}
 
