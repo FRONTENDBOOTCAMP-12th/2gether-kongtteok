@@ -12,6 +12,14 @@
   .max-w-kong {
     max-width: 27.5rem;
   }
+  .absolute-content {
+    position: absolute;
+    top: 3.125rem;
+    bottom: 3.75rem;
+    left: 50%;
+    right: 0;
+    width: 100%;
+  }
 }
 
 @layer components {
@@ -27,8 +35,6 @@
 
 @theme {
   /* 디자인 토큰 구성 */
-  --max-w-kong: 27.5rem;
-
   --color-primary: #3e3232;
   --color-secondary: #d9c6b9;
   --color-background: #fffbeb;
