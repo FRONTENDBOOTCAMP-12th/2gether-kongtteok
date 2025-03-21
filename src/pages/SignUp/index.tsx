@@ -6,17 +6,23 @@ import supabase from '@/lib/supabase-client';
 import { useFormValidation } from './useFormValidation';
 import FormField from './components/FormField';
 import InterestsSection from './components/InterestsSection';
+import Modal from '@/components/Modal';
 
 interface Interest {
   id: number;
   name: string;
 }
 
-const MAX_INTERESTS = 4;
+interface User {
+  id: string;
+  email: string;
+  nickname: string;
+}
+
+const MAX_INTERESTS = 3;
 
 const SignUp = () => {
   const navigate = useNavigate();
-
   const {
     formData,
     errors,
@@ -33,12 +39,12 @@ const SignUp = () => {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const fetchInterests = async () => {
       try {
         const { data, error } = await supabase.from('interests').select('id, name').order('name');
-
         if (error) throw error;
         setInterests(data || []);
       } catch (error) {
@@ -66,21 +72,23 @@ const SignUp = () => {
       if (prev.includes(interest)) {
         return prev.filter((item) => item !== interest);
       }
-
       if (prev.length >= MAX_INTERESTS) {
         return prev;
       }
-
       return [...prev, interest];
     });
   }, []);
 
+  const handleCloseModal = useCallback(() => {
+    setShowSuccessModal(false);
+    navigate('/signin');
+  }, [navigate]);
+
   const handleSubmit = useCallback(async () => {
     if (!isFormValid || isSubmitting) return;
 
+    setIsSubmitting(true);
     try {
-      setIsSubmitting(true);
-
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -106,22 +114,21 @@ const SignUp = () => {
         .map((interest) => interest.id);
 
       const userInterestsData = selectedInterestIds.map((interestId) => ({
-        user_id: userData.id,
+        user_id: (userData as User).id,
         interest_id: interestId,
       }));
 
       const { error: userInterestsError } = await supabase.from('user_interests').insert(userInterestsData);
-
       if (userInterestsError) throw userInterestsError;
 
-      navigate('/signin');
+      setShowSuccessModal(true);
     } catch (error) {
       console.error('Signup error:', error);
       alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData, isFormValid, navigate, selectedInterests, interests, isSubmitting]);
+  }, [formData, isFormValid, selectedInterests, interests, isSubmitting]);
 
   return (
     <CommonLayout
@@ -134,6 +141,7 @@ const SignUp = () => {
         <p className="text-primary flex items-center text-base">말랑이에게 정보를 알려주세요</p>
         <img src="/images/mallang.webp" alt="말랑이" width={50} height={50} />
       </div>
+
       <form className="flex flex-col gap-10">
         <FormField
           fieldType="withButton"
@@ -190,11 +198,21 @@ const SignUp = () => {
         />
       </form>
 
-      <div className="mt-42">
+      <div className="mt-21">
         <Button onClick={handleSubmit} ariaDisabled={!isFormValid || isSubmitting || isLoading}>
           말랑이 만나러 가기
         </Button>
       </div>
+
+      {showSuccessModal && (
+        <Modal
+          title="회원가입 성공!"
+          description="말랑이와 함께할 준비가 되었어요!"
+          primaryBtnText="확인"
+          onConfirm={handleCloseModal}
+          onClose={handleCloseModal}
+        />
+      )}
     </CommonLayout>
   );
 };
