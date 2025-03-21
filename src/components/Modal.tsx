@@ -22,7 +22,7 @@ function Modal({ title, description, primaryBtnText, cancelBtn, onConfirm, onClo
   };
 
   return (
-    <div className="bg-dimmed fixed inset-0 z-60 flex items-center justify-center backdrop-blur-xs" {...restProps}>
+    <div className="bg-dimmed fixed inset-0 z-100 flex items-center justify-center backdrop-blur-xs" {...restProps}>
       <div className="bg-cream-100 border-primary min-w-55 rounded-lg border p-4 text-center">
         <strong
           className={tm(
