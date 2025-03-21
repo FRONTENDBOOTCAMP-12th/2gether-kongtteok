@@ -55,7 +55,7 @@ function NotifyList() {
   return (
     <CommonLayout headerProps={{ title: '알림', isLeftIcon: true }}>
       {isLikesNull && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-y-2">
+        <div className="absolute-content flex -translate-x-[50%] flex-col items-center justify-center gap-y-2">
           <EmotionImage emotion="sad" className="w-8" />
           <span className="text-primary text-sm">알림이 없습니다.</span>
         </div>
