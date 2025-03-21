@@ -21,6 +21,7 @@ function Textarea({ label, labelHidden = false, className, ...restProps }: Texta
         {label}
       </label>
       <textarea
+        maxLength={500}
         className={tm(
           'block h-[6.25rem] w-full resize-none',
           'text-primary focus-visible:none text-xs leading-[165%]',
