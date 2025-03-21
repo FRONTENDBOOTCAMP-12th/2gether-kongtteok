@@ -42,7 +42,7 @@ const MonthPieChart = ({ data, title }: { data: EmotionData[]; title: string }) 
           </PieChart>
         </ResponsiveContainer>
       ) : (
-        <span className="text-primary flex h-full items-center justify-center">일기가 없어요😅</span>
+        <span className="text-primary flex h-full items-center justify-center">일기가 없어요!</span>
       )}
     </div>
   );
@@ -50,7 +50,7 @@ const MonthPieChart = ({ data, title }: { data: EmotionData[]; title: string }) 
 
 const EmotionBadges = ({ emotions }: { emotions: EmotionData[] }) => {
   if (!emotions.length) {
-    return <div className="text-center text-gray-500">이번 달에 일기를 안썼어요!</div>;
+    return <div className="text-primary flex h-40 items-center justify-center text-lg">이번달에 일기가 없어요!😅</div>;
   }
 
   return (
@@ -80,13 +80,22 @@ const EmotionPieChart = ({ monthlyData }: EmotionPieChartProps) => {
 
   const mostFrequentThisMonth = getMostFrequentEmotions(monthlyData.thisMonth);
 
+  // Check if both months have no data
+  const hasThisMonthData = monthlyData.thisMonth.some((item) => item.count > 0);
+  const hasLastMonthData = monthlyData.lastMonth.some((item) => item.count > 0);
+  const hasAnyData = hasThisMonthData || hasLastMonthData;
+
   return (
     <div className="flex flex-col gap-4">
       <span className="text-primary text-xl">비교</span>
-      <div className="flex w-full flex-row gap-4">
-        <MonthPieChart data={monthlyData.lastMonth} title={lastMonthName} />
-        <MonthPieChart data={monthlyData.thisMonth} title={thisMonthName} />
-      </div>
+
+      {hasAnyData && (
+        <div className="flex w-full flex-row gap-4">
+          <MonthPieChart data={monthlyData.lastMonth} title={lastMonthName} />
+          <MonthPieChart data={monthlyData.thisMonth} title={thisMonthName} />
+        </div>
+      )}
+
       <EmotionBadges emotions={mostFrequentThisMonth} />
     </div>
   );
