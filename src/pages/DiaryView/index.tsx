@@ -3,11 +3,10 @@ import { useParams } from 'react-router';
 import supabase from '@/lib/supabase-client';
 import CommonLayout from '@/components/layout/CommonLayout';
 import Button from '@/components/Button';
-import Switch from '@/components/Switch';
 import DiaryHeader from '@/components/DiaryHeader';
 import Textarea from '@/components/Textarea';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Heart } from '@mynaui/icons-react';
+import { Heart, LockKeyhole, LockOpenKeyhole } from '@mynaui/icons-react';
 import { getGPTResponse } from '@/utils/openai';
 import { type EmotionType } from '@/components/EmotionImage';
 import { type WeatherType } from '@/components/WeatherImage';
@@ -93,11 +92,8 @@ function DiaryView() {
         isRightIcon: true,
       }}
       showFooter={true}>
-      <section className="mt-2 flex w-full flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-brown-900 text-sm">{isPrivate ? '혼자보기' : '자랑하기'}</span>
-          <Switch className="min-w-11" label="" checked={isPrivate} onChange={() => setIsPrivate((prev) => !prev)} />
-        </div>
+      <section className="mb-2 flex w-full flex-row items-center justify-between">
+        <div>{isPrivate ? <LockKeyhole width="16" /> : <LockOpenKeyhole width="16" />}</div>
         <div className="text-brown-900 flex gap-2 text-sm">
           <button onClick={() => console.log('삭제 확인 창 띄울 예정')} className="cursor-pointer">
             삭제

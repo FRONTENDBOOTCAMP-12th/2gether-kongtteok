@@ -7,7 +7,7 @@ type TextareaProps = ComponentProps<'textarea'> & {
   className?: string;
 };
 
-function Textarea({ label, labelHidden = false, value, className, ...restProps }: TextareaProps) {
+function Textarea({ label, labelHidden = false, className, ...restProps }: TextareaProps) {
   const id = useId();
 
   return (
@@ -21,6 +21,7 @@ function Textarea({ label, labelHidden = false, value, className, ...restProps }
         {label}
       </label>
       <textarea
+        maxLength={500}
         className={tm(
           'block h-[6.25rem] w-full resize-none',
           'text-primary focus-visible:none text-xs leading-[165%]',
@@ -29,9 +30,7 @@ function Textarea({ label, labelHidden = false, value, className, ...restProps }
           className
         )}
         id={id}
-        {...restProps}>
-        {value}
-      </textarea>
+        {...restProps}></textarea>
     </div>
   );
 }
