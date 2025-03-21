@@ -9,10 +9,10 @@ import Button from '@/components/Button';
 import Textarea from '@/components/Textarea';
 import ToggleButton from '@/components/ToggleButton';
 import validator from '@/lib/validator';
+import { useAuthStore } from '@/stores/auth';
 
 const INTERESTS = ['취미', '가정', '학교', '운동', '동물', '패션', '직장', '친구', '여행', '돈', '음식', '사랑'];
-
-const DEFAULT_PROFILE = '/images/default/profile.webp'; // 기본 이미지 설정
+const DEFAULT_PROFILE = '/images/default/profile.webp';
 
 interface InterestData {
   interest_id: string;
@@ -27,6 +27,8 @@ interface UserProfile {
 }
 
 function ProfileEdit() {
+  const userId = useAuthStore((s) => s.user);
+
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string>(DEFAULT_PROFILE);
@@ -45,7 +47,7 @@ function ProfileEdit() {
         .single<UserProfile>();
 
       if (error) {
-        console.error('프로필 데이터를 불러오는 중 오류 발생:', error);
+        console.error('프로필 불러오기 오류:', error);
         return;
       }
 
@@ -67,6 +69,12 @@ function ProfileEdit() {
     fetchProfile();
   }, []);
 
+  const convertBase64ToFile = async (base64: string, filename: string): Promise<File> => {
+    const res = await fetch(base64);
+    const blob = await res.blob();
+    return new File([blob], filename, { type: blob.type });
+  };
+
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(e.target.value);
     setIsNicknameChecked(false);
@@ -85,12 +93,54 @@ function ProfileEdit() {
   };
 
   const handleSaveProfile = async () => {
-    if (nicknameError) return;
-    const { error } = await supabase.from('users').update({ nickname, profileImage, intro: bio }).eq('id', 'user_id');
+    if (!userId || nicknameError) return;
 
-    if (!error) {
-      setIsModalOpen(true);
+    let profileImageUrl = profileImage;
+
+    if (profileImage.startsWith('data:image')) {
+      const fileName = 'profile.png';
+      const file = await convertBase64ToFile(profileImage, fileName);
+
+      const { error: uploadError } = await supabase.storage
+        .from(`images/profile/${userId}`)
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) {
+        console.error('이미지 업로드 실패:', uploadError);
+        return;
+      }
+
+      const { data: publicUrlData } = supabase.storage.from('images/profile').getPublicUrl(`${userId}/profile.png`);
+
+      profileImageUrl = `${publicUrlData.publicUrl}?t=${Date.now()}`;
     }
+
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ nickname, profileImage: profileImageUrl, intro: bio })
+      .eq('id', userId);
+
+    if (!updateError) setIsModalOpen(true);
+    else console.error('프로필 저장 실패:', updateError);
+  };
+
+  const handleDeleteImage = async () => {
+    if (!userId) return;
+
+    const { error: deleteError } = await supabase.storage.from('images').remove([`profile/${userId}/profile.png`]);
+
+    if (deleteError) {
+      console.error('이미지 삭제 실패:', deleteError);
+    }
+
+    setProfileImage(DEFAULT_PROFILE);
+
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ profileImage: DEFAULT_PROFILE })
+      .eq('id', userId);
+
+    if (updateError) console.error('기본 이미지 업데이트 실패:', updateError);
   };
 
   return (
@@ -98,11 +148,7 @@ function ProfileEdit() {
       <div className="flex flex-col items-center gap-4">
         <div className="relative flex items-center justify-center">
           <div className="border-brown-400 relative h-24 w-24 overflow-hidden rounded-full border-2">
-            <img
-              src={profileImage || '/images/default/profile.webp'}
-              alt="프로필 이미지"
-              className="h-full w-full object-cover"
-            />
+            <img src={profileImage} alt="프로필 이미지" className="h-full w-full object-cover" />
           </div>
           <button
             className="bg-brown-400 absolute right-0 -bottom-0 translate-x-0 translate-y-0 transform rounded-full p-1"
@@ -118,14 +164,13 @@ function ProfileEdit() {
             value={nickname}
             onChange={handleNicknameChange}
             intent="secondary"
-            size="small"
             inlineSize="fit"
             disabled={isNicknameChecked}
             onClick={checkNickname}>
             {isNicknameChecked ? '확인완료' : '확인하기'}
           </InputButtonSet>
         </div>
-        {nicknameError && <p className="mt-1 text-sm text-red-500">{nicknameError}</p>}
+        {nicknameError && <p className="mt-1 text-sm">{nicknameError}</p>}
 
         <div className="w-full">
           <Textarea
@@ -137,7 +182,7 @@ function ProfileEdit() {
         </div>
 
         <div className="w-full">
-          <p className="text-primary flex items-center gap-1 text-sm font-medium">
+          <p className="text-primary flex items-center gap-1 text-xs font-medium">
             관심사
             <span className="text-secondary text-xs">(최대 3개까지 선택할 수 있어요)</span>
           </p>
@@ -190,7 +235,7 @@ function ProfileEdit() {
               }}
             />
           </label>
-          <button className="p-2 text-left" onClick={() => setProfileImage(DEFAULT_PROFILE)}>
+          <button className="p-2 text-left" onClick={handleDeleteImage}>
             이미지 삭제
           </button>
         </BottomSheet>
