@@ -52,7 +52,8 @@ function DiaryWrite() {
   const bottomSheetShow = useBottomSheetStore((s) => s.showBottomSheet);
   const bottomSheetHide = useBottomSheetStore((s) => s.hideBottomSheet);
   const userId = useAuthStore((s) => s.user)!;
-  const date = useLocation().search.split('=').at(-1) ?? getDate();
+  // eslint-disable-next-line
+  const date = useLocation().search.split('=').at(-1) || getDate();
 
   const selectEmotion = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const selecteEmotion = (e.target as HTMLImageElement).dataset.emotion as EmotionType;
