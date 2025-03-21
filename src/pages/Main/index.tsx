@@ -1,5 +1,5 @@
 import Calendar from '@/components/Calendar';
-import Chart from '@/components/Chart';
+import EmotionChart from '@/components/Chart';
 import CommonLayout from '@/components/layout/CommonLayout';
 
 function MainPage() {
@@ -12,7 +12,7 @@ function MainPage() {
       showFooter={true}>
       <div className="mt-6 flex flex-col gap-10">
         <Calendar />
-        <Chart />
+        <EmotionChart />
       </div>
     </CommonLayout>
   );

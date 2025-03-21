@@ -40,7 +40,6 @@ function DiaryList({
   const [diaries, setDiaries] = useState<EnhancedDiaryPreviewProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const handleMonthChange = useCallback(
     (newMonth: string) => {
@@ -67,8 +66,6 @@ function DiaryList({
         setError('로그인이 필요합니다');
         return;
       }
-
-      setCurrentUserId(userData.id);
 
       const [year, month] = selectedMonth.split('-');
       const startDate = `${year}-${month}-01`;
