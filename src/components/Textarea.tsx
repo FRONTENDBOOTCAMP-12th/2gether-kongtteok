@@ -16,7 +16,7 @@ function Textarea({ label, labelHidden = false, value, className, ...restProps }
         'mt-[1.375rem]': !labelHidden,
       })}>
       <label
-        className={tm('absolute bottom-full left-0 pb-1.5 text-sm leading-4', { 'sr-only': labelHidden })}
+        className={tm('absolute bottom-full left-0 pb-1.5 text-xs leading-4', { 'sr-only': labelHidden })}
         htmlFor={id}>
         {label}
       </label>
