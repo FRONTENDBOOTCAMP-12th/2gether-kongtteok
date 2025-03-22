@@ -30,6 +30,10 @@ interface EnhancedDiaryPreviewProps extends DiaryPreviewProps {
   emotion: EmotionType;
 }
 
+interface Like {
+  post_id: number;
+}
+
 function DiaryList({
   initialSelectedMonth = format(new Date(), 'yyyy-MM'),
   onMonthChange,
@@ -38,21 +42,63 @@ function DiaryList({
   const [selectedMonth, setSelectedMonth] = useState(initialSelectedMonth);
   const [selectedEmotion, setSelectedEmotion] = useState<EmotionType | null>(null);
   const [diaries, setDiaries] = useState<EnhancedDiaryPreviewProps[]>([]);
+  const [likes, setLikes] = useState<Record<number, number>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleEmotionToggle = useCallback((emotion: EmotionType | null) => {
+    setSelectedEmotion((prevEmotion) => (prevEmotion === emotion ? null : emotion));
+  }, []);
 
   const handleMonthChange = useCallback(
     (newMonth: string) => {
       setSelectedMonth(newMonth);
-      if (onMonthChange) {
-        onMonthChange(newMonth);
-      }
+      onMonthChange?.(newMonth);
     },
     [onMonthChange]
   );
 
-  const handleEmotionToggle = useCallback((emotion: EmotionType | null) => {
-    setSelectedEmotion((prevEmotion) => (prevEmotion === emotion ? null : emotion));
+  const fetchLikes = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.from('likes').select('post_id');
+      if (error) throw error;
+
+      if (data && Array.isArray(data)) {
+        const likesMap = (data as Like[]).reduce<Record<number, number>>((acc, like) => {
+          acc[like.post_id] = (acc[like.post_id] || 0) + 1;
+          return acc;
+        }, {});
+
+        setLikes(likesMap);
+      }
+    } catch (error) {
+      console.error('좋아요 데이터를 가져오지 못했습니다.', error);
+    }
+  }, []);
+
+  const processedDiaryData = useCallback((data: DiaryItemWithId[]) => {
+    return data.map((diary: DiaryItemWithId) => {
+      const validEmotions = ['exciting', 'happy', 'proud', 'fine', 'angry', 'tired', 'sad', 'depressed'];
+      const emotion = validEmotions.includes(diary.emotion) ? diary.emotion : 'fine';
+
+      let diaryImage: string | string[] | null = null;
+      if (Array.isArray(diary.diaryImage)) {
+        diaryImage = diary.diaryImage.map((item) => (typeof item === 'string' ? item : String(item)));
+      } else if (typeof diary.diaryImage === 'string') {
+        diaryImage = diary.diaryImage;
+      }
+
+      return {
+        id: diary.id,
+        emotion: emotion as EmotionType,
+        date: diary.date,
+        isPrivate: diary.isPrivate || false,
+        content: diary.content || '',
+        diaryImage,
+        likes: 0,
+        title: diary.title || '',
+      } as EnhancedDiaryPreviewProps;
+    });
   }, []);
 
   const fetchDiaries = useCallback(async () => {
@@ -64,13 +110,15 @@ function DiaryList({
 
       if (!userData) {
         setError('로그인이 필요합니다');
+        setIsLoading(false);
         return;
       }
 
       const [year, month] = selectedMonth.split('-');
+      const nextMonth = month === '12' ? '01' : String(parseInt(month) + 1).padStart(2, '0');
+      const nextYear = month === '12' ? String(parseInt(year) + 1) : year;
       const startDate = `${year}-${month}-01`;
-      const endDate =
-        month === '12' ? `${parseInt(year) + 1}-01-01` : `${year}-${String(parseInt(month) + 1).padStart(2, '0')}-01`;
+      const endDate = `${nextYear}-${nextMonth}-01`;
 
       const { data, error: fetchError } = await supabase
         .from(DATABASE_NAME)
@@ -83,32 +131,8 @@ function DiaryList({
       if (fetchError) throw fetchError;
 
       if (data) {
-        const diaryPromises = data.map(async (diary: DiaryItemWithId) => {
-          const { count } = await supabase
-            .from('likes')
-            .select('*', { count: 'exact', head: true })
-            .eq('post_id', diary.id);
-
-          let diaryImageStr = '/images/emotion/default.png';
-          if (typeof diary.diaryImage === 'string') {
-            diaryImageStr = diary.diaryImage;
-          } else if (diary.emotion) {
-            diaryImageStr = `/images/emotion/${diary.emotion}.png`;
-          }
-
-          return {
-            id: diary.id,
-            emotion: diary.emotion as EmotionType,
-            date: diary.date,
-            isPrivate: diary.isPrivate || false,
-            content: diary.content || '',
-            diaryImage: diaryImageStr,
-            likes: count ?? 0,
-          };
-        });
-
-        const diariesWithLikes = await Promise.all(diaryPromises);
-        setDiaries(diariesWithLikes);
+        const processedDiaries = processedDiaryData(data as DiaryItemWithId[]);
+        setDiaries(processedDiaries);
       }
     } catch (err) {
       console.error('Failed to fetch diaries:', err);
@@ -116,36 +140,72 @@ function DiaryList({
     } finally {
       setIsLoading(false);
     }
-  }, [selectedMonth]);
+  }, [selectedMonth, processedDiaryData]);
 
   useEffect(() => {
     fetchDiaries();
   }, [fetchDiaries]);
+
+  useEffect(() => {
+    fetchLikes();
+  }, [fetchLikes]);
 
   const filteredDiaries = useMemo(() => {
     if (!selectedEmotion) return diaries;
     return diaries.filter((diary) => diary.emotion === selectedEmotion);
   }, [diaries, selectedEmotion]);
 
-  const renderDiaryList = () => {
+  const DiaryListContent = useMemo(() => {
     if (isLoading) return <div className="py-8 text-center text-gray-500">로딩 중...</div>;
     if (error) return <div className="py-8 text-center text-red-500">{error}</div>;
     if (filteredDiaries.length === 0)
       return <div className="py-8 text-center text-gray-500">작성된 일기가 없습니다.</div>;
 
-    return filteredDiaries.map((diary) => (
-      <Link key={diary.id} to={`/diary/view/${diary.id}`}>
-        <DiaryPreview
-          emotion={diary.emotion}
-          date={diary.date}
-          isPrivate={diary.isPrivate}
-          content={diary.content}
-          diaryImage={diary.diaryImage}
-          likes={diary.likes}
+    return (
+      <>
+        {filteredDiaries.map((diary) => (
+          <Link key={diary.id} to={`/diary/view/${diary.id}`}>
+            <DiaryPreview
+              emotion={diary.emotion}
+              date={diary.date}
+              isPrivate={diary.isPrivate}
+              content={diary.content}
+              diaryImage={diary.diaryImage}
+              title={diary.title}
+              likes={likes[diary.id] ?? 0}
+              showActions={true}
+            />
+          </Link>
+        ))}
+      </>
+    );
+  }, [filteredDiaries, isLoading, error, likes]);
+
+  const EmotionFilterButtons = useMemo(
+    () => (
+      <div className="flex flex-nowrap gap-2 overflow-x-auto">
+        <ToggleButton
+          type="checkbox"
+          label="전체"
+          isActive={selectedEmotion === null}
+          onClick={() => handleEmotionToggle(null)}
+          className="min-w-fit whitespace-nowrap"
         />
-      </Link>
-    ));
-  };
+
+        {emotionList.map((emotion) => (
+          <ToggleButton
+            key={emotion}
+            type="checkbox"
+            label={EMOTION[emotion]}
+            isActive={selectedEmotion === emotion}
+            onClick={() => handleEmotionToggle(emotion)}
+            className="min-w-fit whitespace-nowrap"
+          />
+        ))}
+      </div>
+    ),
+    [selectedEmotion, handleEmotionToggle]
+  );
 
   return (
     <CommonLayout
@@ -165,28 +225,9 @@ function DiaryList({
           onViewClick={handleCalendarViewClick}
         />
 
-        <div className="flex flex-nowrap gap-2 overflow-x-auto">
-          <ToggleButton
-            type="checkbox"
-            label="전체"
-            isActive={selectedEmotion === null}
-            onClick={() => handleEmotionToggle(null)}
-            className="min-w-fit whitespace-nowrap"
-          />
+        {EmotionFilterButtons}
 
-          {emotionList.map((emotion) => (
-            <ToggleButton
-              key={emotion}
-              type="checkbox"
-              label={EMOTION[emotion]}
-              isActive={selectedEmotion === emotion}
-              onClick={() => handleEmotionToggle(emotion)}
-              className="min-w-fit whitespace-nowrap"
-            />
-          ))}
-        </div>
-
-        <section className="flex flex-col gap-4">{renderDiaryList()}</section>
+        <section className="flex flex-col gap-4">{DiaryListContent}</section>
       </div>
     </CommonLayout>
   );
