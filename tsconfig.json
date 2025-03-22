@@ -30,5 +30,5 @@
     "noUncheckedSideEffectImports": false
   },
 
-  "include": ["src"]
+  "include": ["src", "database.types.ts"]
 }

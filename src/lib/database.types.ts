@@ -9,36 +9,36 @@ export type Database = {
           created_at: string;
           date: string;
           diaryImage: Json | null;
-          emotion: string;
+          emotion: Database['public']['Enums']['emotion'];
           id: number;
           isPrivate: boolean;
           title: string;
           user_id: string;
-          weather: string;
+          weather: Database['public']['Enums']['weather'];
         };
         Insert: {
           content: string;
           created_at?: string;
           date: string;
           diaryImage?: Json | null;
-          emotion: string;
+          emotion: Database['public']['Enums']['emotion'];
           id?: number;
           isPrivate: boolean;
           title: string;
           user_id?: string;
-          weather: string;
+          weather: Database['public']['Enums']['weather'];
         };
         Update: {
           content?: string;
           created_at?: string;
           date?: string;
           diaryImage?: Json | null;
-          emotion?: string;
+          emotion?: Database['public']['Enums']['emotion'];
           id?: number;
           isPrivate?: boolean;
           title?: string;
           user_id?: string;
-          weather?: string;
+          weather?: Database['public']['Enums']['weather'];
         };
         Relationships: [
           {
@@ -69,20 +69,20 @@ export type Database = {
         Row: {
           created_at: string;
           id: number;
-          post_id: number | null;
-          user_id: string | null;
+          post_id: number;
+          user_id: string;
         };
         Insert: {
-          created_at?: string;
+          created_at: string;
           id?: number;
-          post_id?: number | null;
-          user_id?: string | null;
+          post_id: number;
+          user_id: string;
         };
         Update: {
           created_at?: string;
           id?: number;
-          post_id?: number | null;
-          user_id?: string | null;
+          post_id?: number;
+          user_id?: string;
         };
         Relationships: [
           {
@@ -129,69 +129,65 @@ export type Database = {
           created_at: string;
           email: string | null;
           id: string;
+          intro: string | null;
           nickname: string | null;
+          profileImage: string | null;
         };
         Insert: {
           created_at?: string;
           email?: string | null;
           id?: string;
+          intro?: string | null;
           nickname?: string | null;
+          profileImage?: string | null;
         };
         Update: {
           created_at?: string;
           email?: string | null;
           id?: string;
+          intro?: string | null;
           nickname?: string | null;
+          profileImage?: string | null;
         };
         Relationships: [];
-      };
-      Tables: {
-        users: {
-          Row: {
-            id: string;
-            email: string;
-            nickname: string;
-          };
-          Insert: {
-            id: string;
-            email: string;
-            nickname: string;
-          };
-          Update: {
-            id?: string;
-            email?: string;
-            nickname?: string;
-          };
-        };
-        interests: {
-          Row: {
-            id: string;
-            name: string;
-          };
-          Insert: {};
-          Update: {};
-        };
-        user_interests: {
-          Row: {
-            user_id: string;
-            interest_id: string;
-          };
-          Insert: {
-            user_id: string;
-            interest_id: string;
-          };
-          Update: {};
-        };
       };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      delete_user_data: {
+        Args: {
+          target_user_id: string;
+        };
+        Returns: undefined;
+      };
+      get_diary_likes: {
+        Args: {
+          input_user_id: string;
+        };
+        Returns: {
+          diary_id: number;
+          diary_date: string;
+          like_user_id: string;
+          like_created_at: string;
+          nickname: string;
+          image_url: string;
+        }[];
+      };
+      get_enum_values_for_column: {
+        Args: {
+          table_name: string;
+          column_name: string;
+        };
+        Returns: {
+          value: string;
+        }[];
+      };
     };
     Enums: {
-      [_ in never]: never;
+      emotion: 'exciting' | 'happy' | 'proud' | 'fine' | 'angry' | 'tired' | 'sad' | 'depressed';
+      weather: 'sunny' | 'cloudy' | 'windy' | 'rainy' | 'snowy';
     };
     CompositeTypes: {
       [_ in never]: never;

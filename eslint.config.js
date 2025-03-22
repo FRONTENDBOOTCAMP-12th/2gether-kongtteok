@@ -9,7 +9,7 @@ import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'src/lib/database.types.ts'],
+    ignores: ['dist', 'src/lib/database.types.ts', 'vite.config.ts'],
   },
   {
     files: ['**/*.{ts,tsx}'],
