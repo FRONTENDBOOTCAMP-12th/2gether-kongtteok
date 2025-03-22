@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/auth';
 import { getDate, getDateDot } from '@/utils/get-date';
 import { useBottomSheetStore } from '@/stores/bottom-sheet';
 import supabase, { DATABASE_NAME, STORAGE_NAME, type DiaryItemInsert } from '@/lib/supabase-client';
+import { IoIosArrowDown } from 'react-icons/io';
 import Button from '@/components/Button';
 import Switch from '@/components/Switch';
 import emotionList from '@/utils/emotion';
@@ -19,12 +20,6 @@ import CommonLayout from '@/components/layout/CommonLayout';
 import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 import WeatherImage, { type WeatherType } from '@/components/WeatherImage';
 import Modal from '@/components/Modal';
-
-const arrowIcon = (
-  <svg width={9} height={6} className="pointer-events" viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.30297 0.891784L4.65148 5.10815L1 0.891784" stroke="var(--color-primary)" strokeLinejoin="bevel" />
-  </svg>
-);
 
 const insertDiary = async (data: DiaryItemInsert) => {
   const { error } = await supabase.from(DATABASE_NAME).insert([data]);
@@ -122,11 +117,15 @@ function DiaryWrite() {
     imageFileList.current = [...file];
   };
 
-  const handleSubmit = (formData: FormData) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!userId) {
       console.error('로그인 정보가 없습니다.');
       return;
     }
+
+    const formData = new FormData(e.currentTarget);
 
     let diaryData = {
       user_id: userId as unknown as string,
@@ -186,7 +185,7 @@ function DiaryWrite() {
   return (
     <CommonLayout headerProps={{ title: '일기 쓰기', isLeftIcon: true, isRightIcon: true }}>
       <main>
-        <form action={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-y-3">
             <div className="mt-2 flex flex-row items-center justify-between">
               <div className="flex flex-row items-center gap-x-2">
@@ -202,7 +201,7 @@ function DiaryWrite() {
                   onClick={selectValue}
                   className="dark:text-primary relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {weather}
-                  {arrowIcon}
+                  <IoIosArrowDown />
                   <span
                     className={tm(
                       'absolute bottom-full left-[50%] mb-1 hidden -translate-x-[50%] px-2 py-0.25',
@@ -220,7 +219,7 @@ function DiaryWrite() {
                   onClick={selectValue}
                   className="dark:text-primary relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {emotion}
-                  {arrowIcon}
+                  <IoIosArrowDown />
                   <span
                     className={tm(
                       'absolute bottom-full left-[50%] mb-1 hidden -translate-x-[50%] px-2 py-0.25',

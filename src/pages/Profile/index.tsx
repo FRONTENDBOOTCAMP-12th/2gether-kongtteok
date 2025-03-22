@@ -152,7 +152,6 @@ function ProfilePage() {
                   content={diary.content}
                   likes={likes[diary.id] ?? 0}
                   emotion={diary.emotion}
-                  showActions={true}
                 />
               </button>
             ))
