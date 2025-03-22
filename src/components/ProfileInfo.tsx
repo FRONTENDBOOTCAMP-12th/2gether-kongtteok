@@ -13,7 +13,7 @@ function ProfileInfo({ profileImage, nickname, intro, interests }: ProfileInfoPr
           <img src={profileImage} alt={`${nickname}님의 프로필 이미지`} className="h-full w-full rounded-full" />
         </figure>
 
-        <section className="ml-3 flex h-20 w-50 flex-col rounded-[10px] bg-[#ECE3DC] p-2">
+        <section className="ml-3 flex h-20 w-50 flex-col p-2">
           <h2 className="text-primary text-base">{nickname}</h2>
 
           <p className="text-primary h-10 overflow-y-auto text-xs">{intro}</p>
