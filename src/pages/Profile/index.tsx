@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import supabase from '@/lib/supabase-client';
+import { useAuthStore } from '@/stores/auth';
 import CommonLayout from '@/components/layout/CommonLayout';
 import ProfileInfo from '@/components/ProfileInfo';
 import Tab from '@/components/Tab';
@@ -21,7 +22,7 @@ interface Diary {
   content: string;
   isPrivate: boolean;
   emotion: EmotionType;
-  diaryImage: string | string[] | null;
+  diaryImage?: string;
 }
 
 interface Like {
@@ -33,7 +34,11 @@ interface UserInterest {
   interests: { name: string } | null;
 }
 
+const EMOTIONS: EmotionType[] = ['exciting', 'happy', 'proud', 'fine', 'angry', 'tired', 'sad', 'depressed'];
+
 function ProfilePage() {
+  const userId = useAuthStore((s) => s.user);
+
   const [profile, setProfile] = useState<Profile | null>(null);
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [likes, setLikes] = useState<Record<number, number>>({});
@@ -41,89 +46,78 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState<'일기장' | '쪽지함'>('일기장');
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    if (!userId) {
+      console.error('유저 ID가 없습니다.');
+      return;
+    }
+
+    const fetchData = async () => {
       try {
-        const { data, error } = await supabase
+        const { data: userData, error: userError } = await supabase
           .from('users')
           .select(`id, profileImage, nickname, intro, user_interests (interest_id, interests (name))`)
+          .eq('id', userId)
           .single();
 
-        if (error) throw error;
+        if (userError) throw userError;
 
-        const interestsArray: string[] = Array.isArray(data?.user_interests)
-          ? (data.user_interests as unknown as UserInterest[])
+        const interestsArray: string[] = Array.isArray(userData?.user_interests)
+          ? (userData.user_interests as unknown as UserInterest[])
               .filter((interest) => interest.interests !== null && typeof interest.interests.name === 'string')
               .map((interest) => interest.interests!.name)
           : [];
 
         setProfile({
-          id: data.id,
-          profileImage: data.profileImage ?? '/images/default/profile.webp',
-          nickname: data.nickname ?? '익명',
-          intro: data.intro ?? '',
+          id: userData.id,
+          profileImage: userData.profileImage ?? '/images/default/profile.webp',
+          nickname: userData.nickname ?? '익명',
+          intro: userData.intro ?? '',
           interests: interestsArray,
         });
-      } catch (error) {
-        console.error('프로필 정보를 가져오지 못했습니다.', error);
-      }
-    };
 
-    const fetchDiaries = async () => {
-      try {
-        const { data, error } = await supabase
+        const { data: diaryData, error: diaryError } = await supabase
           .from('diary')
-          .select('id, date, title, content, emotion, isPrivate, diaryImage');
+          .select('id, date, title, content, emotion, isPrivate, diaryImage')
+          .eq('user_id', userId)
+          .order('date', { ascending: false });
 
-        if (error) throw error;
+        if (diaryError) throw diaryError;
 
-        if (data && Array.isArray(data)) {
-          setDiaries(
-            data.map((diary) => ({
-              id: diary.id,
-              date: diary.date,
-              title: diary.title,
-              content: diary.content,
-              isPrivate: diary.isPrivate,
-              emotion: (['exciting', 'happy', 'proud', 'fine', 'angry', 'tired', 'sad', 'depressed'].includes(
-                diary.emotion
-              )
-                ? diary.emotion
-                : 'fine') as EmotionType,
-              diaryImage: Array.isArray(diary.diaryImage)
-                ? (diary.diaryImage as string[])
-                : typeof diary.diaryImage === 'string'
-                  ? diary.diaryImage
-                  : null,
-            }))
-          );
-        }
+        const parsedDiaries =
+          (diaryData as Diary[]).map((diary) => ({
+            id: diary.id,
+            date: diary.date,
+            title: diary.title,
+            content: diary.content,
+            isPrivate: diary.isPrivate,
+            emotion: EMOTIONS.includes(diary.emotion) ? diary.emotion : 'fine',
+            diaryImage: Array.isArray(diary.diaryImage)
+              ? diary.diaryImage[0]
+              : typeof diary.diaryImage === 'string'
+                ? diary.diaryImage
+                : undefined,
+          })) ?? [];
+
+        setDiaries(parsedDiaries);
+
+        const { data: likeData, error: likeError } = await supabase.from('likes').select('post_id');
+        if (likeError) throw likeError;
+
+        const likesMap: Record<number, number> = {};
+        (likeData ?? []).forEach((like: Like) => {
+          likesMap[like.post_id] = (likesMap[like.post_id] || 0) + 1;
+        });
+
+        setLikes(likesMap);
       } catch (error) {
-        console.error('일기 데이터를 가져오지 못했습니다.', error);
+        console.error('데이터 불러오는 중 오류 발생:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const fetchLikes = async () => {
-      try {
-        const { data, error } = await supabase.from('likes').select('post_id');
-        if (error) throw error;
-
-        if (data && Array.isArray(data)) {
-          const likesMap: Record<number, number> = {};
-          (data as Like[]).forEach((like) => {
-            likesMap[like.post_id] = (likesMap[like.post_id] || 0) + 1;
-          });
-          setLikes(likesMap);
-        }
-      } catch (error) {
-        console.error('좋아요 데이터를 가져오지 못했습니다.', error);
-      }
-    };
-
-    fetchProfile();
-    fetchDiaries();
-    fetchLikes();
-    setLoading(false);
-  }, []);
+    fetchData();
+  }, [userId]);
 
   return (
     <CommonLayout headerProps={{ title: '프로필', isLeftIcon: true, isRightIcon: true }} showFooter={true}>
