@@ -22,6 +22,7 @@ interface DiaryViewProps {
   isPrivate: boolean;
   likes: number;
   images: string[];
+  feedbackMessage?: string;
 }
 
 interface DiaryData {
@@ -36,6 +37,7 @@ interface DiaryData {
   diaryImage: string | string[];
   user_id: string;
   created_at: string;
+  feedback_message?: string;
 }
 
 function DiaryView() {
@@ -60,6 +62,11 @@ function DiaryView() {
           const diaryData = data as DiaryData;
           const parsedImages = parseImages(diaryData.diaryImage);
 
+          if (diaryData.feedback_message) {
+            setShowMallang(true);
+            setReply(diaryData.feedback_message);
+          }
+
           setDiary({
             id: diaryData.id,
             date: diaryData.date,
@@ -70,6 +77,7 @@ function DiaryView() {
             isPrivate: diaryData.isPrivate,
             likes: diaryData.likes ?? 0,
             images: parsedImages,
+            feedbackMessage: diaryData.feedback_message,
           });
         }
       } catch (error) {
@@ -92,6 +100,18 @@ function DiaryView() {
     return Array.isArray(diaryImage) ? diaryImage : [];
   };
 
+  const saveFeedback = async (content: string) => {
+    if (!diaryIdNum || !content) return;
+
+    try {
+      const { error } = await supabase.from('diary').update({ feedback_message: content }).eq('id', diaryIdNum);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('피드백 저장 실패:', error);
+    }
+  };
+
   const handleGetEncouragement = async () => {
     if (!diary?.content || !diary?.emotion) return;
 
@@ -102,6 +122,10 @@ function DiaryView() {
     try {
       const message = await getGPTResponse(diary.content, diary.emotion);
       setReply(message);
+
+      await saveFeedback(message);
+
+      setDiary((prev) => (prev ? { ...prev, feedbackMessage: message } : null));
     } catch (error) {
       console.error('응원 메시지 가져오기 실패:', error);
       setReply('말랑이가 지금 너무 바빠요. 나중에 다시 물어봐 주세요!');
@@ -135,6 +159,7 @@ function DiaryView() {
         loading={loading}
         reply={reply}
         handleGetEncouragement={handleGetEncouragement}
+        hasFeedback={!!diary.feedbackMessage}
       />
     </CommonLayout>
   );
@@ -172,8 +197,8 @@ const DiaryImages = ({ images }: { images: string[] }) => {
 const DiaryContent = ({ diary }: { diary: DiaryViewProps }) => (
   <div className="relative pt-3">
     <Textarea label="일기 내용" value={diary.content} labelHidden disabled />
-    <div className="absolute right-3 bottom-2 flex items-center gap-1 text-sm text-[#F3A79E]">
-      <Heart className="h-4 w-4 fill-[#F3A79E]" />
+    <div className="text-likes absolute right-3 bottom-2 flex items-center gap-1 text-sm">
+      <Heart className="fill-likes h-4 w-4" />
       <span>{diary.likes}</span>
     </div>
   </div>
@@ -184,19 +209,23 @@ const MallangSection = ({
   loading,
   reply,
   handleGetEncouragement,
+  hasFeedback,
 }: {
   showMallang: boolean;
   loading: boolean;
   reply: string | null;
   handleGetEncouragement: () => Promise<void>;
+  hasFeedback: boolean;
 }) => (
   <div className="mt-3">
     {!showMallang ? (
       <div className="flex items-center justify-end gap-x-2">
-        <Button intent="primary" size="small" onClick={handleGetEncouragement} disabled={loading}>
-          <img src="/images/mallang/mallangFace.png" alt="말랑이" width={31} height={31} className="inline-block" />
-          말랑이의 응원 받기
-        </Button>
+        {!hasFeedback && (
+          <Button intent="primary" size="small" onClick={handleGetEncouragement} disabled={loading}>
+            <img src="/images/mallang/mallangFace.png" alt="말랑이" width={31} height={31} className="inline-block" />
+            말랑이의 응원 받기
+          </Button>
+        )}
       </div>
     ) : (
       <div className="relative flex flex-col items-center">
