@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { tm } from '@/utils/ts-merge';
 import { uploadFile } from '@/utils/supabase-api';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useAuthStore } from '@/stores/auth';
 import { getDate, getDateDot } from '@/utils/get-date';
 import { useBottomSheetStore } from '@/stores/bottom-sheet';
@@ -18,6 +18,7 @@ import EmotionButton from '@/components/EmotionButton';
 import CommonLayout from '@/components/layout/CommonLayout';
 import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 import WeatherImage, { type WeatherType } from '@/components/WeatherImage';
+import Modal from '@/components/Modal';
 
 const arrowIcon = (
   <svg width={9} height={6} className="pointer-events" viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,14 +47,16 @@ function DiaryWrite() {
   const imageFilesPath = useRef<string[]>([]);
 
   const [bottomSheetContents, setBottomSheetContents] = useState<React.ReactNode | string>('');
+  const [showCompleteWriteModal, setShowCompleteWriteModal] = useState(false);
 
   const bottomSheetTitle = useBottomSheetStore((s) => s.title);
   const isBottomSheetShow = useBottomSheetStore((s) => s.isShow);
   const bottomSheetShow = useBottomSheetStore((s) => s.showBottomSheet);
   const bottomSheetHide = useBottomSheetStore((s) => s.hideBottomSheet);
-  const userId = useAuthStore((s) => s.user)!;
+  const userId = useAuthStore((s) => s.user);
   // eslint-disable-next-line
   const date = useLocation().search.split('=').at(-1) || getDate();
+  const navigate = useNavigate();
 
   const selectEmotion = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const selecteEmotion = (e.target as HTMLImageElement).dataset.emotion as EmotionType;
@@ -120,6 +123,11 @@ function DiaryWrite() {
   };
 
   const handleSubmit = (formData: FormData) => {
+    if (!userId) {
+      console.error('로그인 정보가 없습니다.');
+      return;
+    }
+
     let diaryData = {
       user_id: userId as unknown as string,
       date: formData.get('date'),
@@ -161,10 +169,14 @@ function DiaryWrite() {
             insertDiary(diaryData).then(() => {
               imageFileList.current = [];
               imageFilesPath.current = [];
+
+              setShowCompleteWriteModal(true);
             });
           });
       } else {
-        insertDiary(diaryData);
+        insertDiary(diaryData).then(() => {
+          setShowCompleteWriteModal(true);
+        });
       }
     } catch (error) {
       console.error(error);
@@ -246,6 +258,10 @@ function DiaryWrite() {
       <BottomSheet isOpen={isBottomSheetShow} title={bottomSheetTitle!} handleClose={closeBottomSheet}>
         {bottomSheetContents}
       </BottomSheet>
+
+      {showCompleteWriteModal && (
+        <Modal title="작성 완료" description="일기가 기록 되었어요." onConfirm={() => navigate('/')} />
+      )}
     </CommonLayout>
   );
 }
