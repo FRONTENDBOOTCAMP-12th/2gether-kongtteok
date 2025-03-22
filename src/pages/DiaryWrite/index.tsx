@@ -192,7 +192,7 @@ function DiaryWrite() {
               <div className="flex flex-row items-center gap-x-2">
                 <input type="hidden" name="weather" value={weatherValue} />
                 <input type="hidden" name="emotion" value={emotionValue} />
-                <span className="text-primary text-[15px] leading-3.5">{getDateDot(date)}</span>
+                <span className="text-primary dark:text-background text-[15px] leading-3.5">{getDateDot(date)}</span>
                 <input type="hidden" name="date" value={date} />
                 <Button
                   id="weather"
@@ -200,7 +200,7 @@ function DiaryWrite() {
                   size="small"
                   inlineSize="fit"
                   onClick={selectValue}
-                  className="relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
+                  className="dark:text-primary relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {weather}
                   {arrowIcon}
                   <span
@@ -218,7 +218,7 @@ function DiaryWrite() {
                   size="small"
                   inlineSize="fit"
                   onClick={selectValue}
-                  className="relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
+                  className="dark:text-primary relative flex min-w-13 flex-row items-center gap-x-1.5 bg-white px-1.5">
                   {emotion}
                   {arrowIcon}
                   <span

@@ -30,10 +30,16 @@ function Switch({ label, checked, stateOnText, stateOffText, className, onChange
       />
       {stateOnText && (
         <>
-          <span className={tm('text-brown-700 hidden text-right text-xs peer-checked:block', className)}>
+          <span
+            className={tm(
+              'text-brown-700 dark:text-background hidden text-right text-xs peer-checked:block',
+              className
+            )}>
             {stateOnText}
           </span>
-          <span className={tm('text-brown-700 text-right text-xs peer-checked:hidden', className)}>{stateOffText}</span>
+          <span className={tm('text-brown-700 dark:text-background text-right text-xs peer-checked:hidden', className)}>
+            {stateOffText}
+          </span>
         </>
       )}
       <span

@@ -58,8 +58,8 @@ function AttachFile({ label, children, className, attachImage }: AttachFileProps
                 onClick={() => {
                   handleDelete(src);
                 }}
-                className="bg-blueberry-200 absolute top-1 right-1 cursor-pointer px-1">
-                <Trash width={22} height={22} />
+                className="bg-blueberry-200 dark:bg-beige-700 absolute top-1 right-1 cursor-pointer px-1">
+                <Trash width={22} height={22} className="dark:text-background" />
               </Button>
             </SwiperSlide>
           );

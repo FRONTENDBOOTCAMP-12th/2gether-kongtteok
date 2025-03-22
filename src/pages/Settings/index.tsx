@@ -71,7 +71,7 @@ function Settings() {
           </button>
         </li>
         <li className="border-beige-200 dark:border-beige-800 mb-6 flex items-center justify-between border-b py-4">
-          <span className="text-brown-700">다크모드</span>
+          다크모드
           <ThemeSetters />
         </li>
         <li className="border-beige-200 dark:border-beige-800 border-b">
