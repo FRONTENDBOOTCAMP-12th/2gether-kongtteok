@@ -1,6 +1,7 @@
 import WeatherImage, { type WeatherType } from '@/components/WeatherImage';
 import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi2';
+import { getDateDot } from '@/utils/get-date';
 
 export interface DiaryHeaderProps {
   date: string;
@@ -13,12 +14,12 @@ export interface DiaryHeaderProps {
 const DiaryHeader = ({ date, weather, emotion, title, isPrivate }: DiaryHeaderProps) => {
   return (
     <section
-      className="border-primary flex h-auto w-full items-center justify-between rounded-[10px] border bg-[#FFFFFF] px-4 py-3"
+      className="border-primary flex h-auto w-full items-center justify-between rounded-[10px] border bg-white px-4 py-3"
       aria-labelledby="diary-header-title">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <time className="text-beige-700 text-sm" dateTime={date}>
-            {date}
+            {getDateDot(date)}
           </time>
 
           <WeatherImage weather={weather} className="h-4 w-4" aria-label={`날씨: ${weather}`} />
