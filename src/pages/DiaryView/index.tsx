@@ -158,8 +158,12 @@ function DiaryView() {
           </div>
         ) : (
           <div className="relative flex flex-col items-center">
-            <div className="bg-beige-200 absolute top-24 z-20 flex min-h-35 w-full items-center justify-center rounded-[10px] p-4 text-center">
-              {loading ? <p className="text-primary text-lg">말랑이가 생각 중...</p> : <p>{reply}</p>}
+            <div className="bg-beige-200 absolute top-23 z-20 flex w-full items-center justify-center rounded-[10px] p-4 text-center">
+              {loading ? (
+                <p className="text-primary text-lg">말랑이가 생각 중...</p>
+              ) : (
+                <p className="leading-8.5">{reply}</p>
+              )}
             </div>
             <img src="/images/mallang/mallang.png" alt="말랑이" width={140} height={140} className="relative z-10" />
           </div>
