@@ -15,6 +15,7 @@ export type Database = {
           title: string;
           user_id: string;
           weather: Database['public']['Enums']['weather'];
+          feedback_message?: string;
         };
         Insert: {
           content: string;
@@ -27,6 +28,7 @@ export type Database = {
           title: string;
           user_id?: string;
           weather: Database['public']['Enums']['weather'];
+          feedback_message?: string;
         };
         Update: {
           content?: string;
@@ -39,6 +41,7 @@ export type Database = {
           title?: string;
           user_id?: string;
           weather?: Database['public']['Enums']['weather'];
+          feedback_message?: string;
         };
         Relationships: [
           {
