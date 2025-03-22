@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
-import supabase from '@/lib/supabase-client';
-import CommonLayout from '@/components/layout/CommonLayout';
-import Button from '@/components/Button';
-import DiaryHeader from '@/components/DiaryHeader';
-import Textarea from '@/components/Textarea';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useNavigate, useParams } from 'react-router';
 import { Heart } from '@mynaui/icons-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { getGPTResponse } from '@/utils/openai';
 import { type EmotionType } from '@/components/EmotionImage';
 import { type WeatherType } from '@/components/WeatherImage';
+import supabase, { DATABASE_NAME } from '@/lib/supabase-client';
+import CommonLayout from '@/components/layout/CommonLayout';
+import Modal from '@/components/Modal';
+import Button from '@/components/Button';
+import Textarea from '@/components/Textarea';
+import DiaryHeader from '@/components/DiaryHeader';
 import 'swiper/css';
 
 interface DiaryViewProps {
@@ -38,7 +39,13 @@ interface DiaryData {
   created_at: string;
 }
 
+interface ActionButtonsProps {
+  handleDelete?: () => void;
+}
+
 function DiaryView() {
+  const navigate = useNavigate();
+
   const { diaryId } = useParams<{ diaryId: string }>();
   const diaryIdNum = diaryId ? parseInt(diaryId, 10) : 0;
 
@@ -46,13 +53,14 @@ function DiaryView() {
   const [reply, setReply] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showMallang, setShowMallang] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ show: false, isDeleted: false });
 
   useEffect(() => {
     if (!diaryIdNum) return;
 
     const fetchDiary = async () => {
       try {
-        const { data, error } = await supabase.from('diary').select('*').eq('id', diaryIdNum).single();
+        const { data, error } = await supabase.from(DATABASE_NAME).select('*').eq('id', diaryIdNum).single();
 
         if (error) throw error;
 
@@ -110,6 +118,26 @@ function DiaryView() {
     }
   };
 
+  const showDeleteModal = () => {
+    setDeleteModal({ ...deleteModal, show: true });
+  };
+
+  const onDeletePost = async () => {
+    const { error } = await supabase.from(DATABASE_NAME).delete().eq('id', diaryIdNum);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    setDeleteModal({ show: false, isDeleted: true });
+  };
+
+  const onCompleteDelete = () => {
+    setDeleteModal({ ...deleteModal, isDeleted: false });
+    navigate('/diarylist');
+  };
+
   if (!diary) return <p>일기를 불러오는 중...</p>;
 
   return (
@@ -120,7 +148,7 @@ function DiaryView() {
         isRightIcon: true,
       }}
       showFooter={true}>
-      <ActionButtons />
+      <ActionButtons handleDelete={showDeleteModal} />
       <DiaryHeader
         date={diary.date}
         weather={diary.weather}
@@ -136,17 +164,29 @@ function DiaryView() {
         reply={reply}
         handleGetEncouragement={handleGetEncouragement}
       />
+      {deleteModal.show && (
+        <Modal
+          title="삭제"
+          description="일기를 삭제할까요?"
+          cancelBtn="취소"
+          onConfirm={onDeletePost}
+          onClose={() => {
+            setDeleteModal({ ...deleteModal, show: false });
+          }}
+        />
+      )}
+      {deleteModal.isDeleted && <Modal title="삭제 완료" description="일기를 지웠어요" onClose={onCompleteDelete} />}
     </CommonLayout>
   );
 }
 
-const ActionButtons = () => (
+const ActionButtons = ({ handleDelete }: ActionButtonsProps) => (
   <section className="mb-2 flex w-full flex-row items-center justify-end">
-    <div className="text-brown-900 flex gap-2 text-sm">
+    <div className="text-primary flex gap-2 text-sm">
       <button onClick={() => console.log('일기 쓰기 페이지로 이동 예정')} className="cursor-pointer">
         수정
       </button>
-      <button onClick={() => console.log('삭제 확인 창 띄울 예정')} className="cursor-pointer">
+      <button onClick={handleDelete} className="cursor-pointer">
         삭제
       </button>
     </div>
@@ -157,11 +197,11 @@ const DiaryImages = ({ images }: { images: string[] }) => {
   if (images.length === 0) return null;
 
   return (
-    <section className="bg-secondary relative flex h-50 w-full items-center justify-center overflow-hidden">
+    <section className="border-primary relative mt-3 flex h-52 w-full items-center justify-center overflow-hidden rounded-[10px] border bg-white py-2">
       <Swiper spaceBetween={10} slidesPerView={1} className="h-full w-full">
         {images.map((img, index) => (
           <SwiperSlide key={index} className="flex items-center justify-center">
-            <img src={img} alt={`일기 이미지 ${index + 1}`} className="h-auto max-h-[300px] w-full object-contain" />
+            <img src={img} alt={`일기 이미지 ${index + 1}`} className="m-auto max-h-full object-contain" />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -171,9 +211,10 @@ const DiaryImages = ({ images }: { images: string[] }) => {
 
 const DiaryContent = ({ diary }: { diary: DiaryViewProps }) => (
   <div className="relative pt-3">
-    <Textarea label="일기 내용" value={diary.content} labelHidden disabled />
+    <Textarea label="일기 내용" defaultValue={diary.content} className="cursor-auto!" labelHidden disabled />
     <div className="absolute right-3 bottom-2 flex items-center gap-1 text-sm text-[#F3A79E]">
       <Heart className="h-4 w-4 fill-[#F3A79E]" />
+      <span className="sr-only">공감 수</span>
       <span>{diary.likes}</span>
     </div>
   </div>
