@@ -23,13 +23,13 @@ function Header({ title, isLeftIcon = false, isRightIcon = false }: TopHeaderPro
             className="flex size-8 cursor-pointer items-center justify-center"
             aria-label="뒤로 가기"
             onClick={handleBackClick}>
-            <ChevronLeft className="text-primary size-4" aria-hidden="true" />
+            <ChevronLeft className="text-primary dark:text-background size-4" aria-hidden="true" />
           </button>
         )}
       </div>
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <p className="text-primary text-center text-base">{title}</p>
+        <p className="text-primary dark:text-background text-center text-base">{title}</p>
       </div>
 
       <div className="flex w-16 justify-end">
@@ -39,13 +39,13 @@ function Header({ title, isLeftIcon = false, isRightIcon = false }: TopHeaderPro
               to="/notify"
               className="flex size-8 cursor-pointer items-center justify-center"
               aria-label="알람페이지로 가기">
-              <BellSolid className="fill-primary size-4" aria-hidden="true" />
+              <BellSolid className="fill-primary dark:fill-background size-4" aria-hidden="true" />
             </Link>
             <Link
               to="/settings"
               className="flex size-8 cursor-pointer items-center justify-center"
               aria-label="환경설정으로 가기">
-              <CogFourSolid className="fill-primary size-4" aria-hidden="true" />
+              <CogFourSolid className="fill-primary dark:fill-background size-4" aria-hidden="true" />
             </Link>
           </>
         )}

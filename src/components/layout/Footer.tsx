@@ -1,11 +1,17 @@
-import { HomeSolid, PencilSolid, Search, UserSolid } from '@mynaui/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, To } from 'react-router';
+import { useAuthStore } from '@/stores/auth';
+import { useDiaryStore } from '@/stores/diary';
+import { HomeSolid, PencilSolid, Search, UserSolid } from '@mynaui/icons-react';
 import Modal from '@/components/Modal';
 
 function Footer() {
   const navigate = useNavigate();
+  const userId = useAuthStore((s) => s.user);
+  const hasTodayPost = useDiaryStore((s) => s.hasTodayPost);
+  const checkTodayPost = useDiaryStore((s) => s.checkTodayPost);
   const [showModal, setShowModal] = useState(false);
+  const [showModalTodayWrite, setShowModalTodayWrite] = useState(false);
 
   interface ButtonType {
     title: string;
@@ -41,8 +47,18 @@ function Footer() {
       return setShowModal(true);
     }
 
+    if ((path as string).includes('write') && hasTodayPost) {
+      return setShowModalTodayWrite(true);
+    }
+
     navigate(path);
   };
+
+  useEffect(() => {
+    if (userId) {
+      checkTodayPost(userId);
+    }
+  }, [userId, checkTodayPost]);
 
   return (
     <>
@@ -63,6 +79,13 @@ function Footer() {
         </nav>
       </footer>
       {showModal && <Modal title="둘러보기" description="준비중입니다." onClose={() => setShowModal(false)} />}
+      {showModalTodayWrite && (
+        <Modal
+          title="오늘은 일기를 썼어요."
+          description="일기는 하루에 하나만 쓸 수 있어요. 🍡"
+          onClose={() => setShowModalTodayWrite(false)}
+        />
+      )}
     </>
   );
 }

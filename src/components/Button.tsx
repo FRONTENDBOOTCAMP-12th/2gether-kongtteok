@@ -5,9 +5,10 @@ import { tm } from '@/utils/ts-merge';
 const buttonVariants = cva('cursor-pointer', {
   variants: {
     intent: {
-      primary: 'border border-primary bg-primary text-white',
+      primary:
+        'border border-primary bg-primary text-white dark:bg-strawberry-400 dark:border-strawberry-400 dark:text-brown-900',
       secondary: 'border border-secondary bg-secondary text-primary',
-      outline: 'border border-current text-primary',
+      outline: 'border border-current text-primary dark:text-beige-300',
       outlinePink: 'border border-peach-600 text-peach-800',
     },
     size: {
