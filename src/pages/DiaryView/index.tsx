@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 import DiaryHeader from '@/components/DiaryHeader';
 import Textarea from '@/components/Textarea';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Heart, LockKeyhole, LockOpenKeyhole } from '@mynaui/icons-react';
+import { Heart } from '@mynaui/icons-react';
 import { getGPTResponse } from '@/utils/openai';
 import { type EmotionType } from '@/components/EmotionImage';
 import { type WeatherType } from '@/components/WeatherImage';
@@ -20,8 +20,22 @@ interface DiaryViewProps {
   emotion: EmotionType;
   weather: WeatherType;
   isPrivate: boolean;
-  likes: number;
+  likes?: number;
   images: string[];
+}
+
+interface DiaryData {
+  id: number;
+  date: string;
+  title: string;
+  content?: string;
+  emotion: EmotionType;
+  weather: WeatherType;
+  isPrivate: boolean;
+  likes?: number;
+  diaryImage: string | string[];
+  user_id: string;
+  created_at: string;
 }
 
 function DiaryView() {
@@ -32,7 +46,6 @@ function DiaryView() {
   const [reply, setReply] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showMallang, setShowMallang] = useState(false);
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
 
   useEffect(() => {
     if (!diaryIdNum) return;
@@ -43,23 +56,23 @@ function DiaryView() {
       if (error) {
         console.error('Supabase 데이터 불러오기 실패:', error);
       } else {
+        const diaryData = data as DiaryData;
         setDiary({
-          id: data.id,
-          date: data.date,
-          title: data.title,
-          content: data.content,
-          weather: data.weather as WeatherType,
-          emotion: data.emotion as EmotionType,
-          isPrivate: data.isPrivate,
-          likes: data.likes ?? 0,
+          id: diaryData.id,
+          date: diaryData.date,
+          title: diaryData.title,
+          content: diaryData.content,
+          weather: diaryData.weather,
+          emotion: diaryData.emotion,
+          isPrivate: diaryData.isPrivate,
+          likes: diaryData.likes ?? 0,
           images:
-            typeof data.diaryImage === 'string'
-              ? JSON.parse(data.diaryImage)
-              : Array.isArray(data.diaryImage)
-                ? data.diaryImage
+            typeof diaryData.diaryImage === 'string'
+              ? JSON.parse(diaryData.diaryImage)
+              : Array.isArray(diaryData.diaryImage)
+                ? diaryData.diaryImage
                 : [],
         });
-        setIsPrivate(data.isPrivate);
       }
     };
 
@@ -92,20 +105,24 @@ function DiaryView() {
         isRightIcon: true,
       }}
       showFooter={true}>
-      <section className="mb-2 flex w-full flex-row items-center justify-between">
-        <div>{isPrivate ? <LockKeyhole width="16" /> : <LockOpenKeyhole width="16" />}</div>
+      <section className="mb-2 flex w-full flex-row items-center justify-end">
         <div className="text-brown-900 flex gap-2 text-sm">
-          <button onClick={() => console.log('삭제 확인 창 띄울 예정')} className="cursor-pointer">
-            삭제
-          </button>
           <button onClick={() => console.log('일기 쓰기 페이지로 이동 예정')} className="cursor-pointer">
             수정
+          </button>
+          <button onClick={() => console.log('삭제 확인 창 띄울 예정')} className="cursor-pointer">
+            삭제
           </button>
         </div>
       </section>
 
-      <DiaryHeader date={diary.date} weather={diary.weather} emotion={diary.emotion} title={diary.title} />
-      <div className="h-2" />
+      <DiaryHeader
+        date={diary.date}
+        weather={diary.weather}
+        emotion={diary.emotion}
+        title={diary.title}
+        isPrivate={diary.isPrivate}
+      />
 
       {diary.images.length > 0 && (
         <section className="bg-secondary relative flex h-50 w-full items-center justify-center overflow-hidden">
@@ -123,7 +140,7 @@ function DiaryView() {
         </section>
       )}
 
-      <section className="relative flex w-full flex-col gap-y-3">
+      <section className="relative flex w-full flex-col gap-3 pt-3">
         <div className="relative">
           <Textarea label="일기 내용" value={diary.content} labelHidden disabled />
           <div className="absolute right-3 bottom-2 flex items-center gap-1 text-sm text-[#F3A79E]">
