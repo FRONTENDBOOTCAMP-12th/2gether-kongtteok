@@ -39,8 +39,8 @@ function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, li
       </section>
 
       <section className="mt-auto flex items-center justify-end gap-1">
-        <Heart className="h-3.5 w-3.5 fill-[#F3A79E] text-[#F3A79E]" />
-        <span className="text-xs text-[#F3A79E]">{likes}</span>
+        <Heart className="fill-likes text-likes h-3.5 w-3.5" />
+        <span className="text-likes text-xs">{likes}</span>
       </section>
     </article>
   );

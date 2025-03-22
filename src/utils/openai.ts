@@ -21,11 +21,12 @@ export async function getGPTResponse(content: string, emotion: string) {
         },
       ],
       temperature: 0.7,
+      max_tokens: 100,
     });
 
     return response.choices[0]?.message?.content ?? '말랑이가 잠깐 기다려 달래요';
   } catch (error) {
     console.error('OpenAI API 호출 오류:', error);
-    return '응원 메시지를 가져오지 못했어요';
+    return '응원 메시지를 가져오지 못했어요😥';
   }
 }
