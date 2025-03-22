@@ -1,5 +1,6 @@
 import { BellSolid, ChevronLeft, CogFourSolid } from '@mynaui/icons-react';
 import { useNavigate, Link } from 'react-router';
+import Title from './Title';
 
 interface TopHeaderProps {
   title: string;
@@ -16,6 +17,7 @@ function Header({ title, isLeftIcon = false, isRightIcon = false }: TopHeaderPro
 
   return (
     <header className="relative flex h-12.5 w-full items-center justify-between px-4 text-base font-medium">
+      <Title>{title}</Title>
       <div className="w-16">
         {isLeftIcon && (
           <button
