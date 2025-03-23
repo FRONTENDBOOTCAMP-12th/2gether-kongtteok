@@ -53,7 +53,7 @@ function DiaryView() {
 
   const { diaryId } = useParams<{ diaryId: string }>();
   const diaryIdNum = diaryId ? parseInt(diaryId, 10) : 0;
-  const deleteTodayPost: () => void = useDiaryStore((s) => s.deleteTodayPost);
+  const deleteTodayPost = useDiaryStore((s) => s.deleteTodayPost);
 
   const [diary, setDiary] = useState<DiaryViewProps | null>(null);
   const [reply, setReply] = useState<string | null>(null);
@@ -264,10 +264,10 @@ const DiaryContent = ({ diary }: { diary: DiaryViewProps }) => (
   <div className="border-primary relative mt-3 rounded-[10px] border bg-white p-3 pt-3 pb-6 text-xs leading-[165%]">
     {diary.content}
     {/* <Textarea label="일기 내용" defaultValue={diary.content} className="cursor-auto!" labelHidden disabled /> */}
-    <div className="text-likes absolute right-3 bottom-2 flex items-center gap-1 text-sm">
-      <Heart className="fill-likes h-4 w-4" />
+    <div className="absolute right-3 bottom-2 flex items-center gap-1 text-sm">
+      <Heart className="fill-likes text-likes h-4 w-4" />
       <span className="sr-only">공감 수</span>
-      <span>{diary.likes}</span>
+      <span className="text-primary">{diary.likes}</span>
     </div>
   </div>
 );

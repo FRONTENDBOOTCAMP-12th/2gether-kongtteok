@@ -59,10 +59,7 @@ const ProfileFormSection = ({
         <Textarea label="소개글" placeholder="당신은 어떤 사람인가요?" value={bio} onChange={onBioChange} />
       </div>
       <div className="w-full">
-        <p className="text-primary mb-1.5 flex items-center gap-1 text-xs font-medium">
-          관심사
-          <span className="text-beige-600 text-xs">(최대 {maxInterests}개까지 선택할 수 있어요)</span>
-        </p>
+        <p className="text-primary mb-1.5 items-center text-xs font-medium">관심사 (최대 {maxInterests}개)</p>
         <div className="grid grid-cols-4 gap-2">
           {interests.map((interest) => (
             <ToggleButton

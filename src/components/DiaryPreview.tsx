@@ -18,7 +18,7 @@ function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, li
     <div className="border-primary bg-background flex w-full flex-col justify-between rounded-[10px] border p-3 text-left">
       <div className="flex w-full items-center gap-2">
         <EmotionImage emotion={emotion} className="h-5 w-5" />
-        <span className="text-primary text-xs opacity-50">{getDateKR(date)}</span>
+        <span className="text-primary text-xs opacity-80">{getDateKR(date)}</span>
         {isPrivate && <LockSolid className="text-secondary w-3.5" aria-label="비공개" />}
       </div>
 
@@ -41,7 +41,7 @@ function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, li
       <div className="mt-auto flex items-center justify-end gap-1">
         <Heart className="fill-likes text-likes h-3.5 w-3.5" />
         <span className="sr-only">공감 수</span>
-        <span className="text-likes text-xs">{likes}</span>
+        <span className="text-primary text-xs">{likes}</span>
       </div>
     </div>
   );

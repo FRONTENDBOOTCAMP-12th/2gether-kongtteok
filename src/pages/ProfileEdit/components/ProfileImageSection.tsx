@@ -52,12 +52,13 @@ function ProfileImageSection({ userId, profileImage, onImageChange }: ProfileIma
   return (
     <>
       <div className="relative flex items-center justify-center">
-        <div className="outline-beige-700 relative h-24 w-24 overflow-hidden rounded-full border-4 border-transparent outline-1">
+        <div className="outline-primary relative h-24 w-24 overflow-hidden rounded-full border-4 border-transparent outline-1">
           <img src={profileImage} alt="프로필 이미지" className="h-full w-full object-cover" />
         </div>
         <button
-          className="bg-brown-400 absolute right-0 -bottom-0 translate-x-0 translate-y-0 transform cursor-pointer rounded-full p-1"
-          onClick={() => setIsBottomSheetOpen(true)}>
+          className="bg-primary absolute right-0 -bottom-0 translate-x-0 translate-y-0 transform cursor-pointer rounded-full p-1"
+          onClick={() => setIsBottomSheetOpen(true)}
+          aria-label="프로필 이미지 편집">
           <Pencil className="text-cream-100 size-4" />
         </button>
       </div>
