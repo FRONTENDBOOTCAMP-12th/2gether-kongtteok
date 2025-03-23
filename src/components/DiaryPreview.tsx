@@ -35,7 +35,7 @@ function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, li
           </figure>
         ) : null}
 
-        <p className={`text-primary text-xs ${diaryImage ? 'ml-3' : ''} line-clamp-4`}>{content}</p>
+        <p className={`text-primary text-left text-xs ${diaryImage ? 'ml-3' : ''} line-clamp-4`}>{content}</p>
       </section>
 
       <section className="mt-auto flex items-center justify-end gap-1">
