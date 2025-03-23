@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { Heart } from '@mynaui/icons-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useDiaryStore } from '@/stores/diary';
 import { getGPTResponse } from '@/utils/openai';
-import { type EmotionType } from '@/components/EmotionImage';
+import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 import { type WeatherType } from '@/components/WeatherImage';
 import supabase, { DATABASE_NAME } from '@/lib/supabase-client';
 import CommonLayout from '@/components/layout/CommonLayout';
@@ -12,6 +13,8 @@ import Button from '@/components/Button';
 import Textarea from '@/components/Textarea';
 import DiaryHeader from '@/components/DiaryHeader';
 import 'swiper/css';
+import { getDate } from '@/utils/get-date';
+import Loading from '@/components/Loading';
 
 interface DiaryViewProps {
   id: number;
@@ -50,6 +53,7 @@ function DiaryView() {
 
   const { diaryId } = useParams<{ diaryId: string }>();
   const diaryIdNum = diaryId ? parseInt(diaryId, 10) : 0;
+  const deleteTodayPost = useDiaryStore((s) => s.deleteTodayPost);
 
   const [diary, setDiary] = useState<DiaryViewProps | null>(null);
   const [reply, setReply] = useState<string | null>(null);
@@ -155,6 +159,10 @@ function DiaryView() {
     }
 
     setDeleteModal({ show: false, isDeleted: true });
+
+    if (diary?.date === getDate()) {
+      deleteTodayPost();
+    }
   };
 
   const onCompleteDelete = () => {
@@ -162,7 +170,12 @@ function DiaryView() {
     navigate('/diarylist');
   };
 
-  if (!diary) return <p>일기를 불러오는 중...</p>;
+  if (!diary)
+    return (
+      <Loading text="일기를 불러오는 중...">
+        <EmotionImage className="w-9 animate-bounce" />
+      </Loading>
+    );
 
   return (
     <CommonLayout

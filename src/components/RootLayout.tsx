@@ -1,6 +1,8 @@
 import { Navigate, Outlet } from 'react-router';
 import { useState, useEffect } from 'react';
 import { GetUser } from '@/api/get-user';
+import Loading from './Loading';
+import EmotionImage from './EmotionImage';
 
 export function RootLayout() {
   const [userData, setUserData] = useState(null);
@@ -27,7 +29,11 @@ export function RootLayout() {
   }, []);
 
   if (loading) {
-    return <div>로딩 중...</div>;
+    return (
+      <Loading text="로딩중...">
+        <EmotionImage className="w-9 animate-bounce" />
+      </Loading>
+    );
   }
 
   const userId = localStorage.getItem('userData');

@@ -23,6 +23,7 @@ function ProfileImageSection({ userId, profileImage, onImageChange }: ProfileIma
       reader.readAsDataURL(file);
       reader.onload = () => {
         onImageChange(reader.result as string);
+        setIsBottomSheetOpen(false);
       };
     },
     [onImageChange]
@@ -40,6 +41,8 @@ function ProfileImageSection({ userId, profileImage, onImageChange }: ProfileIma
         .update({ profileImage: DEFAULT_PROFILE })
         .eq('id', userId);
 
+      setIsBottomSheetOpen(false);
+
       if (updateError) throw updateError;
     } catch (error) {
       console.error('이미지 삭제 실패:', error);
@@ -49,11 +52,11 @@ function ProfileImageSection({ userId, profileImage, onImageChange }: ProfileIma
   return (
     <>
       <div className="relative flex items-center justify-center">
-        <div className="border-brown-400 relative h-24 w-24 overflow-hidden rounded-full border-2">
+        <div className="outline-beige-700 relative h-24 w-24 overflow-hidden rounded-full border-4 border-transparent outline-1">
           <img src={profileImage} alt="프로필 이미지" className="h-full w-full object-cover" />
         </div>
         <button
-          className="bg-brown-400 absolute right-0 -bottom-0 translate-x-0 translate-y-0 transform rounded-full p-1"
+          className="bg-brown-400 absolute right-0 -bottom-0 translate-x-0 translate-y-0 transform cursor-pointer rounded-full p-1"
           onClick={() => setIsBottomSheetOpen(true)}>
           <Pencil className="text-cream-100 size-4" />
         </button>
@@ -61,11 +64,11 @@ function ProfileImageSection({ userId, profileImage, onImageChange }: ProfileIma
 
       {isBottomSheetOpen && (
         <BottomSheet title="프로필 이미지" isOpen={isBottomSheetOpen} handleClose={() => setIsBottomSheetOpen(false)}>
-          <label className="block cursor-pointer p-2 text-left">
+          <label className="relative block cursor-pointer p-2 text-left">
             이미지 편집
-            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+            <input type="file" accept="image/*" className="absolute inset-0 text-[0px]" onChange={handleFileChange} />
           </label>
-          <button className="p-2 text-left" onClick={handleDeleteImage}>
+          <button className="w-full cursor-pointer p-2 text-left" onClick={handleDeleteImage}>
             이미지 삭제
           </button>
         </BottomSheet>
