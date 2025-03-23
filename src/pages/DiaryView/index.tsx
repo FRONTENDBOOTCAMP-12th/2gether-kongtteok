@@ -45,6 +45,7 @@ interface DiaryData {
 
 interface ActionButtonsProps {
   handleDelete?: () => void;
+  handleModify?: () => void;
 }
 
 function DiaryView() {
@@ -59,6 +60,7 @@ function DiaryView() {
   const [loading, setLoading] = useState(false);
   const [showMallang, setShowMallang] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, isDeleted: false });
+  const [modifyModal, setModifyModal] = useState(false);
 
   useEffect(() => {
     if (!diaryIdNum) return;
@@ -184,7 +186,12 @@ function DiaryView() {
         isRightIcon: true,
       }}
       showFooter={true}>
-      <ActionButtons handleDelete={showDeleteModal} />
+      <ActionButtons
+        handleDelete={showDeleteModal}
+        handleModify={() => {
+          setModifyModal(true);
+        }}
+      />
       <DiaryHeader
         date={diary.date}
         weather={diary.weather}
@@ -201,6 +208,15 @@ function DiaryView() {
         handleGetEncouragement={handleGetEncouragement}
         hasFeedback={!!diary.feedbackMessage}
       />
+      {modifyModal && (
+        <Modal
+          title="일기 수정"
+          description="조금만 기다려 주세요. 🥺"
+          onClose={() => {
+            setModifyModal(false);
+          }}
+        />
+      )}
       {deleteModal.show && (
         <Modal
           title="삭제"
@@ -217,9 +233,9 @@ function DiaryView() {
   );
 }
 
-const ActionButtons = ({ handleDelete }: ActionButtonsProps) => (
+const ActionButtons = ({ handleDelete, handleModify }: ActionButtonsProps) => (
   <div className="text-primary mb-2 flex w-full flex-row items-center justify-end gap-2 text-sm">
-    <button type="button" onClick={() => console.log('일기 쓰기 페이지로 이동 예정')} className="cursor-pointer">
+    <button type="button" onClick={handleModify} className="cursor-pointer">
       수정
     </button>
     <button type="button" onClick={handleDelete} className="cursor-pointer">

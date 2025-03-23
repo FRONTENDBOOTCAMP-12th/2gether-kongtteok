@@ -12,7 +12,7 @@ function Settings() {
   const navigate = useNavigate();
   const userId = useAuthStore((s) => s.user)!;
   const signOut = useAuthStore((s) => s.signOut);
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState({ reconfirm: false, done: false });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteCompleteModalOpen, setIsDeleteCompleteModalOpen] = useState(false);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
@@ -91,7 +91,9 @@ function Settings() {
           </button>
         </li>
         <li className="border-beige-200 dark:border-beige-800 border-b">
-          <button className="w-full cursor-pointer py-4 text-left" onClick={() => setIsLogoutModalOpen(true)}>
+          <button
+            className="w-full cursor-pointer py-4 text-left"
+            onClick={() => setIsLogoutModalOpen({ ...isLogoutModalOpen, reconfirm: true })}>
             로그아웃
           </button>
         </li>
@@ -111,9 +113,20 @@ function Settings() {
         />
       )}
 
-      {(isLogoutModalOpen || isDeleteCompleteModalOpen) && (
+      {isLogoutModalOpen.reconfirm && (
         <Modal
-          title={isLogoutModalOpen ? '로그아웃 완료' : '회원탈퇴 완료'}
+          title="로그아웃"
+          description="로그아웃 할까요?"
+          primaryBtnText="확인"
+          onConfirm={() => {
+            setIsLogoutModalOpen({ reconfirm: false, done: true });
+          }}
+        />
+      )}
+
+      {(isLogoutModalOpen.done || isDeleteCompleteModalOpen) && (
+        <Modal
+          title={isLogoutModalOpen.done ? '로그아웃 완료' : '회원탈퇴 완료'}
           description="로그인 화면으로 이동합니다."
           primaryBtnText="확인"
           onConfirm={() => {
