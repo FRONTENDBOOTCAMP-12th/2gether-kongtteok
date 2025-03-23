@@ -17,6 +17,7 @@ interface ProfileFormSectionProps {
   nicknameSuccess: string;
   isNicknameChecked: boolean;
   maxInterests: number;
+  interestError: string;
   onNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onCheckNickname: () => void;
   onBioChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
