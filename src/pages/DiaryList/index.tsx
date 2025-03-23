@@ -173,7 +173,6 @@ function DiaryList({
               diaryImage={diary.diaryImage}
               title={diary.title}
               likes={likes[diary.id] ?? 0}
-              showActions={true}
             />
           </Link>
         ))}

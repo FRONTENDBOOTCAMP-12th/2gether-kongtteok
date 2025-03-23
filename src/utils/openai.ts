@@ -21,7 +21,7 @@ export async function getGPTResponse(content: string, emotion: string) {
         },
       ],
       temperature: 0.7,
-      max_tokens: 100,
+      max_tokens: 200,
     });
 
     return response.choices[0]?.message?.content ?? '말랑이가 잠깐 기다려 달래요';
