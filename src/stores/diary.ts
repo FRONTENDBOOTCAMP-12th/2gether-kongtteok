@@ -9,6 +9,7 @@ interface DiaryType {
 
 interface DiaryActions {
   checkTodayPost: (userId: string) => void;
+  deleteTodayPost: () => void;
 }
 
 const initialDiary: DiaryType = {
@@ -26,6 +27,9 @@ export const useDiaryStore = create(
         set(() => {
           return { hasTodayPost: hasPost };
         });
+      },
+      deleteTodayPost: () => {
+        set({ hasTodayPost: false });
       },
     })
   )
