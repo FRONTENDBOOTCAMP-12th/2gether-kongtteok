@@ -18,7 +18,7 @@ const DiaryHeader = ({ date, weather, emotion, title, isPrivate }: DiaryHeaderPr
       aria-labelledby="diary-header-title">
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <time className="text-beige-700 text-sm" dateTime={date}>
+          <time className="text-primary text-sm opacity-80" dateTime={date}>
             {getDateDot(date)}
           </time>
 

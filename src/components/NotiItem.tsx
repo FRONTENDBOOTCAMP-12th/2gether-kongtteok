@@ -20,7 +20,7 @@ function NotiItem({ nickname, profileImage, diaryDate, likeDate }: NotiItemProps
       <p className="text-primary">
         {nickname}님이 <time dateTime={diaryDate}>{getDateKR(diaryDate)}</time> 일기에 공감했어요.
       </p>
-      <time dateTime={likeDateFormat} className="text-beige-600">
+      <time dateTime={likeDateFormat} className="text-primary opacity-80">
         {getDateKR(likeDateFormat)}
       </time>
     </div>

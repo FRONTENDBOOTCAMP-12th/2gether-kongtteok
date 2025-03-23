@@ -46,7 +46,7 @@ const CalendarDay = memo(({ day, month, year, diaryEntries, onDayClick }: Calend
             isToday ? 'border-highlight border-2' : ''
           } bg-beige-200 flex h-9 w-9 items-center justify-center rounded-full`}></div>
       )}
-      <span className={`pt-1.5 font-medium ${isToday ? 'text-highlight font-bold' : 'text-primary'}`}>{day}</span>
+      <span className={`pt-1.5 font-medium ${isToday ? 'font-bold' : ''}`}>{day}</span>
     </button>
   );
 });
