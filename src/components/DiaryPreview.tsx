@@ -1,4 +1,5 @@
 import { LockSolid, Heart } from '@mynaui/icons-react';
+import { getDateKR } from '@/utils/get-date';
 import EmotionImage, { type EmotionType } from '@/components/EmotionImage';
 
 export interface DiaryPreviewProps {
@@ -14,18 +15,16 @@ export interface DiaryPreviewProps {
 
 function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, likes = 0 }: DiaryPreviewProps) {
   return (
-    <article className="border-primary bg-background flex w-full flex-col justify-between rounded-[10px] border p-3">
-      <section className="flex w-full items-center justify-between">
-        <div className="flex items-center gap-2">
-          <EmotionImage emotion={emotion} className="h-5 w-5" />
-          <span className="text-primary text-xs opacity-50">{date}</span>
-          {isPrivate && <LockSolid className="text-secondary h-3 w-3" />}
-        </div>
-      </section>
+    <div className="border-primary bg-background flex w-full flex-col justify-between rounded-[10px] border p-3 text-left">
+      <div className="flex w-full items-center gap-2">
+        <EmotionImage emotion={emotion} className="h-5 w-5" />
+        <span className="text-primary text-xs opacity-50">{getDateKR(date)}</span>
+        {isPrivate && <LockSolid className="text-secondary w-3.5" aria-label="비공개" />}
+      </div>
 
-      <h2 className="text-primary mt-2 w-full text-left text-sm font-bold">{title}</h2>
+      <p className="text-primary mt-2 w-full text-left text-sm font-bold">{title}</p>
 
-      <section className="mt-1.5 flex w-full">
+      <div className="mt-1.5 flex w-full">
         {diaryImage ? (
           <figure className="h-16.5 w-16.5 min-w-16.5 flex-shrink-0 overflow-hidden rounded-[10px]">
             <img
@@ -37,13 +36,14 @@ function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, li
         ) : null}
 
         <p className={`text-primary text-xs ${diaryImage ? 'ml-3' : ''} line-clamp-4`}>{content}</p>
-      </section>
+      </div>
 
-      <section className="mt-auto flex items-center justify-end gap-1">
+      <div className="mt-auto flex items-center justify-end gap-1">
         <Heart className="fill-likes text-likes h-3.5 w-3.5" />
+        <span className="sr-only">공감 수</span>
         <span className="text-likes text-xs">{likes}</span>
-      </section>
-    </article>
+      </div>
+    </div>
   );
 }
 
