@@ -39,7 +39,7 @@ const ProfileFormSection = ({
 }: ProfileFormSectionProps) => {
   return (
     <>
-      <div className="w-full">
+      <div className="relative w-full">
         <InputButtonSet
           labelText="닉네임"
           name="nickname"
@@ -51,8 +51,8 @@ const ProfileFormSection = ({
           onClick={onCheckNickname}>
           {isNicknameChecked ? '확인완료' : '확인하기'}
         </InputButtonSet>
-        {nicknameError && <p className="text-warning absolute left-0 mt-1.5 pl-4 text-xs">{nicknameError}</p>}
-        {nicknameSuccess && <p className="text-positive absolute left-0 mt-1.5 pl-4 text-xs">{nicknameSuccess}</p>}
+        {nicknameError && <p className="text-warning absolute left-0 mt-1.5 text-xs">{nicknameError}</p>}
+        {nicknameSuccess && <p className="text-positive absolute left-0 mt-1.5 text-xs">{nicknameSuccess}</p>}
       </div>
       <div className="w-full">
         <Textarea label="소개글" placeholder="당신은 어떤 사람인가요?" value={bio} onChange={onBioChange} />
@@ -60,9 +60,9 @@ const ProfileFormSection = ({
       <div className="w-full">
         <p className="text-primary mb-1.5 flex items-center gap-1 text-xs font-medium">
           관심사
-          <span className="text-secondary text-xs">(최대 {maxInterests}개까지 선택할 수 있어요)</span>
+          <span className="text-beige-600 text-xs">(최대 {maxInterests}개까지 선택할 수 있어요)</span>
         </p>
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-4 gap-2">
           {interests.map((interest) => (
             <ToggleButton
               key={interest.id}

@@ -9,6 +9,7 @@ export interface DiaryPreviewProps {
   content: string;
   likes?: number;
   emotion: EmotionType;
+  showActions?: boolean;
 }
 
 function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, likes = 0 }: DiaryPreviewProps) {

@@ -301,7 +301,7 @@ function ProfileEdit() {
         disabled={isSaveButtonDisabled}
         ariaDisabled={isSaveButtonDisabled}
         onClick={handleSaveProfile}
-        className="mt-41">
+        className="fixed-button mt-auto">
         저장하기
       </Button>
 

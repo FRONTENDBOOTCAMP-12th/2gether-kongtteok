@@ -143,7 +143,7 @@ function ProfilePage() {
               <button
                 key={diary.id}
                 onClick={() => (window.location.href = `/diary/view/${diary.id}`)}
-                className="w-full">
+                className="w-full cursor-pointer">
                 <DiaryPreview
                   date={diary.date}
                   isPrivate={diary.isPrivate}
