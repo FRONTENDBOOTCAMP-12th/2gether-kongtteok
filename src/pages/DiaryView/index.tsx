@@ -10,7 +10,6 @@ import supabase, { DATABASE_NAME } from '@/lib/supabase-client';
 import CommonLayout from '@/components/layout/CommonLayout';
 import Modal from '@/components/Modal';
 import Button from '@/components/Button';
-import Textarea from '@/components/Textarea';
 import DiaryHeader from '@/components/DiaryHeader';
 import 'swiper/css';
 import { getDate } from '@/utils/get-date';
@@ -46,6 +45,7 @@ interface DiaryData {
 
 interface ActionButtonsProps {
   handleDelete?: () => void;
+  handleModify?: () => void;
 }
 
 function DiaryView() {
@@ -60,6 +60,7 @@ function DiaryView() {
   const [loading, setLoading] = useState(false);
   const [showMallang, setShowMallang] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, isDeleted: false });
+  const [modifyModal, setModifyModal] = useState(false);
 
   useEffect(() => {
     if (!diaryIdNum) return;
@@ -185,7 +186,12 @@ function DiaryView() {
         isRightIcon: true,
       }}
       showFooter={true}>
-      <ActionButtons handleDelete={showDeleteModal} />
+      <ActionButtons
+        handleDelete={showDeleteModal}
+        handleModify={() => {
+          setModifyModal(true);
+        }}
+      />
       <DiaryHeader
         date={diary.date}
         weather={diary.weather}
@@ -202,6 +208,15 @@ function DiaryView() {
         handleGetEncouragement={handleGetEncouragement}
         hasFeedback={!!diary.feedbackMessage}
       />
+      {modifyModal && (
+        <Modal
+          title="일기 수정"
+          description="조금만 기다려 주세요. 🥺"
+          onClose={() => {
+            setModifyModal(false);
+          }}
+        />
+      )}
       {deleteModal.show && (
         <Modal
           title="삭제"
@@ -218,17 +233,15 @@ function DiaryView() {
   );
 }
 
-const ActionButtons = ({ handleDelete }: ActionButtonsProps) => (
-  <section className="mb-2 flex w-full flex-row items-center justify-end">
-    <div className="text-primary flex gap-2 text-sm">
-      <button onClick={() => console.log('일기 쓰기 페이지로 이동 예정')} className="cursor-pointer">
-        수정
-      </button>
-      <button onClick={handleDelete} className="cursor-pointer">
-        삭제
-      </button>
-    </div>
-  </section>
+const ActionButtons = ({ handleDelete, handleModify }: ActionButtonsProps) => (
+  <div className="text-primary mb-2 flex w-full flex-row items-center justify-end gap-2 text-sm">
+    <button type="button" onClick={handleModify} className="cursor-pointer">
+      수정
+    </button>
+    <button type="button" onClick={handleDelete} className="cursor-pointer">
+      삭제
+    </button>
+  </div>
 );
 
 const DiaryImages = ({ images }: { images: string[] }) => {
@@ -248,9 +261,10 @@ const DiaryImages = ({ images }: { images: string[] }) => {
 };
 
 const DiaryContent = ({ diary }: { diary: DiaryViewProps }) => (
-  <div className="relative pt-3">
-    <Textarea label="일기 내용" defaultValue={diary.content} className="cursor-auto!" labelHidden disabled />
-    <div className="absolute right-3 bottom-2 flex items-center gap-1 text-sm text-[#F3A79E]">
+  <div className="border-primary relative mt-3 rounded-[10px] border bg-white p-3 pt-3 pb-6 text-xs leading-[165%]">
+    {diary.content}
+    {/* <Textarea label="일기 내용" defaultValue={diary.content} className="cursor-auto!" labelHidden disabled /> */}
+    <div className="text-likes absolute right-3 bottom-2 flex items-center gap-1 text-sm">
       <Heart className="fill-likes h-4 w-4" />
       <span className="sr-only">공감 수</span>
       <span>{diary.likes}</span>
@@ -271,9 +285,9 @@ const MallangSection = ({
   handleGetEncouragement: () => Promise<void>;
   hasFeedback: boolean;
 }) => (
-  <div className="mt-3">
+  <>
     {!showMallang ? (
-      <div className="flex items-center justify-end gap-x-2">
+      <div className="mt-3 flex items-center justify-end gap-x-2">
         {!hasFeedback && (
           <Button intent="primary" size="small" onClick={handleGetEncouragement} disabled={loading}>
             <img src="/images/mallang/mallangFace.png" alt="말랑이" width={31} height={31} className="inline-block" />
@@ -282,18 +296,25 @@ const MallangSection = ({
         )}
       </div>
     ) : (
-      <div className="relative flex flex-col items-center">
-        <div className="bg-beige-200 absolute top-23 z-20 flex w-full items-center justify-center rounded-[10px] p-4 text-center">
+      <div className="relative mt-3 flex flex-col-reverse items-center">
+        <div className="bg-beige-200 z-20 -mt-11.5 flex w-full items-center justify-center rounded-[10px] p-4 text-center">
           {loading ? (
             <p className="text-primary text-lg">말랑이가 생각 중...</p>
           ) : (
-            <p className="leading-8.5">{reply}</p>
+            <p className="text-primary leading-8.5">{reply}</p>
           )}
         </div>
-        <img src="/images/mallang/mallang.png" alt="말랑이" width={140} height={140} className="relative z-10" />
+        <img
+          src="/images/mallang/mallang.png"
+          alt="말랑이"
+          width={140}
+          height={140}
+          className="relative z-10"
+          aria-hidden
+        />
       </div>
     )}
-  </div>
+  </>
 );
 
 export default DiaryView;

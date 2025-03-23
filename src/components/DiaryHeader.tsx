@@ -13,7 +13,7 @@ export interface DiaryHeaderProps {
 
 const DiaryHeader = ({ date, weather, emotion, title, isPrivate }: DiaryHeaderProps) => {
   return (
-    <section
+    <div
       className="border-primary flex h-auto w-full items-center justify-between rounded-[10px] border bg-white px-4 py-3"
       aria-labelledby="diary-header-title">
       <div className="flex flex-col">
@@ -25,19 +25,19 @@ const DiaryHeader = ({ date, weather, emotion, title, isPrivate }: DiaryHeaderPr
           <WeatherImage weather={weather} className="h-4 w-4" aria-label={`날씨: ${weather}`} />
 
           {isPrivate ? (
-            <HiLockClosed className="text-primary size-4" aria-label="비공개 일기" />
+            <HiLockClosed className="text-primary fill-beige-600 size-3.5" aria-label="비공개 일기" />
           ) : (
-            <HiLockOpen className="text-primary size-4" aria-label="공개 일기" />
+            <HiLockOpen className="text-primary fill-beige-600 size-3.5" aria-label="공개 일기" />
           )}
         </div>
 
-        <h2 id="diary-header-title" className="text-primary text-lg font-medium">
+        <p id="diary-header-title" className="text-primary text-lg font-medium">
           {title}
-        </h2>
+        </p>
       </div>
 
       <EmotionImage emotion={emotion} className="h-10 w-10" alt={`콩떡이: ${emotion}`} />
-    </section>
+    </div>
   );
 };
 
