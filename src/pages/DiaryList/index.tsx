@@ -83,7 +83,7 @@ function DiaryList({
 
       let diaryImage: string | string[] | null = null;
       if (Array.isArray(diary.diaryImage)) {
-        diaryImage = diary.diaryImage.map((item) => (typeof item === 'string' ? item : String(item)));
+        diaryImage = diary.diaryImage.map((item) => (typeof item === 'string' ? item : JSON.stringify(item)));
       } else if (typeof diary.diaryImage === 'string') {
         diaryImage = diary.diaryImage;
       }

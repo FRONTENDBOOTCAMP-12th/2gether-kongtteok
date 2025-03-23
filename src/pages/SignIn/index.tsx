@@ -49,8 +49,10 @@ function SignInPage() {
 
         if (userError) throw userError;
 
-        signIn(userData.id);
-        localStorage.setItem('userData', userData.id);
+        if (userData.id) {
+          signIn(userData.id);
+          localStorage.setItem('userData', userData.id);
+        }
 
         navigate('/');
       } catch (error) {

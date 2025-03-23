@@ -73,6 +73,7 @@ function Components() {
     weather: 'sunny',
     emotion: 'happy',
     title: '랜선탈출모임',
+    isPrivate: false,
   };
 
   return (

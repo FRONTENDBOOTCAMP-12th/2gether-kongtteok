@@ -13,7 +13,7 @@ function Tab({ tabs, activeTab, onTabChange }: TabProps) {
         <button
           key={value}
           onClick={() => onTabChange(value)}
-          className={`text-primary relative flex h-full w-1/2 items-center justify-center text-sm font-medium ${
+          className={`text-primary relative flex h-full w-1/2 cursor-pointer items-center justify-center text-sm font-medium ${
             activeTab === value ? 'font-bold' : 'opacity-70'
           } `}
           aria-current={activeTab === value ? 'page' : undefined}>

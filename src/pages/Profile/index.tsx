@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import supabase from '@/lib/supabase-client';
+import { Link } from 'react-router';
 import { useAuthStore } from '@/stores/auth';
+import { EmotionType } from '@/components/EmotionImage';
+import Tab from '@/components/Tab';
+import emotionList from '@/utils/emotion';
+import supabase from '@/lib/supabase-client';
 import CommonLayout from '@/components/layout/CommonLayout';
 import ProfileInfo from '@/components/ProfileInfo';
-import Tab from '@/components/Tab';
 import DiaryPreview from '@/components/DiaryPreview';
-import { EmotionType } from '@/components/EmotionImage';
 
 interface Profile {
   id: string;
@@ -34,7 +36,7 @@ interface UserInterest {
   interests: { name: string } | null;
 }
 
-const EMOTIONS: EmotionType[] = ['exciting', 'happy', 'proud', 'fine', 'angry', 'tired', 'sad', 'depressed'];
+const EMOTIONS = emotionList;
 
 function ProfilePage() {
   const userId = useAuthStore((s) => s.user);
@@ -134,16 +136,13 @@ function ProfilePage() {
         ]}
       />
 
-      <section className="flex w-full flex-col items-center gap-4 py-4">
+      <div className="flex w-full flex-col items-center gap-4 py-4">
         {activeTab === '일기장' ? (
           loading ? (
             <p className="text-primary text-sm opacity-50">데이터를 불러오는 중...</p>
           ) : diaries.length > 0 ? (
             diaries.map((diary) => (
-              <button
-                key={diary.id}
-                onClick={() => (window.location.href = `/diary/view/${diary.id}`)}
-                className="w-full">
+              <Link key={diary.id} to={`/diary/view/${diary.id}`} className="w-full cursor-pointer">
                 <DiaryPreview
                   date={diary.date}
                   isPrivate={diary.isPrivate}
@@ -153,7 +152,7 @@ function ProfilePage() {
                   likes={likes[diary.id] ?? 0}
                   emotion={diary.emotion}
                 />
-              </button>
+              </Link>
             ))
           ) : (
             <p className="text-primary text-sm opacity-50">아직 작성한 일기가 없어요.</p>
@@ -161,7 +160,7 @@ function ProfilePage() {
         ) : (
           <p className="text-primary text-sm opacity-50">쪽지 기능 준비 중</p>
         )}
-      </section>
+      </div>
     </CommonLayout>
   );
 }
