@@ -36,7 +36,7 @@ function DiaryPreview({ emotion, date, isPrivate, diaryImage, title, content, li
         ) : null}
 
         <p className={`text-primary text-left text-xs ${diaryImage ? 'ml-3' : ''} line-clamp-4`}>{content}</p>
-      </section>
+      </div>
 
       <div className="mt-auto flex items-center justify-end gap-1">
         <Heart className="fill-likes text-likes h-3.5 w-3.5" />
