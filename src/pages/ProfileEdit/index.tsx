@@ -41,6 +41,7 @@ interface ValidationState {
   nicknameSuccess: string;
   isNicknameChecked: boolean;
   isFormValid: boolean;
+  interestError: string;
 }
 
 function ProfileEdit() {
@@ -61,10 +62,25 @@ function ProfileEdit() {
     nicknameSuccess: '',
     isNicknameChecked: false,
     isFormValid: false,
+    interestError: '',
   });
 
   const { nickname, profileImage, bio, selectedInterests } = profileState;
-  const { nicknameError, nicknameSuccess, isNicknameChecked, isFormValid } = validationState;
+  const { nicknameError, nicknameSuccess, isNicknameChecked, isFormValid, interestError } = validationState;
+
+  const validateForm = useCallback(() => {
+    const isInterestValid = selectedInterests.length > 0;
+
+    setValidationState((prev) => ({
+      ...prev,
+      interestError: isInterestValid ? '' : '관심사를 하나 이상 선택해주세요.',
+      isFormValid: prev.isNicknameChecked && isInterestValid,
+    }));
+  }, [selectedInterests]);
+
+  useEffect(() => {
+    validateForm();
+  }, [selectedInterests, validateForm]);
 
   const fetchInterests = useCallback(async () => {
     try {
@@ -94,14 +110,26 @@ function ProfileEdit() {
       if (error) throw error;
 
       if (data) {
+        const nickname = data.nickname ?? '';
+        const userInterests = Array.isArray(data.user_interests)
+          ? data.user_interests.map((interest) => interest?.interests?.name ?? '').filter(Boolean)
+          : [];
+
         setProfileState({
-          nickname: data.nickname ?? '',
+          nickname: nickname,
           profileImage: data.profileImage ?? DEFAULT_PROFILE,
           bio: data.intro ?? '',
-          selectedInterests: Array.isArray(data.user_interests)
-            ? data.user_interests.map((interest) => interest?.interests?.name ?? '').filter(Boolean)
-            : [],
+          selectedInterests: userInterests,
         });
+
+        const isInterestValid = userInterests.length > 0;
+
+        setValidationState((prev) => ({
+          ...prev,
+          isNicknameChecked: !!nickname,
+          interestError: isInterestValid ? '' : '관심사를 하나 이상 선택해주세요.',
+          isFormValid: !!nickname && isInterestValid,
+        }));
       }
     } catch (error) {
       console.error('프로필 불러오기 오류:', error);
@@ -127,33 +155,91 @@ function ProfileEdit() {
       nickname: newNickname,
     }));
 
-    setValidationState({
+    setValidationState((prev) => ({
+      ...prev,
       nicknameError: '',
       nicknameSuccess: '',
       isNicknameChecked: false,
       isFormValid: false,
-    });
+    }));
   }, []);
 
-  const checkNickname = useCallback(() => {
+  const checkNickname = useCallback(async () => {
     if (!nickname.trim()) {
-      setValidationState({
+      setValidationState((prev) => ({
+        ...prev,
         nicknameError: '필수 입력칸이에요.',
         nicknameSuccess: '',
         isNicknameChecked: false,
         isFormValid: false,
-      });
+      }));
       return;
     }
 
     const isValid = validator.isNickname(nickname);
-    setValidationState({
-      nicknameError: isValid ? '' : '특수문자 제외 2~8자리로 입력해 주세요',
-      nicknameSuccess: isValid ? '사용 가능한 닉네임이에요.' : '',
-      isNicknameChecked: isValid,
-      isFormValid: isValid,
-    });
-  }, [nickname]);
+    if (!isValid) {
+      setValidationState((prev) => ({
+        ...prev,
+        nicknameError: '특수문자 제외 2~8자리로 입력해 주세요',
+        nicknameSuccess: '',
+        isNicknameChecked: false,
+        isFormValid: false,
+      }));
+      return;
+    }
+
+    try {
+      if (userId) {
+        const { data: userData } = await supabase.from('users').select('nickname').eq('id', userId).single();
+
+        if (userData && userData.nickname === nickname) {
+          const isInterestValid = selectedInterests.length > 0;
+
+          setValidationState((prev) => ({
+            ...prev,
+            nicknameError: '',
+            nicknameSuccess: '사용 가능한 닉네임이에요.',
+            isNicknameChecked: true,
+            isFormValid: isInterestValid,
+          }));
+          return;
+        }
+      }
+
+      const { data, error } = await supabase.from('users').select('nickname').eq('nickname', nickname);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setValidationState((prev) => ({
+          ...prev,
+          nicknameError: '중복된 닉네임입니다.',
+          nicknameSuccess: '',
+          isNicknameChecked: false,
+          isFormValid: false,
+        }));
+      } else {
+        const isInterestValid = selectedInterests.length > 0;
+
+        setValidationState((prev) => ({
+          ...prev,
+          nicknameError: '',
+          nicknameSuccess: '사용 가능한 닉네임이에요.',
+          isNicknameChecked: true,
+          isFormValid: isInterestValid,
+        }));
+      }
+    } catch (error) {
+      console.error('닉네임 중복 확인 오류:', error);
+      setValidationState((prev) => ({
+        ...prev,
+        nicknameError: '닉네임 확인 중 오류가 발생했습니다.',
+        nicknameSuccess: '',
+        isNicknameChecked: false,
+        isFormValid: false,
+      }));
+    }
+  }, [nickname, userId, selectedInterests]);
 
   const handleBioChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setProfileState((prev) => ({ ...prev, bio: e.target.value }));
@@ -187,7 +273,7 @@ function ProfileEdit() {
   );
 
   const handleSaveProfile = useCallback(async () => {
-    if (!userId || !isFormValid || !isNicknameChecked) return;
+    if (!userId || !isFormValid || !isNicknameChecked || selectedInterests.length === 0) return;
 
     try {
       const profileImageUrl = await uploadProfileImage(profileImage);
@@ -271,8 +357,8 @@ function ProfileEdit() {
   }, []);
 
   const isSaveButtonDisabled = useMemo(() => {
-    return !isFormValid || !isNicknameChecked;
-  }, [isFormValid, isNicknameChecked]);
+    return !isFormValid || !isNicknameChecked || selectedInterests.length === 0;
+  }, [isFormValid, isNicknameChecked, selectedInterests]);
 
   return (
     <CommonLayout headerProps={{ title: '프로필 편집', isLeftIcon: true, isRightIcon: true }} showFooter={false}>
@@ -287,6 +373,7 @@ function ProfileEdit() {
           nicknameError={nicknameError}
           nicknameSuccess={nicknameSuccess}
           isNicknameChecked={isNicknameChecked}
+          interestError={interestError}
           onNicknameChange={handleNicknameChange}
           onCheckNickname={checkNickname}
           onBioChange={handleBioChange}

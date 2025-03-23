@@ -53,7 +53,7 @@ function DiaryView() {
 
   const { diaryId } = useParams<{ diaryId: string }>();
   const diaryIdNum = diaryId ? parseInt(diaryId, 10) : 0;
-  const deleteTodayPost = useDiaryStore((s) => s.deleteTodayPost);
+  const deleteTodayPost: () => void = useDiaryStore((s) => s.deleteTodayPost);
 
   const [diary, setDiary] = useState<DiaryViewProps | null>(null);
   const [reply, setReply] = useState<string | null>(null);
