@@ -3,9 +3,6 @@ import { fileURLToPath } from 'node:url';
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import prerender from '@prerenderer/rollup-plugin';
-
-const envUrl = process.env.VITE_CI_ENVIRONMENT_URL;
 
 const viteConfig = defineConfig({
   plugins: [
@@ -13,26 +10,11 @@ const viteConfig = defineConfig({
       jsxRuntime: 'automatic',
     }),
     tailwindcss(),
-    prerender({
-      routes: ['/'], // 정적 페이지를 생성할 루트(경로) 추가
-      renderer: '@prerenderer/renderer-puppeteer',
-      postProcess(renderedRoute) {
-        // HTTP → HTTPS로 변경 or `localhost` → 서비스 URL로 변경
-        renderedRoute.html = renderedRoute.html
-          .replace(/http:/gi, 'https:')
-          .replace(/(https:\/\/)?(localhost|127\.0\.0\.1):\d*/gi, envUrl || '');
-      },
-    }),
     ViteImageOptimizer({
       cache: true,
       cacheLocation: '.cache',
     }),
   ],
-  define: {
-    'import.meta.env.VITE_CI_ENVIRONMENT_URL': JSON.stringify(
-      process.env.VITE_CI_ENVIRONMENT_URL || 'https://kongtteok.netlify.app'
-    ),
-  },
   server: {
     host: 'localhost',
     port: 3000,
