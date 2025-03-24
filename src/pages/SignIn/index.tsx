@@ -52,7 +52,6 @@ function SignInPage() {
 
         if (userData.id) {
           signIn(userData.id);
-          localStorage.setItem('userData', userData.id);
         }
 
         navigate('/');
