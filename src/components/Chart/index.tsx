@@ -28,9 +28,7 @@ interface EmotionChartProps {
   error: string | null;
 }
 
-// React.memo를 사용하여 불필요한 리렌더링 방지
 const EmotionChart = ({ thisMonthData, lastMonthData, isLoading, error }: EmotionChartProps) => {
-  // 월별 데이터 메모이제이션
   const monthlyData = useMemo(
     () => ({
       lastMonth: lastMonthData,
