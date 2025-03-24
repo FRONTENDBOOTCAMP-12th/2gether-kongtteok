@@ -27,7 +27,6 @@
   "devDependencies": {
     "@eslint/js": "9.18.0",
     "@prerenderer/renderer-puppeteer": "1.2.4",
-    "@prerenderer/rollup-plugin": "0.3.12",
     "@types/node": "22.10.7",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
