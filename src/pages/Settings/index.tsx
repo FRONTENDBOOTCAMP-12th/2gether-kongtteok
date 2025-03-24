@@ -20,7 +20,6 @@ function Settings() {
 
   const handleSignOut = () => {
     signOut();
-    localStorage.removeItem('userData');
     navigate('/signin');
   };
 
