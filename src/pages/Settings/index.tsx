@@ -117,10 +117,13 @@ function Settings() {
         <Modal
           title="로그아웃"
           description="로그아웃 할까요?"
+          cancelBtn="취소"
           primaryBtnText="확인"
+          onConfirmReturn
           onConfirm={() => {
             setIsLogoutModalOpen({ reconfirm: false, done: true });
           }}
+          onClose={() => setIsLogoutModalOpen({ reconfirm: false, done: false })}
         />
       )}
 

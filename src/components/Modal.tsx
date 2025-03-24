@@ -7,14 +7,27 @@ interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   description: string;
   primaryBtnText?: string;
   cancelBtn?: string;
+  onConfirmReturn?: boolean;
   onConfirm?: () => void;
   onClose?: () => void;
 }
 
-function Modal({ title, description, primaryBtnText, cancelBtn, onConfirm, onClose, ...restProps }: ModalProps) {
+function Modal({
+  title,
+  description,
+  primaryBtnText,
+  cancelBtn,
+  onConfirmReturn,
+  onConfirm,
+  onClose,
+  ...restProps
+}: ModalProps) {
   const handleConfirm = () => {
     onConfirm?.();
-    onClose?.();
+
+    if (!onConfirmReturn) {
+      onClose?.();
+    }
   };
 
   const handleCancel = () => {
