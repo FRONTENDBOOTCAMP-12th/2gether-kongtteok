@@ -23,7 +23,6 @@ interface DiaryViewProps {
   emotion: EmotionType;
   weather: WeatherType;
   isPrivate: boolean;
-  likes: number;
   images: string[];
   feedbackMessage?: string;
 }
@@ -36,7 +35,6 @@ interface DiaryData {
   emotion: EmotionType;
   weather: WeatherType;
   isPrivate: boolean;
-  likes?: number;
   diaryImage: string | string[];
   user_id: string;
   created_at: string;
@@ -61,6 +59,7 @@ function DiaryView() {
   const [showMallang, setShowMallang] = useState(false);
   const [deleteModal, setDeleteModal] = useState({ show: false, isDeleted: false });
   const [modifyModal, setModifyModal] = useState(false);
+  const [likes, setLikes] = useState(0);
 
   useEffect(() => {
     if (!diaryIdNum) return;
@@ -88,7 +87,6 @@ function DiaryView() {
             weather: diaryData.weather,
             emotion: diaryData.emotion,
             isPrivate: diaryData.isPrivate,
-            likes: diaryData.likes ?? 0,
             images: parsedImages,
             feedbackMessage: diaryData.feedback_message,
           });
@@ -99,6 +97,26 @@ function DiaryView() {
     };
 
     fetchDiary();
+  }, [diaryIdNum]);
+
+  useEffect(() => {
+    if (!diaryIdNum) return;
+
+    const fetchLikes = async () => {
+      try {
+        const { data, error } = await supabase.from('likes').select('post_id').eq('post_id', diaryIdNum);
+
+        if (error) throw error;
+
+        if (data) {
+          setLikes(data.length);
+        }
+      } catch (error) {
+        console.error('좋아요 수를 불러오지 못했습니다:', error);
+      }
+    };
+
+    fetchLikes();
   }, [diaryIdNum]);
 
   const parseImages = (diaryImage: string | string[]): string[] => {
@@ -200,7 +218,7 @@ function DiaryView() {
         isPrivate={diary.isPrivate}
       />
       <DiaryImages images={diary.images} />
-      <DiaryContent diary={diary} />
+      <DiaryContent diary={diary} likes={likes} />
       <MallangSection
         showMallang={showMallang}
         loading={loading}
@@ -260,14 +278,13 @@ const DiaryImages = ({ images }: { images: string[] }) => {
   );
 };
 
-const DiaryContent = ({ diary }: { diary: DiaryViewProps }) => (
+const DiaryContent = ({ diary, likes }: { diary: DiaryViewProps; likes: number }) => (
   <div className="border-primary relative mt-3 rounded-[10px] border bg-white p-3 pt-3 pb-6 text-xs leading-[165%]">
     {diary.content}
-    {/* <Textarea label="일기 내용" defaultValue={diary.content} className="cursor-auto!" labelHidden disabled /> */}
     <div className="absolute right-3 bottom-2 flex items-center gap-1 text-sm">
       <Heart className="fill-likes text-likes h-4 w-4" />
       <span className="sr-only">공감 수</span>
-      <span className="text-primary">{diary.likes}</span>
+      <span className="text-primary">{likes}</span>
     </div>
   </div>
 );
