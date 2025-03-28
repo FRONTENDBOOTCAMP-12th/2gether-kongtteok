@@ -1,91 +1,139 @@
-# 🐰 말랑콩떡
-### [🍡 배포 링크 바로가기](https://kongtteok.netlify.app)
-### [✍️ 백로그 바로가기](https://github.com/orgs/FRONTENDBOOTCAMP-12th/projects/21)
-### [📖 위키 바로가기](https://github.com/FRONTENDBOOTCAMP-12th/2gether-kongtteok/wiki)
+# 🐰 힐링공간 일기 서비스앱 말랑콩떡
 
+## 프로젝트 소개
 
+개발 기간 : 2025.02.24 ~ 2025.03.24
 
-## 1️⃣ 프로젝트 소개
-### [피그마 시안](https://www.figma.com/design/jTFvdhEvinJLeauIHLBX1S/%EB%A7%90%EB%9E%91%EC%BD%A9%EB%96%A1?node-id=41-558&t=hdlP635Ubug00J3X-1)
-### [플로우차트](https://www.canva.com/design/DAGgFfGZcVs/A-jixnLmFTtrGD8euXG-HA/edit)
+배포 링크 : https://kongtteok.netlify.app
 
+테스트 ID : test1@naver.com
 
-## 2️⃣ 팀 정보
+테스트 PW : asdf1234@
 
-| 🍓 민준기 | 🍌 박혜미 | 🍑 김수정 |
-| :------: | :------: | :------: |
-| [<img src="https://github.com/FRONTENDBOOTCAMP-12th/2gether-kongtteok/blob/develop/public/images/emotion/angry.png?raw=true" width="100" height="100" alt="딸기 콩떡이" /> <br/> @wnsrl7250](https://github.com/wnsrl7250) |[<img src="https://github.com/FRONTENDBOOTCAMP-12th/2gether-kongtteok/blob/develop/public/images/emotion/happy.png?raw=true" width="100" height="100" alt="바나나 콩떡이" /> <br/> @bohyemian](https://github.com/bohyemian) | [<img src="https://github.com/FRONTENDBOOTCAMP-12th/2gether-kongtteok/blob/develop/public/images/emotion/exciting.png?raw=true" width="100" height="100" alt="복숭아 콩떡이" /> <br/> @peachily](https://github.com/peachily) |
-  | - 스크럼 마스터 <br> - 로그인/회원가입 <br> - 통계 | - 일기 쓰기 <br> - 알림  | - 일기 보기 <br> - 프로필 <br> - 설정 |
+말랑콩떡은 감정을 기록하고 서로 공감하는 특별한 일기 서비스 앱입니다. 단순한 일기 작성을 넘어 감정의 깊이를 이해하고 공유할 수 있는 플랫폼입니다.
 
+- 하루의 감정을 기록할 수 있는 직관적인 일기 작성 인터페이스
+- AI가 사용자의 일기를 읽고 따뜻하고 공감적인 위로와 조언 제공
+- 날짜별 감정 상태를 한눈에 볼 수 있는 캘린더 기능
+- 월별 감정 분포와 감정 변화를 그래프로 제공
 
-## 3️⃣ 기술 스택
+향후 계획
+
+- 다른 유저의 일기 둘러보기 기능
+- 사용자 간 쪽지 기능
+
+## 팀원 구성
+
+ <div align="center">
+
+|                                 [🍓 민준기](https://github.com/wnsrl7250)                                 |                                [🍌 박혜미](https://github.com/bohyemian)                                 |                                 [🍑 김수정](https://github.com/peachily)                                  |
+| :-------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------: |
+| <img src="https://avatars.githubusercontent.com/u/103577262?v=4" height="100" style="border-radius:50%;"> | <img src="https://avatars.githubusercontent.com/u/31885579?v=4" height="100" style="border-radius:50%;"> | <img src="https://avatars.githubusercontent.com/u/182451123?v=4" height="100" style="border-radius:50%;"> |
+|              스크럼 마스터 <br> 로그인 <br> 회원가입 <br> 캘린더 <br> 통계 <br> 일기 리스트               |                                  공통 컴포넌트 <br> 일기 쓰기 <br> 알림                                  |                                      일기 상세 <br> 프로필 <br> 설정                                      |
+
+</div>
+
+## 개발 환경
+
 ### Frontend
-  : React v19, TypeScript, Vite, React Router, Zustand
-### Styling & UI
-  : Tailwind CSS v4, Swiper, Recharts
-### API
-  : OpenAI GPT-4o API
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) <br>
+![React Router](https://img.shields.io/badge/React%20Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
+![Zustand](https://img.shields.io/badge/zustand-orange?style=for-the-badge&logo=zustand&logoColor=white)
+
 ### Backend
-  : Supabase
+
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+
+### Styling & UI
+
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Recharts](https://img.shields.io/badge/Recharts-8884d8?style=for-the-badge&logo=recharts&logoColor=white)
+![Swiper](https://img.shields.io/badge/Swiper-0C4B8D?style=for-the-badge&logo=swiper&logoColor=white)
+
+### API
+
+![OpenAI](https://img.shields.io/badge/OpenAI-00A3E0?style=for-the-badge&logo=openai&logoColor=white)
+
+### Version Control System
+
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+
 ### Deployment
-  : Netlify
+
+![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)
+
 ### Code Quality
-  : Prettier, ESLint
 
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
 
-## 4️⃣ 주요 기능
+### [커밋컨벤션](https://github.com/FRONTENDBOOTCAMP-12th/2gether-kongtteok/wiki/%EA%B9%83-%EC%BB%A8%EB%B2%A4%EC%85%98)
 
-- 회원가입
+### [코드컨벤션](https://github.com/FRONTENDBOOTCAMP-12th/2gether-kongtteok/wiki/%EC%BD%94%EB%94%A9-%EC%BB%A8%EB%B2%A4%EC%85%98)
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![회원가입](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/signup.gif) | - useFormValidation 커스텀 훅을 사용하여 입력값 및 유효성 검사 관리 <br> - supabase에서 관심사 목록 불러오기 -> 사용자가 선택한 관심사 추적 |
+## 디자인
 
-- 로그인
+### [피그마 시안](https://www.figma.com/design/jTFvdhEvinJLeauIHLBX1S/%EB%A7%90%EB%9E%91%EC%BD%A9%EB%96%A1?node-id=2-11&p=f&t=0pvu7c4BClktfzfR-0)
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![로그인](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/signin.gif) | - 이메일과 비밀번호를 통한 사용자 인증 <br> - Supabase 인증 시스템 연동 <br> - Zustand로 로그인 상태 관리 및 유저 정보 저장 <br> - form 유효성 검사 |
+## 플로우 차트
 
-- 메인
+## 주요 기능
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![메인](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/main.gif) | - 로그인한 사용자 정보와 일기 데이터를 상태로 관리 <br> - 선택된 월의 시작일과 종료일을 계산하여 날짜 범위로 일기 데이터 필터링 <br> - 사용자 ID와 일치하는 데이터만 조회 <br> - 일기 데이터를 순회하며 감정별 발생 빈도 계산 <br> - Promise.all을 사용해 이번 달과 지난 달 데이터를 병렬로 요청하여 성능 최적화 <br> - 로딩 상태와 에러 처리로 사용자 경험 개선|
+### [회원가입]
 
-- 일기 쓰기
+|                                                                  동작 화면                                                                   | 기능                                                                                                                                                                                                                                                                                                                                           |
+| :------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="800" alt="회원가입 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/signup.gif"> | - 이메일과 비밀번호, 닉네임을 입력하면 validation에 따른 유효성 검사가 진행되고 경고 문구를 하단에 표시 <br> - 이메일과 닉네임 입력 후 중복 확인 버튼을 누르면 중복된 이메일, 닉네임인지 확인 <br> - 관심사를 최대 3개까지 선택 가능 <br> - 이메일, 비밀번호, 닉네임의 유효성 검사를 통과하고 관심사를 한개 이상 골라야 회원가입 버튼이 활성화 |
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![일기 쓰기](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/diarywrite.gif) | - 날씨, 감정, 제목, 내용을 필수 값으로 입력 <br> - form 전송 후 필수값 미입력 시 안내메세지 출력 |
+### [로그인]
 
-- 일기 보기
+|                                                                 동작 화면                                                                  | 기능                                                                                                                                                       |
+| :----------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="700" alt="로그인 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/signin.gif"> | - 이메일과 비밀번호를 입력하고 로그인 버튼을 클릭 <br> - 로그인 버튼 클릭 시 일치하지 않을 경우 경고 문구가 나타나고, 로그인에 성공하면 메인 화면으로 이동 |
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![일기 쓰기](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/diaryview.gif) | - URL에서 전달받은 diaryId 값으로 해당 일기의 상세 데이터를 요청하여 화면에 출력 <br> - 응답 받은 AI 메시지를 DB에 저장하여 재방문 시에도 동일한 피드백을 제공 |
+### [메인]
 
-- 프로필
+|                                                               동작 화면                                                                | 기능                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| :------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="800" alt="메인 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/main.gif"> | - 월별 캘린더 UI 제공 <br> - 월 선택 기능을 통해 원하는 월로 쉽게 이동 가능 <br> - 캘린더의 특정 날짜 선택 시 해당 날짜에 일기가 없다면 일기 작성 화면으로, 일기가 있다면 일기 상세 화면으로 이동 <br> - 작성된 일기의 감정 상태가 자동으로 캘린더에 반영 <br> - 현재 달의 전체 감정 분포를 시각적 그래프로 제공 <br> - 이번 달과 지난 달의 감정 분포를 나란히 비교하는 파이 그래프 제공함으로써 감정 변화 트렌드를 한눈에 확인 가능 <br> - 리스트보기 클릭 시 일기 목록 페이지로 이동 |
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![프로필](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/profile.gif) | - users 테이블에서 전역 상태에 저장된 userId로 사용자 정보 요청 <br> - user_interests 테이블에서 userId를 키로 갖는 rows 조회 |
+### [일기 작성]
 
-- 프로필 편집
+|                                                                     동작 화면                                                                     | 기능                                                                                                                                                                                                                                                         |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="550" alt="일기 작성 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/diarywrite.gif"> | - 하루에 하나의 일기만 작성 가능 <br> -오늘 하루의 감정 (설렘, 행복, 뿌듯, 괜찮음, 피곤, 우울, 화남, 슬픔)과 날씨 선택 <br> - 일기 제목과 일기 내용 작성 (최대 500자) <br> - 일기의 공개/비공개 여부 선택 가능 <br> - 여러 장의 사진 업로드 가능 (선택 사항) |
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![프로필 편집](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/profileedit.gif) | - 사용자의 기존 프로필 정보를 불러오고, 관심사 목록과 함께 초기 상태를 구성 <br> - 프로필 이미지 supabase storage에 업로드 후 URL을 DB 컬럼에 저장 |
+### [일기 상세]
 
-- 알림
+|                                                                    동작 화면                                                                     | 기능                                                                                                                                                                                                                                                            |
+| :----------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="600" alt="일기 상세 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/diaryview.gif"> | - 작성한 일기의 상세한 내용 확인 가능 <br> - 첨부된 이미지가 여러장이면 슬라이드로 좌우 넘김 가능 <br> - 일기 수정 및 삭제 가능 <br> - 해당 일기의 좋아요 수 확인 가능 <br> - 말랑이의 응원 받기 버튼 클릭 시 해당 일기에 대한 개인화된 응원 메시지를 AI가 제공 |
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![알림](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/notification.gif) | - likes 테이블에서 created_at 날짜가 최근 일주일 이내인 내가 작성한 일기 id의 수를 카운트 |
+### [프로필]
 
-- 설정
+|                                                                  동작 화면                                                                  | 기능                                                                                                                                                      |
+| :-----------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="430" alt="프로필 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/profile.gif"> | - 사용자의 정보 제공 (프로필 이미지, 닉네임, 인사말, 관심사) <br> - 사용자가 작성한 일기 목록 확인 가능 <br> - 각 일기를 클릭하여 상세 페이지로 이동 가능 |
 
-  | 동작 화면 | 기능 및 구현 방법 |
-  | :------: | :------ |
-  | ![설정](https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/settings.gif) | - 로그인 시 저장되는 전역상태 초기화 후 로그인 화면으로 이동 <br> - user_id를 참조하는 모든 연관 데이터 삭제 <br> - theme을 전역상태로 관리하여 data-theme 속성 토글 |
+### [프로필 편집]
 
+|                                                                      동작 화면                                                                       | 기능                                                                                                                                                                                                                                                                                                                                                              |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="700" alt="프로필 편집 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/profileedit.gif"> | - 프로필 이미지 선택 시 바텀시트 호출 <br> - 바텀시트에서 이미지 편집, 이미지 삭제 선택 <br> - 닉네임 입력 후 확인하기 버튼 클릭 시 validation에 따라 유효성 검사, 닉네임 중복 확인 <br> - 검사 결과에 따른 메시지를 입력창 하단에 표시 <br> - 소개글, 관심사 변경 가능 <br> - 닉네임 유효성 검사를 통과하고 관심사를 최소 1개 이상 선택해야 저장하기 버튼 활성화 |
+
+### [알림]
+
+|                                                                   동작 화면                                                                   | 기능                                                                                                                                                                        |
+| :-------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="650" alt="알림 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/profileedit.gif"> | - 사용자의 일기에 대한 상호작용 알림 제공 <br> - 최대 일주일 동안 알림 보관 <br> - 좋아요를 누른 사용자의 프로필 이미지, 좋아요를 누른 날짜, 좋아요를 누른 일기의 날짜 제공 |
+
+### [설정]
+
+|                                                                 동작 화면                                                                  | 기능                                                                                                                                                                                                                       |
+| :----------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="390" alt="알림 화면" src="https://raw.githubusercontent.com/wiki/FRONTENDBOOTCAMP-12th/2gether-kongtteok/README/settings.gif"> | - 프로필 편집 화면으로 이동 가능 <br> - 화면의 색상 테마를 어두운 모드로 전환 가능 <br> - 로그아웃 클릭 시 모달창으로 사용자에게 한번 더 확인 <br> - 로그아웃 성공 시 로그인 화면으로 이동 <br> - 회원탈퇴도 동일하게 동작 |
