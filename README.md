@@ -1,4 +1,4 @@
-# 🐰 힐링공간 일기 서비스앱 말랑콩떡
+# 🐰 감정 공유 일기 서비스앱 말랑콩떡
 
 ![Image](https://github.com/user-attachments/assets/72933fc0-05b4-449d-9937-0b701f756db6)
 
